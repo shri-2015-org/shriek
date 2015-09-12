@@ -3,10 +3,10 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-var config = require('./configs/config');
+var config = require('../configs/config');
 var port = config.get('port') || 3000;
 
-var mongoose = require('./models/mongoose');
+var mongoose = require('../models/mongoose');
 var UserModel = mongoose.UserModel;
 var ChannelModel = mongoose.ChannelModel;
 var MessageModel = mongoose.MessageModel;
@@ -27,9 +27,9 @@ var numUsers = 0;
 io.on('connection', function (socket) {
   var addedUser = false;
 
-  require('./modules/user')(socket);
-  require('./modules/message')(socket);
-  require('./modules/channel')(socket);
+  require('../modules/user')(socket);
+  require('../modules/message')(socket);
+  require('../modules/channel')(socket);
 
   // when the client emits 'add user', this listens and executes
   socket.on('user create', function (username) {

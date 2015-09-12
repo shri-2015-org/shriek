@@ -1,1 +1,1 @@
-require('./app/chat');
+require('./app/controllers/chat');

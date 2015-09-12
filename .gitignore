@@ -1,2 +1,7 @@
-node_modules
 *.sublime-*
+.sass-cache
+
+node_modules
+
+app/components
+app/assets/css/modules.sass

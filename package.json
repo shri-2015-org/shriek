@@ -2,6 +2,7 @@
   "name": "project-name",
   "version": "0.1.0",
   "devDependencies": {
+    "bower": "^1.5.2",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.5.2",
     "gulp-flatten": "^0.2.0",

@@ -27,18 +27,46 @@ var numUsers = 0;
 io.on('connection', function (socket) {
   var addedUser = false;
 
-  // when the client emits 'new message', this listens and executes
-  socket.on('new message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
-      username: socket.username,
-      message: data
+
+
+
+  /** Слушаем сообщение с фронта
+  * @param data
+  * @param data.user string логин юзера
+  * @param data.channel string канал в который пишем (не обязательное)
+  * @param data.text string текст сообщения
+  * @param data.type string не обязательное, по умолчанию text
+  */
+
+  socket.on('message send', function (data) {
+
+    var newMessage = MessageModel({
+      user: data.username,
+      channel: ( data.channel !== undefined ? data.channel : 'general' ), // если канал не пришёл, пишем в general
+      text: data.text,
+      type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст
     });
+
+    newMessage.save({runValidators: true}, function (err, data) {
+
+      var out = {};
+      if (!err) {
+        out.status = 'ok';
+        out.message = data; // здесь будет запись из БД со всеми полями (см схему)
+      } else {
+        out.status = 'error';
+        out.error_message = 'Ошибка создания файла';
+      }
+
+      socket.broadcast.emit('message send', out);
+
+    });
+
   });
 
   // when the client emits 'add user', this listens and executes
   // TODO:: check find or create
-  socket.on('add user', function (username) {
+  socket.on('user create', function (username) {
     // we store the username in the socket session for this client
     socket.username = username;
     // add the client's username to the global list

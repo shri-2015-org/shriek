@@ -47,24 +47,33 @@ $(function() {
       $currentInput = $inputMessage.focus();
 
       // Tell the server your username
-      socket.emit('add user', username);
+      socket.emit('user create', username);
     }
   }
 
   // Sends a chat message
   function sendMessage () {
-    var message = $inputMessage.val();
+
+    var message = {
+      username: username,
+      channel: 'general',
+      text: $inputMessage.val(),
+      type: 'text'
+    };
+
     // Prevent markup from being injected into the message
-    message = cleanInput(message);
+    // message = cleanInput(message);
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
       addChatMessage({
         username: username,
-        message: message
+        channel: 'general',
+        text: message.text,
+        type: 'text'
       });
-      // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', message);
+      // tell server to execute 'message send' and send along one parameter
+      socket.emit('message send', message);
     }
   }
 
@@ -84,11 +93,13 @@ $(function() {
       $typingMessages.remove();
     }
 
+    console.log(data);
+
     var $usernameDiv = $('<span class="username"/>')
       .text(data.username)
       .css('color', getUsernameColor(data.username));
     var $messageBodyDiv = $('<span class="messageBody">')
-      .text(data.message);
+      .text(data.text);
 
     var typingClass = data.typing ? 'typing' : '';
     var $messageDiv = $('<li class="message"/>')
@@ -236,8 +247,8 @@ $(function() {
     addParticipantsMessage(data);
   });
 
-  // Whenever the server emits 'new message', update the chat body
-  socket.on('new message', function (data) {
+  // Whenever the server emits 'message send', update the chat body
+  socket.on('message send', function (data) {
     addChatMessage(data);
   });
 

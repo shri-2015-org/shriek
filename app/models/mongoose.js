@@ -53,8 +53,12 @@ var Channel = new Schema({
 });
 
 var Message = new Schema({
-  user: String,
-  channel: String,
+  user: {
+    type: String
+  },
+  channel: {
+    type: String
+  },
   text: {
     type: String
   },

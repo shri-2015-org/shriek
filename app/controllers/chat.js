@@ -27,18 +27,12 @@ var numUsers = 0;
 io.on('connection', function (socket) {
   var addedUser = false;
 
-  // when the client emits 'new message', this listens and executes
-  socket.on('new message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
-      username: socket.username,
-      message: data
-    });
-  });
+  require('./modules/user')(socket);
+  require('./modules/message')(socket);
+  require('./modules/channel')(socket);
 
   // when the client emits 'add user', this listens and executes
-  // TODO:: check find or create
-  socket.on('add user', function (username) {
+  socket.on('user create', function (username) {
     // we store the username in the socket session for this client
     socket.username = username;
     // add the client's username to the global list

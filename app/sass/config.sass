@@ -1,0 +1,53 @@
+// Snippets
+
+=bg($image, $repeat : no-repeat, $offsetX : 0, $offsetY : 0)
+  background: url(../img/#{$image}.png) $offsetX $offsetY $repeat
+
+=pic($image, $height)
+  height: $height
+  background: url(../img/#{$image}.png) 50% 0 no-repeat
+
+=f($fontFamily, $fontSize, $fontWeight : normal, $color : #000)
+  font-family: $fontFamily
+  font-size: $fontSize
+  font-weight: $fontWeight
+  color: $color
+
+=spr($offsetX,$offsetY)
+  background-image: url(../img/#{$sprite}.png) !important
+  background-position: -#{$offsetX}px -#{$offsetY}px !important
+  background-repeat: no-repeat
+
+=grd-v($start-color, $end-color)
+  background: $start-color
+  background: -moz-linear-gradient(top, $start-color 0%, $end-color 100%)
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, $start-color), color-stop(100%, $end-color))
+  background: -webkit-linear-gradient(top, $start-color 0%, $end-color 100%)
+  background: -o-linear-gradient(top, $start-color 0%, $end-color 100%)
+  background: -ms-linear-gradient(top, $start-color 0%, $end-color 100%)
+  background: linear-gradient(to bottom, $start-color 0%, $end-color 100%)
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$start-color', endColorstr='$end-color', GradientType=0 )
+
+=grd-h($start-color, $end-color)
+  background: $start-color
+  background: -moz-linear-gradient(left, $start-color 0%, $end-color 100%)
+  background: -webkit-gradient(left top, right top, color-stop(0%, $start-color), color-stop(100%, $end-color))
+  background: -webkit-linear-gradient(left, $start-color 0%, $end-color 100%)
+  background: -o-linear-gradient(left, $start-color 0%, $end-color 100%)
+  background: -ms-linear-gradient(left, $start-color 0%, $end-color 100%)
+  background: linear-gradient(to right, $start-color 0%, $end-color 100%)
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$start-color', endColorstr='$end-color', GradientType=0 )
+
+=rotate($angle)
+  -webkit-transform: rotate(#{$angle}deg)
+  -moz-transform: rotate(#{$angle}deg)
+  -o-transform: rotate(#{$angle}deg)
+  writing-mode: lr-tb
+
+=transition($length)
+  transition: all $length ease-in-out 0s
+  -ms-transition: all $length ease-in-out 0s
+  -moz-transition: all $length ease-in-out 0s
+  -webkit-transition: all $length ease-in-out 0s
+
+

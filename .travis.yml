@@ -3,15 +3,19 @@ language: node_js
 node_js: 4.0.0
 
 branches:
-only:
-  - master
-  - develop
+  only:
+    - master
+    - develop
 
 services:
   - mongodb
 
 install:
-  - npm install -g
+  - npm install
+  - bower install
+
+script:
+  # test running
 
 deploy:
   on:

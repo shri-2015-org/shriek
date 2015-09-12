@@ -49,13 +49,12 @@ var Channel = new Schema({
   updated_at: {
     type: Date,
     default: Date.now
-  },
-  users: [User]
+  }
 });
 
 var Message = new Schema({
-  user: [User],
-  channel: [Channel],
+  user: String,
+  channel: String,
   text: {
     type: String
   },
@@ -66,7 +65,7 @@ var Message = new Schema({
     type: Date,
     default: Date.now
   },
-  attaches: {}
+  attachments: {}
 });
 
 var UserModel = mongoose.model('User', User);

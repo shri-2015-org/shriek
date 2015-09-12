@@ -28,12 +28,11 @@ var messageModule = function(socket) {
         out.message = data; // здесь будет запись из БД со всеми полями (см схему)
       } else {
         out.status = 'error';
-        out.error_message = 'Ошибка создания файла';
+        out.error_message = 'Ошибка создания сообщения';
       }
 
-      console.log(out);
-
       socket.broadcast.emit('message send', out);
+      socket.emit('message send', out);
 
     });
 

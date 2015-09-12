@@ -66,12 +66,6 @@ $(function() {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
-      addChatMessage({
-        username: username,
-        channel: 'general',
-        text: message.text,
-        type: 'text'
-      });
       // tell server to execute 'message send' and send along one parameter
       socket.emit('message send', message);
     }
@@ -96,14 +90,14 @@ $(function() {
     console.log(data);
 
     var $usernameDiv = $('<span class="username"/>')
-      .text(data.username)
-      .css('color', getUsernameColor(data.username));
+      .text(data.message.user)
+      .css('color', getUsernameColor(data.message.user));
     var $messageBodyDiv = $('<span class="messageBody">')
-      .text(data.text);
+      .text(data.message.text);
 
     var typingClass = data.typing ? 'typing' : '';
     var $messageDiv = $('<li class="message"/>')
-      .data('username', data.username)
+      .data('username', data.message.user)
       .addClass(typingClass)
       .append($usernameDiv, $messageBodyDiv);
 
@@ -113,7 +107,9 @@ $(function() {
   // Adds the visual chat typing message
   function addChatTyping (data) {
     data.typing = true;
-    data.message = 'is typing';
+    data.message = {};
+    data.message.text = 'is typing';
+    data.message.user = data.username;
     addChatMessage(data);
   }
 

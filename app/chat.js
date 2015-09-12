@@ -27,12 +27,11 @@ var numUsers = 0;
 io.on('connection', function (socket) {
   var addedUser = false;
 
-
-
-  require('./moduls/message')(socket);
+  require('./modules/user')(socket);
+  require('./modules/message')(socket);
+  require('./modules/channel')(socket);
 
   // when the client emits 'add user', this listens and executes
-  // TODO:: check find or create
   socket.on('user create', function (username) {
     // we store the username in the socket session for this client
     socket.username = username;

@@ -57,7 +57,7 @@ var userModule = function(socket) {
 
           // echo globally (all clients) that a person has connected
           if (out.status == 'ok') {
-            socket.broadcast.emit('user enter', out);
+            socket.broadcast.emit('user connected', out);
           }
           socket.emit('user enter', out);
         });
@@ -87,7 +87,7 @@ var userModule = function(socket) {
     }
 
     if (out.status == 'ok') {
-      socket.broadcast.emit('user leave', out);
+      socket.broadcast.emit('user disconnected', out);
     }
     socket.emit('user leave', out);
   });

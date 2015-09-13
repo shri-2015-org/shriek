@@ -19,7 +19,7 @@ var ChatBox = React.createClass({displayName: "ChatBox",
       messagesAll.push(data.message);
       that.setState({ messages: messagesAll });
     });
-    // socket.emit('fetch messages'); // загрузка сообщений при загрузке чата, пока что нет такого у нас
+    socket.emit('channel get', {channel: 'general', date: new Date()});
   },
   submitMessage: function (text, callback) {
     var message = {
@@ -109,6 +109,7 @@ var ChannelsList = React.createClass({displayName: "ChannelsList",
     socket.emit('channel list');
     socket.on('channel get', function (data) {
       console.log('change chat room');
+      // React.ChatBox.setState({messages: data.messages});
     });
   },
   changeChannel: function(event) {

@@ -9,10 +9,7 @@ Yet another chat
 
 # Development workflow
 
-## Смотреть на изменения main.js для фронта
-jsx --watch app/assets/js/ public/assets/js/
-
-## Смотреть на изменения sass файлов
+## Смотреть на изменения sass файлов и jsx файлов фронта
 gulp watch
 
 ## Стартовать ноду

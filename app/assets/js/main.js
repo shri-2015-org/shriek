@@ -5,6 +5,7 @@ var app = app || {};
   var socket = io();
   var username;
 
+// CHAT MODULE
 var ChatBox = React.createClass({
   getInitialState: function () {
     return {
@@ -91,7 +92,9 @@ var MessageForm = React.createClass({
     );
   }
 });
+// CHAT MODULE
 
+// CHANEL LIST MODULE
 var ChannelsList = React.createClass({
   getInitialState: function () {
     return {
@@ -104,12 +107,19 @@ var ChannelsList = React.createClass({
       that.setState({ channels: data.channels });
     });
     socket.emit('channel list');
+    socket.on('channel get', function (data) {
+      console.log('change chat room');
+    });
+  },
+  changeChannel: function(event) {
+    socket.emit('channel get', {channel: event.target.dataset.slug, date: new Date()});
   },
   render: function () {
     var Channels = (<div>Loading channels...</div>);
+    var that = this;
     if (this.state.channels) {
       Channels = this.state.channels.map(function (channel) {
-        return (<Channel channel={channel} />);
+        return (<Channel channel={channel} changeChannel={that.changeChannel}/>);
       });
     }
     return (
@@ -121,14 +131,18 @@ var ChannelsList = React.createClass({
 });
 
 var Channel = React.createClass({
+  clickHandler: function(event) {
+    this.props.changeChannel(event);
+  },
   render: function () {
     return (
       <div className="channel">
-        <a ref='channellist' className="name">{this.props.channel.name}</a>
+        <a className="name" onClick={this.clickHandler} data-slug={this.props.channel.slug}>{this.props.channel.name}</a>
       </div>
     );
   }
 });
+// CHANEL LIST MODULE
 
   var TodoApp = React.createClass({
 

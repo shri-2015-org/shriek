@@ -5,6 +5,7 @@ var app = app || {};
   var socket = io();
   var username;
 
+// CHAT MODULE
 var ChatBox = React.createClass({displayName: "ChatBox",
   getInitialState: function () {
     return {
@@ -91,7 +92,9 @@ var MessageForm = React.createClass({displayName: "MessageForm",
     );
   }
 });
+// CHAT MODULE
 
+// CHANEL LIST MODULE
 var ChannelsList = React.createClass({displayName: "ChannelsList",
   getInitialState: function () {
     return {
@@ -104,12 +107,19 @@ var ChannelsList = React.createClass({displayName: "ChannelsList",
       that.setState({ channels: data.channels });
     });
     socket.emit('channel list');
+    socket.on('channel get', function (data) {
+      console.log('change chat room');
+    });
+  },
+  changeChannel: function(event) {
+    socket.emit('channel get', {channel: event.target.dataset.slug, date: new Date()});
   },
   render: function () {
     var Channels = (React.createElement("div", null, "Loading channels..."));
+    var that = this;
     if (this.state.channels) {
       Channels = this.state.channels.map(function (channel) {
-        return (React.createElement(Channel, {channel: channel}));
+        return (React.createElement(Channel, {channel: channel, changeChannel: that.changeChannel}));
       });
     }
     return (
@@ -121,14 +131,18 @@ var ChannelsList = React.createClass({displayName: "ChannelsList",
 });
 
 var Channel = React.createClass({displayName: "Channel",
+  clickHandler: function(event) {
+    this.props.changeChannel(event);
+  },
   render: function () {
     return (
       React.createElement("div", {className: "channel"}, 
-        React.createElement("a", {ref: "channellist", className: "name"}, this.props.channel.name)
+        React.createElement("a", {className: "name", onClick: this.clickHandler, "data-slug": this.props.channel.slug}, this.props.channel.name)
       )
     );
   }
 });
+// CHANEL LIST MODULE
 
   var TodoApp = React.createClass({displayName: "TodoApp",
 

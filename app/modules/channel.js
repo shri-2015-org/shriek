@@ -92,6 +92,8 @@ var channelModule = function(socket) {
 
     // строим запрос в БД
 
+    console.log(data);
+
     var query = {
       channel: data.channel // канал нужно учитывать всегда
     };

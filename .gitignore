@@ -5,3 +5,4 @@ node_modules
 
 app/components
 app/assets/css/modules.sass
+app/js/.module-cache

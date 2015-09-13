@@ -152,11 +152,11 @@ var Channel = React.createClass({displayName: "Channel",
           // здесь промтом выясняем под каким логином хочется войти и шлем на сервер
           function askLogin() {
             username = prompt('What is your login?');
-            socket.emit('user login', username);
+            socket.emit('user enter', {username: username, password: '111'});
           }
 
           // получаем ответ, если все ок, продолжаем работу, иначе переспрашиваем логин
-          socket.on('user login', function(data) {
+          socket.on('user enter', function(data) {
             if (data.status == 'ok') {
               socket.username = username;
             } else {

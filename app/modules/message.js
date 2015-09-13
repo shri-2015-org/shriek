@@ -14,7 +14,7 @@ var messageModule = function(socket) {
   socket.on('message send', function (data) {
 
     var newMessage = MessageModel({
-      user: data.username,
+      username: data.username,
       channel: ( data.channel !== undefined ? data.channel : 'general' ), // если канал не пришёл, пишем в general
       text: data.text,
       type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст

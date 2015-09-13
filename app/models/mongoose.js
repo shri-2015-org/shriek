@@ -54,16 +54,20 @@ var Channel = new Schema({
 
 var Message = new Schema({
   username: {
-    type: String
+    type: String,
+    required: true
   },
   channel: {
-    type: String
+    type: String,
+    required: true
   },
   text: {
-    type: String
+    type: String,
+    required: true
   },
   type: {
-    type: String
+    type: String,
+    required: true
   },
   created_at: {
     type: Date,

@@ -19,6 +19,7 @@ var channelModule = function(socket) {
     });
 
     newChannel.save({runValidators: true}, function (err, data) {
+      console.log(err);
 
       var out = {};
       if (!err) {

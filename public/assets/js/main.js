@@ -4,8 +4,6 @@ var app = app || {};
   'use strict';
   var socket = io();
   var username;
-  var ENTER_KEY = 13;
-
 
 var ChatBox = React.createClass({displayName: "ChatBox",
   getInitialState: function () {
@@ -22,11 +20,11 @@ var ChatBox = React.createClass({displayName: "ChatBox",
     });
     // socket.emit('fetch messages'); // загрузка сообщений при загрузке чата, пока что нет такого у нас
   },
-  submitMessage: function (comment, callback) {
+  submitMessage: function (text, callback) {
     var message = {
       username: socket.username,
       channel: 'general',
-      text: comment,
+      text: text,
       type: 'text'
     };
     socket.emit('message send', message);
@@ -62,7 +60,7 @@ var Message = React.createClass({displayName: "Message",
   render: function () {
     return (
       React.createElement("div", {className: "message"}, 
-        React.createElement("span", {className: "author"}, this.props.message.user, ":"), React.createElement("span", {className: "body"}, this.props.message.text)
+        React.createElement("span", {className: "author"}, this.props.message.username, ":"), React.createElement("span", {className: "body"}, this.props.message.text)
       )
     );
   }
@@ -94,8 +92,45 @@ var MessageForm = React.createClass({displayName: "MessageForm",
   }
 });
 
-  var TodoApp = React.createClass({displayName: "TodoApp",
+var ChannelsList = React.createClass({displayName: "ChannelsList",
+  getInitialState: function () {
+    return {
+      channels: []
+    };
+  },
+  componentDidMount: function () {
+    var that = this;
+    socket.on('channel list', function (data) {
+      that.setState({ channels: data.channels });
+    });
+    socket.emit('channel list');
+  },
+  render: function () {
+    var Channels = (React.createElement("div", null, "Loading channels..."));
+    if (this.state.channels) {
+      Channels = this.state.channels.map(function (channel) {
+        return (React.createElement(Channel, {channel: channel}));
+      });
+    }
+    return (
+      React.createElement("div", {className: "channel_list"}, 
+        Channels
+      )
+    );
+  }
+});
 
+var Channel = React.createClass({displayName: "Channel",
+  render: function () {
+    return (
+      React.createElement("div", {className: "channel"}, 
+        React.createElement("a", {ref: "channellist", className: "name"}, this.props.channel.name)
+      )
+    );
+  }
+});
+
+  var TodoApp = React.createClass({displayName: "TodoApp",
 
       componentDidMount: function() {
 
@@ -123,7 +158,7 @@ var MessageForm = React.createClass({displayName: "MessageForm",
 
         left_panel = (
           React.createElement("div", {className: "left_panel"}, 
-            "text"
+            React.createElement(ChannelsList, null)
           )
         );
 

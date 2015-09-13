@@ -16,9 +16,10 @@
     console.log(data);
   });
 
-  function channelCreate() {
+  function channelCreate(name) {
+    if (name == undefined) name = 'Название чата';
     var data = {
-      name: 'Название чата',
+      name: name
     };
     socket.emit('channel create', data);
   }
@@ -28,7 +29,7 @@
 
   function channelInfo() {
     var data = {
-      slug: 'nazvanie_channela',
+      slug: 'nazvanie_channela'
     };
     socket.emit('channel info', data);
   }

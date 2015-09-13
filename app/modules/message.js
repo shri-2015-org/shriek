@@ -16,7 +16,7 @@ var messageModule = function(socket) {
     // здесь еще нужно проверять на существование чата, если его нет — создавать
 
     var newMessage = MessageModel({
-      username: data.username,
+      username: socket.username,
       channel: ( data.channel !== undefined ? data.channel : 'general' ), // если канал не пришёл, пишем в general
       text: data.text,
       type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст

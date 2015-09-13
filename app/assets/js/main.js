@@ -4,8 +4,6 @@ var app = app || {};
   'use strict';
   var socket = io();
   var username;
-  var ENTER_KEY = 13;
-
 
 var ChatBox = React.createClass({
   getInitialState: function () {
@@ -22,11 +20,11 @@ var ChatBox = React.createClass({
     });
     // socket.emit('fetch messages'); // загрузка сообщений при загрузке чата, пока что нет такого у нас
   },
-  submitMessage: function (comment, callback) {
+  submitMessage: function (text, callback) {
     var message = {
       username: socket.username,
       channel: 'general',
-      text: comment,
+      text: text,
       type: 'text'
     };
     socket.emit('message send', message);
@@ -62,7 +60,7 @@ var Message = React.createClass({
   render: function () {
     return (
       <div className="message">
-        <span className="author">{this.props.message.user}:</span><span className="body">{this.props.message.text}</span>
+        <span className="author">{this.props.message.username}:</span><span className="body">{this.props.message.text}</span>
       </div>
     );
   }
@@ -94,8 +92,45 @@ var MessageForm = React.createClass({
   }
 });
 
-  var TodoApp = React.createClass({
+var ChannelsList = React.createClass({
+  getInitialState: function () {
+    return {
+      channels: []
+    };
+  },
+  componentDidMount: function () {
+    var that = this;
+    socket.on('channel list', function (data) {
+      that.setState({ channels: data.channels });
+    });
+    socket.emit('channel list');
+  },
+  render: function () {
+    var Channels = (<div>Loading channels...</div>);
+    if (this.state.channels) {
+      Channels = this.state.channels.map(function (channel) {
+        return (<Channel channel={channel} />);
+      });
+    }
+    return (
+      <div className="channel_list">
+        {Channels}
+      </div>
+    );
+  }
+});
 
+var Channel = React.createClass({
+  render: function () {
+    return (
+      <div className="channel">
+        <a ref='channellist' className="name">{this.props.channel.name}</a>
+      </div>
+    );
+  }
+});
+
+  var TodoApp = React.createClass({
 
       componentDidMount: function() {
 
@@ -123,7 +158,7 @@ var MessageForm = React.createClass({
 
         left_panel = (
           <div className='left_panel'>
-            text
+            <ChannelsList/>
           </div>
         );
 

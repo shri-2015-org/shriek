@@ -1,1 +1,1 @@
-body{color:#fff}
+body,html{height:100%}.todoapp,.container-fluid{height:100%}.todoapp>.row,.container-fluid>.row{height:100%}.left_part{background-color:#414141;color:#fff;height:100%}.right_part{height:100%}.right_part .chat_box{height:100%}.right_part .chat_div{height:calc(100% - 30px)}.right_part .chat_div .message{color:#ccc}.right_part .send_form{height:30px}

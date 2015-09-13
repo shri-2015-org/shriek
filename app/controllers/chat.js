@@ -17,6 +17,7 @@ server.listen(port, function () {
 
 // Routing
 app.use(express.static('public'));
+app.use('/components', express.static('app/components'));
 
 // Chatroom
 

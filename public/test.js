@@ -2,7 +2,7 @@
 
   function sendMessage(username, channel, text) {
     if (username == undefined) username = 'testuser';
-    if (channel == undefined) channel = 'nazvanie_chata';
+    if (channel == undefined) channel = 'nazvanie_channela';
     if (text == undefined) text = 'sometext';
     var data = {
       username: username,
@@ -16,35 +16,35 @@
     console.log(data);
   });
 
-  function chatCreate() {
+  function channelCreate() {
     var data = {
       name: 'Название чата',
     };
-    socket.emit('chat create', data);
+    socket.emit('channel create', data);
   }
-  socket.on('chat create', function(data){
+  socket.on('channel create', function(data){
     console.log(data);
   });
 
-  function chatInfo() {
+  function channelInfo() {
     var data = {
-      slug: 'nazvanie_chata',
+      slug: 'nazvanie_channela',
     };
-    socket.emit('chat info', data);
+    socket.emit('channel info', data);
   }
-  socket.on('chat info', function(data){
+  socket.on('channel info', function(data){
     console.log(data);
   });
 
-  function chatList() {
-    socket.emit('chat list');
+  function channelList() {
+    socket.emit('channel list');
   }
-  socket.on('chat list', function(data){
+  socket.on('channel list', function(data){
     console.log(data);
   });
 
-  function chatGet(channel) {
-    if (channel == undefined) channel = 'nazvanie_chata';
+  function channelGet(channel) {
+    if (channel == undefined) channel = 'nazvanie_channela';
     requestdate = new Date();
     // min5ago = new Date();
     // requestdate.setMinutes(min5ago.getMinutes()-5);
@@ -54,8 +54,8 @@
       limit: 5,
       skip: 0
     };
-    socket.emit('chat get', data);
+    socket.emit('channel get', data);
   }
-  socket.on('chat get', function(data){
+  socket.on('channel get', function(data){
     console.log(data);
   });

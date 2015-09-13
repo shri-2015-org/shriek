@@ -9,7 +9,7 @@ var channelModule = function(socket) {
   * @param data
   * @param data.name название чата
   */
-  socket.on('chat create', function (data) {
+  socket.on('channel create', function (data) {
 
   slug = slugify(data.name, {lowercase: true, separator: '_'}); // трансилитирируем name
 
@@ -29,8 +29,8 @@ var channelModule = function(socket) {
         out.error_message = 'Ошибка создания чата';
       }
 
-      if (out.status == 'ok') socket.broadcast.emit('chat create', out); // броадкастим на всех, только если все прошло удачно
-      socket.emit('chat create', out);
+      if (out.status == 'ok') socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
+      socket.emit('channel create', out);
 
     });
 
@@ -40,7 +40,7 @@ var channelModule = function(socket) {
   * @param data
   * @param data.slug слаг чата
   */
-  socket.on('chat info', function (data) {
+  socket.on('channel info', function (data) {
 
     ChannelModel.findOne({ slug: data.slug }, function (err, data) {
 
@@ -53,7 +53,7 @@ var channelModule = function(socket) {
         out.error_message = 'Ошибка получение чата';
       }
 
-      socket.emit('chat info', out);
+      socket.emit('channel info', out);
 
     });
 
@@ -61,7 +61,7 @@ var channelModule = function(socket) {
 
   /** Получение всех чатов
   */
-  socket.on('chat list', function () {
+  socket.on('channel list', function () {
 
     ChannelModel.find(function (err, data) {
 
@@ -74,7 +74,7 @@ var channelModule = function(socket) {
         out.error_message = 'Ошибка получения чатов';
       }
 
-      socket.emit('chat list', out);
+      socket.emit('channel list', out);
 
     });
 
@@ -87,7 +87,7 @@ var channelModule = function(socket) {
   * @param data.skip integer начиная с
   * @param data.date date дата от которой брать ( < date )
   */
-  socket.on('chat get', function (data) {
+  socket.on('channel get', function (data) {
 
     // строим запрос в БД
 
@@ -111,7 +111,7 @@ var channelModule = function(socket) {
         out.status = 'error';
         out.error_message = 'Ошибка получения сообщений';
       }
-      socket.emit('chat get', out);
+      socket.emit('channel get', out);
 
     });
 

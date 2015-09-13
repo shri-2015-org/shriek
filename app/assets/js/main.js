@@ -23,7 +23,7 @@ var ChatBox = React.createClass({
   submitMessage: function (text, callback) {
     var message = {
       username: socket.username,
-      channel: 'general',
+      channel: 'generals',
       text: text,
       type: 'text'
     };

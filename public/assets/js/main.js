@@ -32,8 +32,8 @@ var ChatBox = React.createClass({displayName: "ChatBox",
   },
   render: function() {
     return (
-      React.createElement("div", {className: "chat_box"}, 
-        React.createElement(MessagesList, {messages: this.state.messages}), 
+      React.createElement("div", {className: "chat_box"},
+        React.createElement(MessagesList, {messages: this.state.messages}),
         React.createElement(MessageForm, {submitMessage: this.submitMessage})
       )
     );
@@ -49,7 +49,7 @@ var MessagesList = React.createClass({displayName: "MessagesList",
       });
     }
     return (
-      React.createElement("div", {className: "chat_div"}, 
+      React.createElement("div", {className: "chat_div"},
         Messages
       )
     );
@@ -59,7 +59,7 @@ var MessagesList = React.createClass({displayName: "MessagesList",
 var Message = React.createClass({displayName: "Message",
   render: function () {
     return (
-      React.createElement("div", {className: "message"}, 
+      React.createElement("div", {className: "message"},
         React.createElement("span", {className: "author"}, this.props.message.username, ":"), React.createElement("span", {className: "body"}, this.props.message.text)
       )
     );
@@ -82,9 +82,9 @@ var MessageForm = React.createClass({displayName: "MessageForm",
   },
   render: function () {
     return (
-      React.createElement("div", {className: "send_form"}, 
-        React.createElement("form", {className: "messageForm", onSubmit: this.handleSubmit}, 
-          React.createElement("input", {name: "text", ref: "text", placeholder: "Message", required: true}), 
+      React.createElement("div", {className: "send_form"},
+        React.createElement("form", {className: "messageForm", onSubmit: this.handleSubmit},
+          React.createElement("input", {name: "text", ref: "text", placeholder: "Message", required: true}),
           React.createElement("button", {type: "submit", ref: "submitButton"}, "Post message")
         )
       )
@@ -113,7 +113,7 @@ var ChannelsList = React.createClass({displayName: "ChannelsList",
       });
     }
     return (
-      React.createElement("div", {className: "channel_list"}, 
+      React.createElement("div", {className: "channel_list"},
         Channels
       )
     );
@@ -123,7 +123,7 @@ var ChannelsList = React.createClass({displayName: "ChannelsList",
 var Channel = React.createClass({displayName: "Channel",
   render: function () {
     return (
-      React.createElement("div", {className: "channel"}, 
+      React.createElement("div", {className: "channel"},
         React.createElement("a", {ref: "channellist", className: "name"}, this.props.channel.name)
       )
     );
@@ -157,24 +157,24 @@ var Channel = React.createClass({displayName: "Channel",
       var left_panel;
 
         left_panel = (
-          React.createElement("div", {className: "left_panel"}, 
+          React.createElement("div", {className: "left_panel"},
             React.createElement(ChannelsList, null)
           )
         );
 
         main = (
-          React.createElement("div", {className: "row"}, 
-            React.createElement("div", {className: "col-md-2 left_part"}, 
+          React.createElement("div", {className: "row"},
+            React.createElement("div", {className: "col-md-2 left_part"},
               left_panel
-            ), 
-            React.createElement("div", {className: "col-md-10 right_part"}, 
+            ),
+            React.createElement("div", {className: "col-md-10 right_part"},
               React.createElement(ChatBox, null)
             )
           )
         );
 
       return (
-        React.createElement("div", {className: "container-fluid"}, 
+        React.createElement("div", {className: "container-fluid"},
           main
         )
       );

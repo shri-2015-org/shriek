@@ -59,3 +59,41 @@
   socket.on('channel get', function(data){
     console.log(data);
   });
+
+  ////////////////
+  // User tests //
+  ////////////////
+
+  function userEnter(username, password) {
+    username = username || 'testuser';
+    password = password || 'testpass';
+    var data = {
+      username: username,
+      password: password
+    };
+    socket.emit('user enter', data);
+  }
+  socket.on('user enter', function (data) {
+    console.log('user enter', data);
+  });
+
+  function userLeave() {
+    socket.emit('user leave');
+  }
+  socket.on('user leave', function (data) {
+    console.log('user leave', data);
+  });
+
+  function userStartTyping() {
+    socket.emit('user start typing');
+  }
+  socket.on('user start typing', function (data) {
+    console.log('user start typing', data);
+  });
+
+  function userStopTyping() {
+    socket.emit('user stop typing');
+  }
+  socket.on('user stop typing', function (data) {
+    console.log('user stop typing', data);
+  });

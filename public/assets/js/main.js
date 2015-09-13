@@ -145,65 +145,112 @@ var Channel = React.createClass({displayName: "Channel",
 });
 // CHANEL LIST MODULE
 
-  var TodoApp = React.createClass({displayName: "TodoApp",
+var ChatApp = React.createClass({displayName: "ChatApp",
 
-      componentDidMount: function() {
+    render: function () {
+    var main;
+    var left_panel;
 
-          // здесь промтом выясняем под каким логином хочется войти и шлем на сервер
-          function askLogin() {
-            username = prompt('What is your login?');
-            socket.emit('user enter', {username: username, password: '111'});
-          }
-
-          // получаем ответ, если все ок, продолжаем работу, иначе переспрашиваем логин
-          socket.on('user enter', function(data) {
-            if (data.status == 'ok') {
-              socket.username = username;
-            } else {
-              askLogin();
-            }
-          });
-
-          askLogin(); // спрашиваем логин (temporary)
-      },
-
-      render: function () {
-      var main;
-      var left_panel;
-
-        left_panel = (
-          React.createElement("div", {className: "left_panel"}, 
-            React.createElement(ChannelsList, null)
-          )
-        );
-
-        main = (
-          React.createElement("div", {className: "row"}, 
-            React.createElement("div", {className: "col-md-2 left_part"}, 
-              left_panel
-            ), 
-            React.createElement("div", {className: "col-md-10 right_part"}, 
-              React.createElement(ChatBox, null)
-            )
-          )
-        );
-
-      return (
-        React.createElement("div", {className: "container-fluid"}, 
-          main
-        )
-      );
-    }
-  });
-
-  function render() {
-    React.render(
-      React.createElement(TodoApp, null),
-      document.getElementsByClassName('todoapp')[0]
+    left_panel = (
+      React.createElement("div", {className: "left_panel"}, 
+        React.createElement(ChannelsList, null)
+      )
     );
 
-  }
+    main = (
+      React.createElement("div", {className: "row"}, 
+        React.createElement(AskLogin, null), 
+        React.createElement("div", {className: "col-md-2 left_part"}, 
+          left_panel
+        ), 
+        React.createElement("div", {className: "col-md-10 right_part"}, 
+          React.createElement(ChatBox, null)
+        )
+      )
+    );
 
-  render();
+    return (
+      React.createElement("div", {className: "container-fluid"}, 
+        main
+      )
+    );
+  }
+});
+
+
+// askLogin component
+var AskLogin = React.createClass({displayName: "AskLogin",
+
+  componentDidMount: function() {
+    socket.on('user enter', function(data) {
+      if (data.status == 'ok') {
+        socket.username = username;
+
+        // i believe, there's a better way
+        $('.modal').modal('hide');
+      }
+    });
+  },
+
+  handleNameChange: function(e) {
+   this.setState({name: e.target.value});
+  },
+
+  handlePasswordChange: function(e) {
+   this.setState({password: e.target.value});
+  },
+
+  handleLogin: function() {
+    socket.emit('user enter', {username: this.state.name, password: this.state.password});
+  },
+
+  render: function() {
+
+    var login_box;
+
+    login_box = (
+      React.createElement("div", {className: "modal fade"}, 
+        React.createElement("div", {className: "modal-dialog"}, 
+          React.createElement("div", {className: "modal-content"}, 
+              React.createElement("div", {className: "modal-header"}, 
+                  React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-hidden": "true"}, "×"), 
+                  React.createElement("h4", {className: "modal-title"}, "Login")
+              ), 
+              React.createElement("div", {className: "modal-body"}, 
+                  React.createElement("p", null, "Please, specify your name and password:"), 
+                  React.createElement("div", {className: "input-group"}, 
+                    React.createElement("input", {onChange: this.handleNameChange, type: "text", className: "form-control", placeholder: "Username"}), 
+                    React.createElement("input", {onChange: this.handlePasswordChange, type: "password", className: "form-control", placeholder: "Password"})
+                  )
+              ), 
+              React.createElement("div", {className: "modal-footer"}, 
+                  React.createElement("button", {onClick: this.handleLogin, type: "button", className: "btn btn-primary"}, "Enter chat"), 
+                  React.createElement("button", {type: "button", className: "btn btn-default", "data-dismiss": "modal"}, "Close")
+              )
+          )
+        )
+      )
+    );
+
+    return (
+      React.createElement("div", null, 
+        login_box
+      )
+    );
+  }
+});
+
+function render() {
+  React.render(
+    React.createElement(ChatApp, null),
+    document.getElementsByClassName('chatApp')[0]
+  );
+}
+
+render();
 
 })();
+
+$(function() {
+  $('.modal').modal('show');
+});

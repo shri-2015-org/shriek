@@ -145,65 +145,112 @@ var Channel = React.createClass({
 });
 // CHANEL LIST MODULE
 
-  var TodoApp = React.createClass({
+var ChatApp = React.createClass({
 
-      componentDidMount: function() {
+    render: function () {
+    var main;
+    var left_panel;
 
-          // здесь промтом выясняем под каким логином хочется войти и шлем на сервер
-          function askLogin() {
-            username = prompt('What is your login?');
-            socket.emit('user enter', {username: username, password: '111'});
-          }
-
-          // получаем ответ, если все ок, продолжаем работу, иначе переспрашиваем логин
-          socket.on('user enter', function(data) {
-            if (data.status == 'ok') {
-              socket.username = username;
-            } else {
-              askLogin();
-            }
-          });
-
-          askLogin(); // спрашиваем логин (temporary)
-      },
-
-      render: function () {
-      var main;
-      var left_panel;
-
-        left_panel = (
-          <div className='left_panel'>
-            <ChannelsList/>
-          </div>
-        );
-
-        main = (
-          <div className="row">
-            <div className="col-md-2 left_part">
-              {left_panel}
-            </div>
-            <div className="col-md-10 right_part">
-              <ChatBox/>
-            </div>
-          </div>
-        );
-
-      return (
-        <div className='container-fluid'>
-          {main}
-        </div>
-      );
-    }
-  });
-
-  function render() {
-    React.render(
-      <TodoApp/>,
-      document.getElementsByClassName('todoapp')[0]
+    left_panel = (
+      <div className='left_panel'>
+        <ChannelsList/>
+      </div>
     );
 
-  }
+    main = (
+      <div className="row">
+        <AskLogin/>
+        <div className="col-md-2 left_part">
+          {left_panel}
+        </div>
+        <div className="col-md-10 right_part">
+          <ChatBox/>
+        </div>
+      </div>
+    );
 
-  render();
+    return (
+      <div className='container-fluid'>
+        {main}
+      </div>
+    );
+  }
+});
+
+
+// askLogin component
+var AskLogin = React.createClass({
+
+  componentDidMount: function() {
+    socket.on('user enter', function(data) {
+      if (data.status == 'ok') {
+        socket.username = username;
+
+        // i believe, there's a better way
+        $('.modal').modal('hide');
+      }
+    });
+  },
+
+  handleNameChange: function(e) {
+   this.setState({name: e.target.value});
+  },
+
+  handlePasswordChange: function(e) {
+   this.setState({password: e.target.value});
+  },
+
+  handleLogin: function() {
+    socket.emit('user enter', {username: this.state.name, password: this.state.password});
+  },
+
+  render: function() {
+
+    var login_box;
+
+    login_box = (
+      <div className='modal fade'>
+        <div className='modal-dialog'>
+          <div className='modal-content'>
+              <div className='modal-header'>
+                  <button type='button' className='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+                  <h4 className='modal-title'>Login</h4>
+              </div>
+              <div className='modal-body'>
+                  <p>Please, specify your name and password:</p>
+                  <div className="input-group">
+                    <input onChange={this.handleNameChange} type="text" className="form-control" placeholder="Username"/>
+                    <input onChange={this.handlePasswordChange} type="password" className="form-control" placeholder="Password"/>
+                  </div>
+              </div>
+              <div className="modal-footer">
+                  <button onClick={this.handleLogin} type='button' className='btn btn-primary'>Enter chat</button>
+                  <button type='button' className='btn btn-default' data-dismiss='modal'>Close</button>
+              </div>
+          </div>
+        </div>
+      </div>
+    );
+
+    return (
+      <div>
+        {login_box}
+      </div>
+    );
+  }
+});
+
+function render() {
+  React.render(
+    <ChatApp/>,
+    document.getElementsByClassName('chatApp')[0]
+  );
+}
+
+render();
 
 })();
+
+$(function() {
+  $('.modal').modal('show');
+});

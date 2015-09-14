@@ -20,9 +20,6 @@ var userModule = function(socket) {
     var username = data.username;
     var password = data.password;
 
-    // we store the username in the socket session for this client
-    socket.username = username;
-
     var newUser = new UserModel({
         username: username
     });
@@ -34,6 +31,8 @@ var userModule = function(socket) {
       if (!err) {
         out.status = 'ok';
         out.user = data;
+        // we store the username in the socket session for this client
+        socket.username = username;
 
         // echo globally (all clients) that a person has connected
         if (out.status == 'ok') {
@@ -41,11 +40,13 @@ var userModule = function(socket) {
         }
         socket.emit('user enter', out);
       } else {
-        UserModel.findOne({username: socket.username}, function (err, doc) {
+        UserModel.findOne({username: username}, function (err, doc) {
           if (!err) {
             if (doc.checkPassword(password)) {
               out.status = 'ok';
               out.user = doc;
+              // we store the username in the socket session for this client
+              socket.username = username;
             } else {
               out.status = 'error';
               out.error_message = 'Неверный пароль';

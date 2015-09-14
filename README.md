@@ -3,13 +3,11 @@ Yet another chat
 
 # Build workflow (short)
 1. npm install
-2. bower install
-3. gulp bower
-4. gulp watch (watching for sass files)
+2. gulp watch (inits: bower install > bower components; watch for sass and jsx)
 
 # Development workflow
 
-## Смотреть на изменения sass файлов и jsx файлов фронта
+## Собрать проект и смотреть на изменения sass файлов и jsx файлов фронта
 gulp watch
 
 ## Стартовать ноду

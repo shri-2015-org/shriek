@@ -86,7 +86,7 @@ var MessageForm = React.createClass({
       <div className='send_form'>
         <form className="messageForm" onSubmit={this.handleSubmit}>
           <input name="text" ref="text" placeholder="Message" required />
-          <button type="submit" ref="submitButton">Post message</button>
+          <button type="submit" className="hidden" ref="submitButton">Post message</button>
         </form>
       </div>
     );
@@ -94,7 +94,7 @@ var MessageForm = React.createClass({
 });
 // CHAT MODULE
 
-// CHANEL LIST MODULE
+// CHANNEL LIST MODULE
 var ChannelsList = React.createClass({
   getInitialState: function () {
     return {
@@ -124,8 +124,11 @@ var ChannelsList = React.createClass({
       });
     }
     return (
-      <div className="channel_list">
-        {Channels}
+      <div>
+        <h4>Каналы</h4>
+        <ul className="channel_list list-unstyled">
+          {Channels}
+        </ul>
       </div>
     );
   }
@@ -137,13 +140,71 @@ var Channel = React.createClass({
   },
   render: function () {
     return (
-      <div className="channel">
+      <li className="channel">
         <a className="name" onClick={this.clickHandler} data-slug={this.props.channel.slug}>{this.props.channel.name}</a>
-      </div>
+      </li>
     );
   }
 });
+
+// USERS LIST
+
+var UsersList = React.createClass({
+
+  render: function() {
+    return (
+      <div>
+        <h4>Пользователи</h4>
+        <ul className="user-list list-unstyled">
+          <User/>
+        </ul>
+      </div>
+    );
+  }
+
+});
+
+var User = React.createClass({
+
+  render: function() {
+    return (
+      <li className="user">
+        <a className="name">User</a>
+      </li>
+    );
+  }
+
+});
+
+// CURRENT USER MODULE
+
+var UserPanel = React.createClass({
+
+  render: function() {
+    return (
+      <div className="user-panel">
+        <ul className="list-unstyled list-inline pull-right">
+          <li><i className="fa fa-power-off"></i></li>
+          <li><i className="fa fa-user"></i></li>
+          <li><i className="fa fa-cog"></i></li>
+        </ul>
+      </div>
+    );
+  }
+
+});
+
 // CHANEL LIST MODULE
+
+var Title = React.createClass({
+
+  render: function() {
+    return (
+      <h1>Shriek Chat</h1>
+    );
+  }
+
+});
 
 var ChatApp = React.createClass({
 
@@ -153,7 +214,9 @@ var ChatApp = React.createClass({
 
     left_panel = (
       <div className='left_panel'>
+        <Title/>
         <ChannelsList/>
+        <UsersList/>
       </div>
     );
 
@@ -164,6 +227,7 @@ var ChatApp = React.createClass({
           {left_panel}
         </div>
         <div className="col-md-10 right_part">
+          <UserPanel/>
           <ChatBox/>
         </div>
       </div>
@@ -200,7 +264,8 @@ var AskLogin = React.createClass({
     this.setState({password: e.target.value});
   },
 
-  handleLogin: function() {
+  handleLogin: function(e) {
+    e.preventDefault();
     var warning = $('.modal-body p');
     var warningText = 'Please, fill all fields!';
 
@@ -226,13 +291,25 @@ var AskLogin = React.createClass({
               </div>
               <div className='modal-body'>
                   <p>Please, specify your name and password:</p>
-                  <div className="input-group">
-                    <input onChange={this.handleNameChange} type="text" className="form-control" placeholder="Username"/>
-                    <input onChange={this.handlePasswordChange} type="password" className="form-control" placeholder="Password"/>
-                  </div>
-              </div>
-              <div className="modal-footer">
-                  <button onClick={this.handleLogin} type='button' className='btn btn-primary'>Enter chat</button>
+                  <form className="form-horizontal" onSubmit={this.handleLogin}>
+                    <div className="form-group">
+                      <label htmlFor="inputUsername" className="col-sm-2 control-label">Username</label>
+                      <div className="col-sm-10">
+                        <input onChange={this.handleNameChange} type="username" className="form-control" id="inputUsername" placeholder="Username"/>
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="inputPassword" className="col-sm-2 control-label">Password</label>
+                      <div className="col-sm-10">
+                        <input onChange={this.handlePasswordChange} type="password" className="form-control" id="inputPassword" placeholder="Password"/>
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <div className="col-sm-offset-2 col-sm-10">
+                        <button onClick={this.handleLogin} type="submit" className="btn btn-primary">Sign in</button>
+                      </div>
+                    </div>
+                  </form>
               </div>
           </div>
         </div>

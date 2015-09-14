@@ -1,28 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Shriek Chat</title>
-  <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-  <ul class="pages">
-    <li class="chat page">
-      <div class="chatArea">
-        <ul class="messages"></ul>
-      </div>
-      <input class="inputMessage" placeholder="Type here..."/>
-    </li>
-    <li class="login page">
-      <div class="form">
-        <h3 class="title">What's your nickname?</h3>
-        <input class="usernameInput" type="text" maxlength="14" />
-      </div>
-    </li>
-  </ul>
-
-  <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/main.js"></script>
-</body>
+<!doctype html>
+<html class="no-js" lang="ru">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>shriek chat</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="apple-touch-icon" href="apple-touch-icon.png">
+		<link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+		<!-- build:css css/vendor.min.css -->
+		<!-- bower:css -->
+		<!-- endbower -->
+		<!-- endbuild -->
+		<!-- build:css css/bootstrap.min.css -->
+		<link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.css" />
+		<!-- endbuild -->
+		<!-- build:css css/main.min.css -->
+		<link rel="stylesheet" href="assets/css/bundle.min.css" />
+		<!-- endbuild -->
+	</head>
+	<body>
+    <div class="chatApp"></div>
+    <script src="/socket.io/socket.io.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="vendor/jquery-1.11.2.min.js"><\/script>')</script>
+		<!-- build:js js/vendor.min.js -->
+		<!-- bower:js -->
+		<script src="components/jquery/dist/jquery.js"></script>
+		<script src="components/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="components/react/react.js"></script>
+		<!-- endbower -->
+		<!-- endbuild -->
+		<!-- build:js js/main.min.js -->
+    <script src="assets/js/main.js"></script>
+    <script src="test.js"></script>
+		<!-- endbuild -->
+	</body>
 </html>

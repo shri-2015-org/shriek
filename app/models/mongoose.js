@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var crypto =require('crypto');
 var config = require('../configs/config');
 
 mongoose.connect(config.get('mongoose:uri'));
@@ -19,8 +20,13 @@ var User = new Schema({
     required: true,
     unique: true
   },
-  password: {
-    type: String
+  hashedPassword: {
+    type: String,
+    required: true
+  },
+  salt: {
+    type: String,
+    required: true
   },
   created_at: {
     type: Date,
@@ -31,6 +37,31 @@ var User = new Schema({
     default: Date.now
   }
 });
+
+User.methods.encryptPassword = function(password) {
+  return crypto.Hmac('sha1', this.salt).update(password).digest('hex');
+};
+
+User
+  .virtual('userId')
+  .get(function () {
+    return this.id;
+  });
+
+User
+  .virtual('password')
+  .set(function (password) {
+    this._plainPassword = password;
+    this.salt = crypto.randomBytes(32).toString('hex');
+    this.hashedPassword = this.encryptPassword(password);
+  })
+  .get(function () {
+    return this._plainPassword;
+  });
+
+User.methods.checkPassword = function(password) {
+ return this.encryptPassword(password) === this.hashedPassword;
+};
 
 var Channel = new Schema({
   name: {
@@ -53,17 +84,21 @@ var Channel = new Schema({
 });
 
 var Message = new Schema({
-  user: {
-    type: String
+  username: {
+    type: String,
+    required: true
   },
   channel: {
-    type: String
+    type: String,
+    required: true
   },
   text: {
-    type: String
+    type: String,
+    required: true
   },
   type: {
-    type: String
+    type: String,
+    required: true
   },
   created_at: {
     type: Date,

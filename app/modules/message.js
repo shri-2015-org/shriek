@@ -13,8 +13,10 @@ var messageModule = function(socket) {
 
   socket.on('message send', function (data) {
 
+    // здесь еще нужно проверять на существование чата, если его нет — создавать
+
     var newMessage = MessageModel({
-      user: data.username,
+      username: socket.username,
       channel: ( data.channel !== undefined ? data.channel : 'general' ), // если канал не пришёл, пишем в general
       text: data.text,
       type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст
@@ -31,7 +33,7 @@ var messageModule = function(socket) {
         out.error_message = 'Ошибка создания сообщения';
       }
 
-      socket.broadcast.emit('message send', out);
+      if (out.status == 'ok') socket.broadcast.emit('message send', out); // броадкастим на всех, только если все прошло удачно
       socket.emit('message send', out);
 
     });

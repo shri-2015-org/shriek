@@ -18,7 +18,7 @@ var onError = function(err) {
 
 // watcher
 
-gulp.task('watch', function() {
+gulp.task('watch',['sass','jsx'], function() {
   gulp.watch(['app/assets/css/*.sass','app/assets/css/modules/*.sass'], ['sass']);
   gulp.watch(['bower.json'], ['bower']);
   gulp.watch(['app/assets/js/*.js'], ['jsx']);

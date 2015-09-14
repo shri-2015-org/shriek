@@ -225,7 +225,6 @@ var AskLogin = React.createClass({
               </div>
               <div className="modal-footer">
                   <button onClick={this.handleLogin} type='button' className='btn btn-primary'>Enter chat</button>
-                  <button type='button' className='btn btn-default' data-dismiss='modal'>Close</button>
               </div>
           </div>
         </div>

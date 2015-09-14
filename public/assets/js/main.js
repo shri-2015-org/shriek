@@ -224,8 +224,7 @@ var AskLogin = React.createClass({displayName: "AskLogin",
                   )
               ), 
               React.createElement("div", {className: "modal-footer"}, 
-                  React.createElement("button", {onClick: this.handleLogin, type: "button", className: "btn btn-primary"}, "Enter chat"), 
-                  React.createElement("button", {type: "button", className: "btn btn-default", "data-dismiss": "modal"}, "Close")
+                  React.createElement("button", {onClick: this.handleLogin, type: "button", className: "btn btn-primary"}, "Enter chat")
               )
           )
         )

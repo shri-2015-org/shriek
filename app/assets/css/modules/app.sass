@@ -1,3 +1,6 @@
+*
+  outline: none
+
 body, html
   height: 100%
 
@@ -10,14 +13,57 @@ body, html
   background-color: #414141
   color: #ffffff
   height: 100%
+  padding: 0
+  a
+    color: #fff
+    text-decoration: none
+  h1
+    padding: 0 15px
+    text-align: center
+  h4
+    text-transform: uppercase
+    padding: 5px 30px
+  .name
+    font-size: 1.5rem
+    display: block
+    padding: 5px 45px
+    cursor: pointer
+    &:hover
+      color: gold
+      background-color: #666
+    &:active
+      color: #eee
+      background-color: #aaa
 
 .right_part
   height: 100%
+  padding: 0
+  .user-panel
+    min-height: 50px
+    background-color: whitesmoke
+    border-bottom: 1px solid #c8c8c8
+    font-size: 35px
+    li
+      padding: 0 10px
+    li + li
+      margin-left: 15px
   .chat_box
-    height: 100%
+    height: calc(100% - 50px)
   .chat_div
-    height: calc(100% - 30px)
+    height: calc(100% - 50px)
     .message
-      color: #ccc
+      font-size: 1.5rem
+      color: #222
+      padding: 0 30px
+      .author
+        color: #aaa
+        margin-right: 10px
   .send_form
     height: 30px
+    input
+      display: block
+      width: 100%
+      border: none
+      border-top: 1px solid #c8c8c8
+      font-size: 2rem
+      padding: 10px 20px

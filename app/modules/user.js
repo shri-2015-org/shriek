@@ -25,7 +25,7 @@ var userModule = function(socket) {
     });
     newUser.set('password', password);
 
-    newUser.save({runValidators: true}, function (err, data) {
+    newUser.save(function (err, data) {
       var out = {};
 
       if (!err) {
@@ -40,28 +40,35 @@ var userModule = function(socket) {
         }
         socket.emit('user enter', out);
       } else {
-        UserModel.findOne({username: username}, function (err, doc) {
-          if (!err) {
-            if (doc.checkPassword(password)) {
-              out.status = 'ok';
-              out.user = doc;
-              // we store the username in the socket session for this client
-              socket.username = username;
+        if (err.name === 'ValidationError') {
+          // Validation failed
+          out.status = 'error';
+          out.error_message = err.message;
+          socket.emit('user enter', out);
+        } else {
+          UserModel.findOne({username: username}, function (err, doc) {
+            if (!err) {
+              if (doc.checkPassword(password)) {
+                out.status = 'ok';
+                out.user = doc;
+                // we store the username in the socket session for this client
+                socket.username = username;
+              } else {
+                out.status = 'error';
+                out.error_message = 'Неверный пароль';
+              }
             } else {
               out.status = 'error';
-              out.error_message = 'Неверный пароль';
+              out.error_message = 'Ошибка поиска пользователя'
             }
-          } else {
-            out.status = 'error';
-            out.error_message = 'Ошибка поиска пользователя'
-          }
 
-          // echo globally (all clients) that a person has connected
-          if (out.status == 'ok') {
-            socket.broadcast.emit('user connected', out);
-          }
-          socket.emit('user enter', out);
-        });
+            // echo globally (all clients) that a person has connected
+            if (out.status == 'ok') {
+              socket.broadcast.emit('user connected', out);
+            }
+            socket.emit('user enter', out);
+          });
+        }
       }
     });
   });

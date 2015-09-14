@@ -193,15 +193,23 @@ var AskLogin = React.createClass({
   },
 
   handleNameChange: function(e) {
-   this.setState({name: e.target.value});
+    this.setState({name: e.target.value});
   },
 
   handlePasswordChange: function(e) {
-   this.setState({password: e.target.value});
+    this.setState({password: e.target.value});
   },
 
   handleLogin: function() {
-    socket.emit('user enter', {username: this.state.name, password: this.state.password});
+    var warning = $('.modal-body p');
+    var warningText = 'Please, fill all fields!';
+
+    if (this.state != null && this.state.name && this.state.password) {
+      socket.emit('user enter', {username: this.state.name, password: this.state.password});
+    } else {
+      warning.css('color', 'red');
+      warning.text(warningText);
+    }
   },
 
   render: function() {

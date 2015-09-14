@@ -7,3 +7,4 @@ app/components
 app/assets/css/modules.sass
 app/js/.module-cache
 public/assets/js/.module-cache
+public/assets

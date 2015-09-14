@@ -6,6 +6,7 @@
     "bower": "^1.5.2",
     "express": "4.10.2",
     "gulp": "^3.9.0",
+    "gulp-bower": "0.0.10",
     "gulp-concat": "^2.5.2",
     "gulp-flatten": "^0.2.0",
     "gulp-if": "^1.2.5",

@@ -10,6 +10,7 @@ var gulp = require('gulp'),
   minifyCss = require('gulp-minify-css'),
   flatten = require('gulp-flatten'),
   react = require('gulp-react'),
+  bower = require('gulp-bower'),
   wiredep = require('wiredep').stream;
 
 var onError = function(err) {
@@ -18,13 +19,13 @@ var onError = function(err) {
 
 // watcher
 
-gulp.task('watch',['sass','jsx'], function() {
+gulp.task('watch',['bowerInstall','sass','jsx'], function() {
   gulp.watch(['app/assets/css/*.sass','app/assets/css/modules/*.sass'], ['sass']);
   gulp.watch(['bower.json'], ['bower']);
   gulp.watch(['app/assets/js/*.js'], ['jsx']);
 });
 
-// wiredep
+// wiredep (bower)
 
 gulp.task('bower', function () {
   gulp.src('app/views/layouts/*.html')
@@ -32,6 +33,10 @@ gulp.task('bower', function () {
       directory: "app/components"
     }))
   .pipe(gulp.dest('app/views/layouts'));
+});
+
+gulp.task('bowerInstall', function() {
+  return bower({ cmd: 'update'});
 });
 
 // sass

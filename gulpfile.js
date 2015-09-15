@@ -11,6 +11,7 @@ var gulp = require('gulp'),
   flatten = require('gulp-flatten'),
   react = require('gulp-react'),
   bower = require('gulp-bower'),
+  gulpCommonJS = require('gulp-commonjs'),
   wiredep = require('wiredep').stream,
   prefix = require('gulp-autoprefixer');
 
@@ -58,7 +59,8 @@ gulp.task('sass', ['templates'], function() {
 // jsx
 
 gulp.task('jsx', function () {
-  return gulp.src('app/assets/js/*.js')
+  return gulp.src('app/views/components/*.jsx')
+  .pipe(concat('app.jsx'))
   .pipe(react())
-  .pipe(gulp.dest('public/assets/js/'));
+  .pipe(gulp.dest('public/assets/js'));
 });

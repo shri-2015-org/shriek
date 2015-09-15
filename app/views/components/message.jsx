@@ -1,5 +1,3 @@
-var React = require('react');
-
 var ChatComponent = function(socket) {
 
   var ChatBox = React.createClass({
@@ -91,5 +89,3 @@ var ChatComponent = function(socket) {
 
   return ChatBox;
 };
-
-module.exports = ChatComponent;

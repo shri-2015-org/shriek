@@ -1,5 +1,3 @@
-var React = require('react');
-
 var UserComponent = function(socket) {
 
   var UsersList = React.createClass({
@@ -42,5 +40,3 @@ var UserComponent = function(socket) {
 
   return UsersList;
 };
-
-module.exports = UserComponent;

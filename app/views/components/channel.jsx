@@ -1,5 +1,3 @@
-var React = require('react');
-
 var ChannelComponent = function(socket) {
 
   var ChannelsList = React.createClass({
@@ -70,5 +68,3 @@ var ChannelComponent = function(socket) {
 
   return ChannelsList
 };
-
-module.exports = ChannelComponent;

@@ -2,7 +2,6 @@
   "name": "project-name",
   "version": "0.1.0",
   "dependencies": {
-    "bootstrap": "~3.3.5",
     "react": "~0.13.3",
     "fontawesome": "~4.0.0",
     "normalize.css": "~3.0.0"

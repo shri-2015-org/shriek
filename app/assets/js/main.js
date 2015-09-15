@@ -33,7 +33,7 @@ var ChatBox = React.createClass({
   },
   render: function() {
     return (
-      <div className="chat_box">
+      <div className="msg">
         <MessagesList messages={this.state.messages}/>
         <MessageForm submitMessage={this.submitMessage}/>
       </div>
@@ -50,7 +50,7 @@ var MessagesList = React.createClass({
       });
     }
     return (
-      <div className="chat_div">
+      <div className="msg__list">
         {Messages}
       </div>
     );
@@ -60,8 +60,8 @@ var MessagesList = React.createClass({
 var Message = React.createClass({
   render: function () {
     return (
-      <div className="message">
-        <span className="author">{this.props.message.username}:</span><span className="body">{this.props.message.text}</span>
+      <div className="msg__item">
+        <span className="msg__author">{this.props.message.username}: </span><span className="msg__text">{this.props.message.text}</span>
       </div>
     );
   }
@@ -83,9 +83,9 @@ var MessageForm = React.createClass({
   },
   render: function () {
     return (
-      <div className='send_form'>
-        <form className="messageForm" onSubmit={this.handleSubmit}>
-          <input name="text" ref="text" placeholder="Message" required />
+      <div className='send'>
+        <form className="send__form" onSubmit={this.handleSubmit}>
+          <input className="send__text" name="text" ref="text" placeholder="Сообщение" required />
           <button type="submit" className="hidden" ref="submitButton">Post message</button>
         </form>
       </div>
@@ -124,11 +124,15 @@ var ChannelsList = React.createClass({
       });
     }
     return (
-      <div>
-        <h4>Каналы</h4>
-        <ul className="channel_list list-unstyled">
+      <div className="group">
+        <div className="heading heading_group">
+          <h3 className="heading__header">Каналы</h3>
+          <span className="heading__plus"><i class="fa fa-plus-square-o fa-lg"></i></span>
+        </div>
+        <ul className="list list_channels">
           {Channels}
         </ul>
+        <MoreChannels />
       </div>
     );
   }
@@ -140,24 +144,36 @@ var Channel = React.createClass({
   },
   render: function () {
     return (
-      <li className="channel">
+      <li className="list__item">
         <a className="name" onClick={this.clickHandler} data-slug={this.props.channel.slug}>{this.props.channel.name}</a>
       </li>
     );
   }
 });
 
-// USERS LIST
+var MoreChannels = React.createClass({
+  render: function() {
+    return (
+      <div className="more">
+        <span>Показать +7</span>
+      </div>
+    );
+  }
+});
 
+// USERS LIST
 var UsersList = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <h4>Пользователи</h4>
-        <ul className="user-list list-unstyled">
+      <div className="group">
+        <div className="heading heading_group">
+          <h3 className="heading__header">Пользователи</h3>
+        </div>
+        <ul className="list list_users">
           <User/>
         </ul>
+        <MoreUsers/>
       </div>
     );
   }
@@ -165,55 +181,56 @@ var UsersList = React.createClass({
 });
 
 var User = React.createClass({
-
   render: function() {
     return (
-      <li className="user">
+      <li className="list__item list__item_active">
         <a className="name">User</a>
       </li>
     );
   }
-
 });
 
-// CURRENT USER MODULE
-
-var UserPanel = React.createClass({
-
+var MoreUsers = React.createClass({
   render: function() {
     return (
-      <div className="user-panel">
-        <ul className="list-unstyled list-inline pull-right">
-          <li><i className="fa fa-power-off"></i></li>
-          <li><i className="fa fa-user"></i></li>
-          <li><i className="fa fa-cog"></i></li>
-        </ul>
+      <div className="more">
+      <span>Показать +15</span>
       </div>
     );
   }
-
 });
 
-// CHANEL LIST MODULE
 
 var Title = React.createClass({
-
   render: function() {
     return (
-      <h1>Shriek Chat</h1>
+      <div className="heading">
+        <h3 className="heading__header">Shriek Chat</h3>
+      </div>
     );
   }
-
 });
+
+
 
 var ChatApp = React.createClass({
 
     render: function () {
-    var main;
-    var left_panel;
+    var profileUser;
+    var menu, main;
 
-    left_panel = (
-      <div className='left_panel'>
+    profileUser = (
+      <div className='profile'>
+        <div className="profile__out"><i className="fa fa-sign-out fa-2x"></i></div>
+          <div className="profile__tools"><i className="fa fa-cog fa-2x"></i></div>
+          <div className="profile__img">
+          <img src="http://3.bp.blogspot.com/_TbnTJqaNl4U/SVVJ0Mhb4cI/AAAAAAAAANE/57QF4arMr-A/S220-s40/40x40falloutav-vb.gif"/>
+        </div>
+      </div>
+    );
+
+    menu = (
+      <div className='nav'>
         <Title/>
         <ChannelsList/>
         <UsersList/>
@@ -221,20 +238,15 @@ var ChatApp = React.createClass({
     );
 
     main = (
-      <div className="row">
-        <AskLogin/>
-        <div className="col-md-2 left_part">
-          {left_panel}
-        </div>
-        <div className="col-md-10 right_part">
-          <UserPanel/>
-          <ChatBox/>
-        </div>
+      <div className="content">
+        {profileUser}
+        <ChatBox/>
       </div>
     );
 
     return (
-      <div className='container-fluid'>
+      <div className="container">
+        {menu}
         {main}
       </div>
     );
@@ -327,7 +339,7 @@ var AskLogin = React.createClass({
 function render() {
   React.render(
     <ChatApp/>,
-    document.getElementsByClassName('chatApp')[0]
+    document.getElementsByClassName('layout')[0]
   );
 }
 

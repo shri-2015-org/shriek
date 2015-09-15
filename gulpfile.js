@@ -11,7 +11,8 @@ var gulp = require('gulp'),
   flatten = require('gulp-flatten'),
   react = require('gulp-react'),
   bower = require('gulp-bower'),
-  wiredep = require('wiredep').stream;
+  wiredep = require('wiredep').stream,
+  prefix = require('gulp-autoprefixer');
 
 var onError = function(err) {
   console.error(err);
@@ -49,6 +50,7 @@ gulp.task('templates', function() {
 
 gulp.task('sass', ['templates'], function() {
   return sass('app/assets/css/modules.sass', { style: 'compressed' })
+  .pipe(prefix({ browsers: ['last 2 version'] }))
   .pipe(rename('bundle.min.css'))
   .pipe(gulp.dest('public/assets/css'));
 });

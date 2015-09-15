@@ -6,6 +6,7 @@ var ChannelComponent = function(socket) {
         channels: []
       };
     },
+
     componentDidMount: function () {
       var that = this;
       socket.on('channel list', function (data) {
@@ -17,17 +18,20 @@ var ChannelComponent = function(socket) {
         // React.ChatBox.setState({messages: data.messages});
       });
     },
+
     changeChannel: function(event) {
       socket.emit('channel get', {channel: event.target.dataset.slug, date: new Date()});
     },
     render: function () {
       var Channels = (<div>Loading channels...</div>);
       var that = this;
+
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
           return (<Channel channel={channel} changeChannel={that.changeChannel}/>);
         });
       }
+
       return (
         <div className="group">
           <div className="heading heading_group">
@@ -47,6 +51,7 @@ var ChannelComponent = function(socket) {
     clickHandler: function(event) {
       this.props.changeChannel(event);
     },
+
     render: function () {
       return (
         <li className="list__item">
@@ -68,3 +73,5 @@ var ChannelComponent = function(socket) {
 
   return ChannelsList
 };
+
+module.exports = ChannelComponent;

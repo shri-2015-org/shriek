@@ -1,9 +1,5 @@
 var app = app || {};
-
-(function () {
-  'use strict';
-  var socket = io();
-  var username;
+var socket = io();
 
 // CHAT MODULE
 var ChatComponent = require('../../views/components/message.jsx')(socket);
@@ -14,6 +10,9 @@ var ChannelComponent = require('../../views/components/channel.jsx')(socket);
 // USERS LIST
 var UserComponent = require('../../views/components/user.jsx')(socket);
 
+(function () {
+  'use strict';
+  var username;
 
 var Title = React.createClass({
   render: function() {
@@ -27,7 +26,6 @@ var Title = React.createClass({
 
 
 var ChatApp = React.createClass({
-
     render: function () {
     var profileUser;
     var menu, main;
@@ -69,7 +67,6 @@ var ChatApp = React.createClass({
 
 // askLogin component
 var AskLogin = React.createClass({
-
   componentDidMount: function() {
     socket.on('user enter', function(data) {
       if (data.status == 'ok') {
@@ -159,7 +156,3 @@ function render() {
 render();
 
 })();
-
-$(function() {
-  $('.modal').modal('show');
-});

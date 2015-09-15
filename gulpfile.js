@@ -7,38 +7,66 @@ var gulp = require('gulp'),
   rename = require('gulp-rename'),
   concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
-  minifyCss = require('gulp-minify-css'),
-  flatten = require('gulp-flatten'),
-  react = require('gulp-react'),
   bower = require('gulp-bower'),
-  gulpCommonJS = require('gulp-commonjs'),
   wiredep = require('wiredep').stream,
-  prefix = require('gulp-autoprefixer');
+  prefix = require('gulp-autoprefixer'),
+  source = require('vinyl-source-stream'),
+  browserify = require('browserify'),
+  reactify = require('reactify'),
+  streamify = require('gulp-streamify');
 
 var onError = function(err) {
   console.error(err);
 }
 
-// watcher
+var path = {
+  HTML: 'app/views/layouts/index.html',
+  MINIFIED_OUT: 'assets/js/components.min.js',
+  REACT_COMPONENTS: 'app/views/components/*.jsx',
+  OUT: 'app/assets/js/components.js',
+  SASS_FILE: 'app/assets/css/*.sass',
+  SASS_MODULES: 'app/assets/css/modules/*.sass',
+  DEST: 'public',
+  DEST_BUILD: 'public',
+  DEST_SRC: 'dist/assets',
+  ENTRY_POINT: 'app/assets/js/app.jsx'
+};
 
-gulp.task('watch',['bowerInstall','bower','sass','jsx'], function() {
-  gulp.watch(['app/assets/css/*.sass','app/assets/css/modules/*.sass'], ['sass']);
-  gulp.watch(['bower.json'], ['bower']);
-  gulp.watch(['app/assets/js/*.js'], ['jsx']);
+
+gulp.task('default', ['bower','sass','build','watch']);
+
+// watch
+
+gulp.task('watch', function() {
+  gulp.watch([path.SASS_FILE,path.SASS_MODULES], ['sass']);
+  gulp.watch(['bower.json'],['bower']);
+  gulp.watch([path.ENTRY_POINT,path.REACT_COMPONENTS], ['build']);
 });
 
 // wiredep (bower)
 
 gulp.task('bower', function () {
-  gulp.src('app/views/layouts/*.html')
+  gulp.src(path.HTML)
     .pipe(wiredep({
       directory: "app/components"
     }))
-  .pipe(gulp.dest('app/views/layouts'));
+  .pipe(gulp.dest('public'));
 });
 
 gulp.task('bowerInstall', function() {
   return bower({ cmd: 'update'});
+});
+
+// react components
+
+gulp.task('build', function(){
+  browserify({
+    entries: [path.ENTRY_POINT],
+    transform: [reactify]
+  })
+    .bundle()
+    .pipe(source(path.MINIFIED_OUT))
+    .pipe(gulp.dest(path.DEST_BUILD));
 });
 
 // sass
@@ -54,13 +82,4 @@ gulp.task('sass', ['templates'], function() {
   .pipe(prefix({ browsers: ['last 2 version'] }))
   .pipe(rename('bundle.min.css'))
   .pipe(gulp.dest('public/assets/css'));
-});
-
-// jsx
-
-gulp.task('jsx', function () {
-  return gulp.src('app/views/components/*.jsx')
-  .pipe(concat('app.jsx'))
-  .pipe(react())
-  .pipe(gulp.dest('public/assets/js'));
 });

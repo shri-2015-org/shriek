@@ -40,3 +40,5 @@ var UserComponent = function(socket) {
 
   return UsersList;
 };
+
+module.exports = UserComponent;

@@ -1,11 +1,11 @@
 var ChatComponent = function(socket) {
-
   var ChatBox = React.createClass({
     getInitialState: function () {
       return {
         messages: []
       };
     },
+
     componentDidMount: function () {
       var that = this;
       socket.on('message send', function (data) {
@@ -15,6 +15,7 @@ var ChatComponent = function(socket) {
       });
       socket.emit('channel get', {channel: 'general', date: new Date()});
     },
+
     submitMessage: function (text, callback) {
       var message = {
         username: socket.username,
@@ -25,6 +26,7 @@ var ChatComponent = function(socket) {
       socket.emit('message send', message);
       callback();
     },
+
     render: function() {
       return (
         <div className="msg">
@@ -38,11 +40,13 @@ var ChatComponent = function(socket) {
   var MessagesList = React.createClass({
     render: function () {
       var Messages = (<div>Loading messages...</div>);
+
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
           return (<Message message={message} />);
         });
       }
+
       return (
         <div className="msg__list">
           {Messages}
@@ -69,12 +73,14 @@ var ChatComponent = function(socket) {
       var submitButton = this.refs.submitButton.getDOMNode(); // получаем кнопку
       submitButton.innerHTML = 'Posting message...'; // отключаем кнопку и меняем текст
       submitButton.setAttribute('disabled', 'disabled');
+
       this.props.submitMessage(text, function (err) { // вызываем submitMessage, передаем колбек
         that.refs.text.getDOMNode().value = '';
         submitButton.innerHTML = 'Post message';
         submitButton.removeAttribute('disabled');
       });
     },
+
     render: function () {
       return (
         <div className='send'>
@@ -89,3 +95,5 @@ var ChatComponent = function(socket) {
 
   return ChatBox;
 };
+
+module.exports = ChatComponent;

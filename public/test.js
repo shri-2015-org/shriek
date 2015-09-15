@@ -85,6 +85,17 @@
     console.log('user leave', data);
   });
 
+  function userInfo(username) {
+    username = username || 'testuser';
+    var data = {
+      username: username
+    };
+    socket.emit('user info', data);
+  }
+  socket.on('user info', function (data) {
+    console.log('user info', data);
+  });
+
   function userStartTyping() {
     socket.emit('user start typing');
   }

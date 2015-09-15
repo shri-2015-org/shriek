@@ -94,6 +94,33 @@ var userModule = function(socket) {
   });
 
   /**
+   * Получение информации о пользователе
+   * @param data
+   * @param data.username Никнейм пользователя
+   */
+  socket.on('user info', function (data) {
+    var out = {};
+
+    if (socket.username === undefined) {
+      out.status = 'error';
+      out.error_message = 'Пользователь должен войти';
+      return socket.emit('user info', out);
+    }
+
+    var username = data.username || socket.username;
+    UserModel.findOne({username: username}, function (err, doc) {
+      if (!err && doc) {
+        out.status = 'ok';
+        out.user = doc;
+      } else {
+        out.status = 'error';
+        out.error_message = 'Пользователь не найден';
+      }
+      socket.emit('user info', out);
+    });
+  });
+
+  /**
    * when the client emits 'typing', we broadcast it to others
    * @param  data
    */

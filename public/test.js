@@ -96,6 +96,13 @@
     console.log('user info', data);
   });
 
+  function userList() {
+    socket.emit('user list');
+  }
+  socket.on('user list', function (data) {
+    console.log('user list', data);
+  });
+
   function userStartTyping() {
     socket.emit('user start typing');
   }

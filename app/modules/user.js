@@ -121,6 +121,32 @@ var userModule = function(socket) {
   });
 
   /**
+   * Список пользователей
+   * @param  data
+   */
+  socket.on('user list', function (data) {
+    var out = {};
+
+    if (socket.username === undefined) {
+      return socket.emit('user list', {
+        status: 'error',
+        error_message: 'Пользователь должен войти'
+      });
+    }
+
+    UserModel.find({}, function (err, docs) {
+      if (!err && docs) {
+        out.status = 'ok';
+        out.users= docs;
+      } else {
+        out.status= 'error';
+        out.error_message = 'Пользователей не найдено';
+      }
+      socket.emit('user list', out);
+    });
+  });
+
+  /**
    * when the client emits 'typing', we broadcast it to others
    * @param  data
    */

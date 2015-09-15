@@ -19,58 +19,51 @@ var userModule = function(socket) {
 
     var username = data.username;
     var password = data.password;
+    var out = {};
 
-    var newUser = new UserModel({
-        username: username
-    });
-    newUser.set('password', password);
-
-    newUser.save(function (err, data) {
-      var out = {};
-
-      if (!err) {
-        out.status = 'ok';
-        out.user = data;
-        // we store the username in the socket session for this client
-        socket.username = username;
-
-        // echo globally (all clients) that a person has connected
-        if (out.status == 'ok') {
-          socket.broadcast.emit('user connected', out);
-        }
-        socket.emit('user enter', out);
-      } else {
-        if (err.name === 'ValidationError') {
-          // Validation failed
-          out.status = 'error';
-          out.error_message = err.message;
-          socket.emit('user enter', out);
+    UserModel.findOne({username: username}, function (err, doc) {
+      if (!err && doc) {
+        if (doc.checkPassword(password)) {
+          out.status = 'ok';
+          out.user = doc;
         } else {
-          UserModel.findOne({username: username}, function (err, doc) {
-            if (!err) {
-              if (doc.checkPassword(password)) {
-                out.status = 'ok';
-                out.user = doc;
-                // we store the username in the socket session for this client
-                socket.username = username;
-              } else {
-                out.status = 'error';
-                out.error_message = 'Неверный пароль';
-              }
-            } else {
-              out.status = 'error';
-              out.error_message = 'Ошибка поиска пользователя'
-            }
-
-            // echo globally (all clients) that a person has connected
-            if (out.status == 'ok') {
-              socket.broadcast.emit('user connected', out);
-            }
-            socket.emit('user enter', out);
-          });
+          out.status = 'error';
+          out.error_message = 'Неверный пароль';
         }
+        callbackUserEnter(out);
+      } else {
+        var newUser = new UserModel({
+            username: username
+        });
+        newUser.set('password', password);
+
+        newUser.save(function (err, saved_data) {
+          if (!err) {
+            out.status = 'ok';
+            out.user = saved_data;
+          } else {
+            out.status = 'error';
+            if (err.name === 'ValidationError') {
+              // Validation failed
+              out.error_message = err.message;
+            } else {
+              out.error_message = 'Пользователь не найден'
+            }
+          }
+          callbackUserEnter(out);
+        });
       }
     });
+
+    function callbackUserEnter(out) {
+      if (out.status == 'ok') {
+        // echo globally (all clients) that a person has connected
+        socket.broadcast.emit('user connected', out);
+        // we store the username in the socket session for this client
+        socket.username = username;
+      }
+      socket.emit('user enter', out);
+    }
   });
 
   /**

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <title>Shriek test Frontend</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+    <!-- build:css css/vendor.min.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="components/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="components/normalize.css/normalize.css">
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css css/main.min.css -->
+    <link rel="stylesheet" href="assets/css/bundle.min.css" />
+    <!-- endbuild -->
+  </head>
+  <body>
+
+    <div class="container">
+
+      <nav class="nav">
+        <div class="heading">
+          <h3 class="heading__header">Shriek Chat</h3>
+        </div>
+        <div class="heading heading_group">
+          <h3 class="heading__header">Каналы</h3>
+          <span class="heading__plus"><i class="fa fa-plus-square-o fa-lg"></i></span>
+        </div>
+        <ul class="list list_channels">
+          <li class="list__item">General</li>
+          <li class="list__item list__item_active">А тут наш канал</li>
+          <li class="list__item">Ну</li>
+          <li class="list__item">А тут мы</li>
+          <li class="list__item list__item_more"><span>Показать +7</span></li>
+        </ul>
+        <div class="heading heading_group">
+          <h3 class="heading__header">Пользователи</h3>
+        </div>
+        <ul class="list list_users">
+          <li class="list__item list__item_active">Павел Петров</li>
+          <li class="list__item list__item_active">Оля </li>
+          <li class="list__item">Катерина </li>
+          <li class="list__item list__item_active">Влад Гришаев</li>
+          <li class="list__item list__item_more"><span>Показать +15</span></li>
+        </ul>
+      </nav>
+
+      <div class="content">
+        <div class="profile">
+          <!--div class="profile__name">Дмитрий Калугин</div-->
+          <div class="profile__out"><i class="fa fa-sign-out fa-2x"></i></div>
+          <div class="profile__tools"><i class="fa fa-cog fa-2x"></i></div>
+          <div class="profile__img">
+            <img src="http://3.bp.blogspot.com/_TbnTJqaNl4U/SVVJ0Mhb4cI/AAAAAAAAANE/57QF4arMr-A/S220-s40/40x40falloutav-vb.gif">
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg__list">
+            <div class="msg__item">
+              <span class="msg__author">Айткулова Чинара:</span>
+              <span class="msg__text">Уже половина сентября..</span>
+            </div>
+
+            <div class="msg__item">
+              <span class="msg__author">Чинара:</span>
+              <span class="msg__text">Надобы поспать )</span>
+            </div>
+
+            <div class="msg__item">
+              <span class="msg__author">Айткулова Чинара:</span>
+              <span class="msg__text">Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста.ут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. Тут проверка длинного текста. </span>
+            </div>
+          </div>
+          <div class="send">
+            <form class="send__form">
+              <input class="send__text" type="text" placeholder="Сообщение">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

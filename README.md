@@ -7,7 +7,7 @@ Yet another chat
 
 # Development workflow
 
-## Собрать проект и смотреть на изменения sass файлов и jsx файлов фронта
+## Собрать проект и смотреть на изменения файлов
 gulp
 
 ## Стартовать ноду
@@ -25,7 +25,7 @@ node .
   * models — модели для express
   * modules — модули для express
   * views
-    * layouts — тут html шаблон страницы, который потом копируютсе в public/
+    * layouts — тут html шаблон страницы, который потом копируются в public/
     * components — react компоненты
 * public — все статичные файлы, здесь лежит базовый index.html, который собирается из вьюх
   * assets

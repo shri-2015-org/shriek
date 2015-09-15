@@ -1,0 +1,11 @@
+
+.send__text {
+    width: 100%;
+    min-height: 40px;
+    padding: 5px 20px;
+    border-top: 2px solid #E0E0E0;
+    border-bottom: 2px solid #E0E0E0;
+    border-left: none;
+    border-right: none;
+    box-sizing: border-box;
+}

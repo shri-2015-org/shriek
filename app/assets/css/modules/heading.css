@@ -1,0 +1,33 @@
+.heading {
+    font-size: 1em;
+}
+
+.heading__header {
+    font-weight: normal;
+    margin: 0 0 20px;
+}
+
+.heading_group {
+    font-size: 14px;
+    margin: 40px 0 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.heading_group > * {
+    display: inline-block;
+}
+
+.heading_group .heading__header {
+    font-family: OpenSansLightRegular;
+    font-size: 15px;
+    margin: 0;
+}
+
+.heading__plus {
+    cursor: pointer;
+}
+
+.heading__plus:hover {
+    opacity: .6;
+}

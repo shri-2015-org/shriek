@@ -1,7 +1,17 @@
 {
-  "name": "project-name",
+  "name": "Shriek",
   "version": "0.1.0",
+  "description": "Yet another chat for Yandex Frontend School",
+  "homepage": "http://128.199.39.245/",
+  "bugs": {
+    "url": "https://github.com/shri-2015-org/shriek/issues"
+  },
+  "license": "MIT",
   "main": "index.js",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/shri-2015-org/shriek.git"
+  },
   "devDependencies": {
     "bower": "^1.5.2",
     "express": "4.10.2",

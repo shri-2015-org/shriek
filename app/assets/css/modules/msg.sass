@@ -1,0 +1,26 @@
+.msg
+  flex-grow: 1
+  display: flex
+  flex-direction: column
+  justify-content: flex-end
+
+.msg__list
+  margin: 0 0 20px
+
+.msg__item
+  padding: 5px 20px
+  font-size: 15px
+
+  &:after
+    content: ''
+    clear: both
+    display: table
+
+.msg__author
+  float: left
+  margin-right: 5px
+  font-weight: bolder
+
+.msg__text
+  display: block
+  overflow: hidden

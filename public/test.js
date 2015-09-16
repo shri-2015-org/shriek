@@ -76,6 +76,9 @@ function userEnter(username, password) {
 }
 socket.on('user enter', function (data) {
   console.log('user enter', data);
+  if (data.status === 'ok') {
+    socket.username = data.user.username;
+  }
 });
 
 function userLeave() {

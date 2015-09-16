@@ -65,7 +65,7 @@ var ChannelComponent = function(socket, ChatComponent) {
 
     render: function () {
 
-      var className = 'list__item '+this.props.activeClass;
+      var className = 'list__item ' + this.props.activeClass;
 
       return (
         <li className={className}>

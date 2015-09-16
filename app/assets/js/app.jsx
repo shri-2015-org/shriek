@@ -24,7 +24,6 @@ var UserComponent = require('../../views/components/user.jsx')(socket);
     }
   });
 
-
   var ChatApp = React.createClass({
     render: function () {
       var profileUser;
@@ -64,16 +63,17 @@ var UserComponent = require('../../views/components/user.jsx')(socket);
     }
   });
 
-
-// askLogin component
+  // askLogin component
   var AskLogin = React.createClass({
+
     componentDidMount: function() {
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
           socket.username = username;
 
           // i believe, there's a better way
-          $('.modal').modal('hide');
+          //$('.modal').modal('hide');
+
         }
       });
     },
@@ -88,68 +88,59 @@ var UserComponent = require('../../views/components/user.jsx')(socket);
 
     handleLogin: function(e) {
       e.preventDefault();
-      var warning = $('.modal-body p');
-      var warningText = 'Please, fill all fields!';
+      //var warning = $('.modal-body p');
+      //var warningText = 'Please, fill all fields!';
 
       if (this.state != null && this.state.name && this.state.password) {
         socket.emit('user enter', {username: this.state.name, password: this.state.password});
+        $('.overflow').css("display", 'none');
       } else {
-        warning.css('color', 'red');
-        warning.text(warningText);
+        //warning.css('color', 'red');
+       // warning.text(warningText);
       }
     },
 
     render: function() {
 
-      var login_box;
+      var formAuth;
 
-      login_box = (
-        <div className='modal fade'>
-          <div className='modal-dialog'>
-            <div className='modal-content'>
-                <div className='modal-header'>
-                    <button type='button' className='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-                    <h4 className='modal-title'>Login</h4>
-                </div>
-                <div className='modal-body'>
-                    <p>Please, specify your name and password:</p>
-                    <form className="form-horizontal" onSubmit={this.handleLogin}>
-                      <div className="form-group">
-                        <label htmlFor="inputUsername" className="col-sm-2 control-label">Username</label>
-                        <div className="col-sm-10">
-                          <input onChange={this.handleNameChange} type="username" className="form-control" id="inputUsername" placeholder="Username"/>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="inputPassword" className="col-sm-2 control-label">Password</label>
-                        <div className="col-sm-10">
-                          <input onChange={this.handlePasswordChange} type="password" className="form-control" id="inputPassword" placeholder="Password"/>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <div className="col-sm-offset-2 col-sm-10">
-                          <button onClick={this.handleLogin} type="submit" className="btn btn-primary">Sign in</button>
-                        </div>
-                      </div>
-                    </form>
-                </div>
-            </div>
+      formAuth = (
+        <form className="auth" onSubmit={this.handleLogin}>
+          <div className="auth__row">
+            <label className="auth__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
+            <input className="auth__text" onChange={this.handleNameChange} type="username" id="inputUsername" placeholder="Username"/>
           </div>
-        </div>
+          <div className="auth__row">
+            <label className="auth__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
+            <input className="auth__text" onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
+          </div>
+          <button className="auth__sbmt" onClick={this.handleLogin} type="submit">Sign in</button>
+        </form>
       );
 
       return (
-        <div>
-          {login_box}
+        <div className="overflow">
+          {formAuth}
         </div>
+      );
+    }
+  });
+
+  var Content = React.createClass({
+    render: function() {
+      return (
+        <div className="layout">
+          <AskLogin />
+          <ChatApp />
+        </ div >
       );
     }
   });
 
   function render() {
     React.render(
-      <ChatApp/>,
-      document.getElementsByClassName('layout')[0]
+      <Content/>,
+      document.body
     );
   }
 

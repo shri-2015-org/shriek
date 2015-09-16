@@ -68,7 +68,7 @@ var UserComponent = require('../../views/components/user.jsx')(socket);
   var AskLogin = React.createClass({
 
     componentDidMount: function() {
-      $('.overflow').css("display", 'none');
+      // $('.overflow').css("display", 'none');
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
           socket.username = username;

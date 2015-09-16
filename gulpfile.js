@@ -29,37 +29,36 @@ var path = {
   DEST: 'public',
   DEST_BUILD: 'public',
   DEST_SRC: 'dist/assets',
-  ENTRY_POINT: 'app/assets/js/app.jsx'
+  ENTRY_POINT: 'app/assets/js/app.jsx',
+  BOWER_DIR: 'app/components'
 };
 
 
-gulp.task('default', ['bower','sass','build','watch']);
+gulp.task('default', ['bower', 'sass', 'build', 'watch']);
 
 // watch
 
-gulp.task('watch', function() {
-  gulp.watch([path.SASS_FILE,path.SASS_MODULES], ['sass']);
-  gulp.watch(['bower.json'],['bower']);
-  gulp.watch([path.ENTRY_POINT,path.REACT_COMPONENTS], ['build']);
+gulp.task('watch', function () {
+  gulp.watch([path.SASS_FILE, path.SASS_MODULES], ['sass']);
+  gulp.watch(['bower.json'], ['bower']);
+  gulp.watch([path.ENTRY_POINT, path.REACT_COMPONENTS], ['build']);
 });
 
 // wiredep (bower)
 
-gulp.task('bower', function () {
+gulp.task('bower', ['bowerInstall'], function () {
   gulp.src(path.HTML)
-    .pipe(wiredep({
-      directory: "app/components"
-    }))
-  .pipe(gulp.dest('public'));
+    .pipe(wiredep())
+    .pipe(gulp.dest('./public'));
 });
 
-gulp.task('bowerInstall', function() {
+gulp.task('bowerInstall', function () {
   return bower({ cmd: 'update'});
 });
 
 // react components
 
-gulp.task('build', function(){
+gulp.task('build', function (){
   browserify({
     entries: [path.ENTRY_POINT],
     transform: [reactify]
@@ -69,17 +68,29 @@ gulp.task('build', function(){
     .pipe(gulp.dest(path.DEST_BUILD));
 });
 
-// sass
+// fontawesome
 
-gulp.task('templates', function() {
-  return gulp.src('app/assets/css/modules/*.sass')
-  .pipe(concat('modules.sass'))
-  .pipe(gulp.dest('app/assets/css/'));
+gulp.task('icons', function () {
+  return gulp.src(path.BOWER_DIR + '/fontawesome/fonts/**.*')
+    .pipe(gulp.dest('./public/assets/fonts'));
 });
 
-gulp.task('sass', ['templates'], function() {
-  return sass('app/assets/css/modules.sass', { style: 'compressed' })
-  .pipe(prefix({ browsers: ['last 2 version'] }))
-  .pipe(rename('bundle.min.css'))
-  .pipe(gulp.dest('public/assets/css'));
+gulp.task('fontawesome', ['icons'], function () {
+  return gulp.src(path.BOWER_DIR + '/fontawesome/css/*.min.css')
+    .pipe(gulp.dest('./public/assets/css'));
+});
+
+// sass
+
+gulp.task('templates', function () {
+  return gulp.src('app/assets/css/modules/*.sass')
+    .pipe(concat('modules.sass'))
+    .pipe(gulp.dest('app/assets/css/'));
+});
+
+gulp.task('sass', ['fontawesome', 'templates'], function () {
+  return sass('app/assets/css/modules.sass', {style: 'compressed'})
+    .pipe(prefix({ browsers: ['last 2 version'] }))
+    .pipe(rename('bundle.min.css'))
+    .pipe(gulp.dest('./public/assets/css'));
 });

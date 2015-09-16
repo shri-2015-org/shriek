@@ -10,3 +10,5 @@ public/assets/js/.module-cache
 public/assets
 public/index.html
 .idea/
+
+config.json

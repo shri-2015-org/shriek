@@ -35,7 +35,7 @@ Yet another chat
     * js
 
 ## API
-### Описание событий
+### Description
 Все события отправляются с помощью `socket.io`. Если мы хотим получить данные то пишем:
 
 ```javascript
@@ -49,17 +49,18 @@ socket.on('<name-of-event>', function (data) {
 socket.emit('<name-of-event>', data);
 ```
 
-### Error Response
-*Успех*
+### Response
+
+##### Success
 
 ```json
 {
   "status": "ok",
-  "<data>" : {}
+  "<some-data>" : {}
 }
 ```
 
-*Ошибка*
+##### Failed
 
 ```json
 {
@@ -70,7 +71,9 @@ socket.emit('<name-of-event>', data);
 
 ### Events
 
-#### `user enter`
+##### `user enter`
+
+Вход/регистрация пользователя
 
 *Input* (`emit`)
 
@@ -92,7 +95,9 @@ socket.emit('<name-of-event>', data);
   * `User validation failed`
   * `Пользователь не найден`
 
-#### `user connected`
+##### `user connected`
+
+Пользователь подсоединился
 
 *Output* (`on`)
 
@@ -101,7 +106,9 @@ socket.emit('<name-of-event>', data);
 | status | String | Status of error |
 | user | Object | `user` object from DB (see schema) |
 
-#### `user leave`
+##### `user leave`
+
+Пользователь вышел
 
 *Input* (`emit`)
 
@@ -118,7 +125,9 @@ socket.emit('<name-of-event>', data);
 `error_message`:
   * `Пользователь еще не вошел`
 
-#### `user disconnected`
+##### `user disconnected`
+
+Отсоединение пользователя
 
 *Output* (`on`)
 
@@ -127,7 +136,9 @@ socket.emit('<name-of-event>', data);
 | status | String | Status of error |
 | user.username | String | Username |
 
-#### `user info`
+##### `user info`
+
+Получить информацию о пользователе
 
 *Input* (`emit`)
 
@@ -146,7 +157,9 @@ socket.emit('<name-of-event>', data);
   * `Пользователь должен войти`
   * `Пользователь не найден`
 
-#### `user list`
+##### `user list`
+
+Получить список пользователей
 
 *Input* (`emit`)
 
@@ -164,7 +177,9 @@ socket.emit('<name-of-event>', data);
   * `Пользователь должен войти`
   * `Пользователей не найдено`
 
-#### `user start typing`
+##### `user start typing`
+
+Пользователь начал печатать
 
 *Input* (`emit`)
 
@@ -182,7 +197,9 @@ socket.emit('<name-of-event>', data);
   * `Пользователь должен войти`
   * `Пользователь уже печатает`
 
-#### `user stop typing`
+##### `user stop typing`
+
+Пользователь закончил печатать
 
 *Input* (`emit`)
 
@@ -199,7 +216,9 @@ socket.emit('<name-of-event>', data);
 `error_message`:
   * `Пользователь должен начать печатать`
 
-#### `channel create`
+##### `channel create`
+
+Создание канала
 
 *Input* (`emit`)
 
@@ -217,7 +236,9 @@ socket.emit('<name-of-event>', data);
 `error_message`:
   * `Ошибка создания чата`
 
-#### `channel info`
+##### `channel info`
+
+Получение информации о канале
 
 *Input* (`emit`)
 
@@ -235,7 +256,9 @@ socket.emit('<name-of-event>', data);
 `error_message`:
   * `Ошибка получения чата`
 
-#### `channel list`
+##### `channel list`
+
+Получение списка каналов
 
 *Input* (`emit`)
 
@@ -252,7 +275,9 @@ socket.emit('<name-of-event>', data);
 `error_message`:
   * `Ошибка получения чата`
 
-#### `channel get`
+##### `channel get`
+
+Получить сообщения из канала
 
 *Input* (`emit`)
 
@@ -273,7 +298,9 @@ socket.emit('<name-of-event>', data);
 `error_message`:
   * `Ошибка получения сообщений`
 
-#### `message send`
+##### `message send`
+
+Отправить сообщение
 
 *Input* (`emit`)
 
@@ -296,7 +323,7 @@ socket.emit('<name-of-event>', data);
 
 ### Schema
 
-#### User
+##### User
 
 | Field | Type | Other |
 |-------|------ | -------|
@@ -310,7 +337,7 @@ socket.emit('<name-of-event>', data);
 
 `password` from 6 letters.
 
-#### Channel
+##### Channel
 
 | Field | Type | Other |
 |-------|------ | -------|
@@ -319,7 +346,7 @@ socket.emit('<name-of-event>', data);
 | created_at | ISODate | `default: now` |
 | updated_at | ISODate | `default: now` |
 
-#### Message
+##### Message
 
 | Field | Type | Other |
 |-------|------ | -------|
@@ -328,3 +355,17 @@ socket.emit('<name-of-event>', data);
 | text | String | `required` |
 | type | String | `required` |
 | created_at | ISODate | `default: now` |
+
+### Config
+
+Configuration file `config.json` example
+
+```json
+{
+  "port": 3000,
+  "mongoose": {
+    "uri": "mongodb://localhost/shriek"
+  }
+}
+
+```

@@ -18,8 +18,8 @@ var ChannelComponent = function(socket, ChatComponent) {
       socket.emit('channel list');
       socket.on('channel get', function (data) {
         console.log('change chat room');
-        console.log(ChatComponent);
-        ChatComponent({messages: data.messages});
+        // console.log(ChatComponent);
+        // ChatComponent({messages: data.messages});
       });
     },
 

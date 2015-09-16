@@ -71,6 +71,9 @@ var UserComponent = require('../../views/components/user.jsx')(socket);
         if (data.status == 'ok') {
           socket.username = username;
 
+          // Request for user list
+          socket.emit('user list');
+
           // i believe, there's a better way
           //$('.modal').modal('hide');
 

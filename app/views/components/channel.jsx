@@ -1,4 +1,4 @@
-var ChannelComponent = function(socket) {
+var ChannelComponent = function(socket, ChatComponent) {
 
   var ChannelsList = React.createClass({
     getInitialState: function () {
@@ -10,17 +10,23 @@ var ChannelComponent = function(socket) {
     componentDidMount: function () {
       var that = this;
       socket.on('channel list', function (data) {
+        if (socket.activeChannel == undefined) {
+          socket.activeChannel = 'general';
+        }
         that.setState({ channels: data.channels });
       });
       socket.emit('channel list');
       socket.on('channel get', function (data) {
         console.log('change chat room');
-        // React.ChatBox.setState({messages: data.messages});
+        // console.log(ChatComponent);
+        // ChatComponent({messages: data.messages});
       });
     },
 
     changeChannel: function(event) {
-      socket.emit('channel get', {channel: event.target.dataset.slug, date: new Date()});
+      socket.activeChannel = event.target.dataset.slug;
+      socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
+      socket.emit('channel list');
     },
     render: function () {
       var Channels = (<div>Loading channels...</div>);
@@ -28,7 +34,12 @@ var ChannelComponent = function(socket) {
 
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
-          return (<Channel channel={channel} changeChannel={that.changeChannel}/>);
+          if (channel.slug == socket.activeChannel) {
+            activeClass = 'active';
+          } else {
+            activeClass = '';
+          }
+          return (<Channel channel={channel} changeChannel={that.changeChannel} activeClass={activeClass}/>);
         });
       }
 
@@ -53,8 +64,11 @@ var ChannelComponent = function(socket) {
     },
 
     render: function () {
+
+      var className = 'list__item ' + this.props.activeClass;
+
       return (
-        <li className="list__item">
+        <li className={className}>
           <a className="name" onClick={this.clickHandler} data-slug={this.props.channel.slug}>{this.props.channel.name}</a>
         </li>
       );

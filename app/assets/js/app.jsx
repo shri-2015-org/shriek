@@ -6,7 +6,7 @@ var app = app || {};
 var ChatComponent = require('../../views/components/message.jsx')(socket);
 
 // CHANNEL LIST MODULE
-var ChannelComponent = require('../../views/components/channel.jsx')(socket);
+var ChannelComponent = require('../../views/components/channel.jsx')(socket, ChatComponent);
 
 // USERS LIST
 var UserComponent = require('../../views/components/user.jsx')(socket);
@@ -32,10 +32,10 @@ var UserComponent = require('../../views/components/user.jsx')(socket);
 
       profileUser = (
         <div className='profile'>
-          <div className="profile__out"><i className="fa fa-sign-out fa-2x"></i></div>
-            <div className="profile__tools"><i className="fa fa-cog fa-2x"></i></div>
+          <div className="profile__out"><i className="fa fa-power-off fa-lg"></i></div>
+            <div className="profile__tools"><i className="fa fa-cog fa-lg"></i></div>
             <div className="profile__img">
-            <img src="http://3.bp.blogspot.com/_TbnTJqaNl4U/SVVJ0Mhb4cI/AAAAAAAAANE/57QF4arMr-A/S220-s40/40x40falloutav-vb.gif"/>
+            <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/78/78acf20c6efa57fcadad137ff7ababb6f8210305_full.jpg"/>
           </div>
         </div>
       );
@@ -68,6 +68,7 @@ var UserComponent = require('../../views/components/user.jsx')(socket);
   var AskLogin = React.createClass({
 
     componentDidMount: function() {
+      // $('.overflow').css("display", 'none');
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
           socket.username = username;

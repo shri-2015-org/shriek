@@ -1,17 +1,19 @@
-# shriek
+# Shriek Chat
 Yet another chat
 
 # Build workflow (short)
-1. npm install
-2. gulp
+1. `npm install`
+2. `gulp`
 
 # Development workflow
 
 ## Собрать проект и смотреть на изменения файлов
-gulp
+
+`gulp`
 
 ## Стартовать ноду
-node .
+
+`node .`
 
 # Files structure
 * app — основное приложение
@@ -31,3 +33,298 @@ node .
   * assets
     * css
     * js
+
+## API
+### Описание событий
+Все события отправляются с помощью `socket.io`. Если мы хотим получить данные то пишем:
+
+```javascript
+socket.on('<name-of-event>', function (data) {
+  // work with 'data'
+});
+```
+Для отправки данных:
+
+```javascript
+socket.emit('<name-of-event>', data);
+```
+
+### Error Response
+*Успех*
+
+```json
+{
+  "status": "ok",
+  "<data>" : {}
+}
+```
+
+*Ошибка*
+
+```json
+{
+  "status": "error",
+  "error_message": "<Error message>"
+}
+```
+
+### Events
+
+#### `user enter`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| username | String | Username |
+| password | String | Password |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user | Object | `user` object from DB (see schema) |
+
+`error_message`:
+  * `Пользователь уже вошел`
+  * `Неверный пароль`
+  * `User validation failed`
+  * `Пользователь не найден`
+
+#### `user connected`
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user | Object | `user` object from DB (see schema) |
+
+#### `user leave`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user.username | String | Username |
+
+`error_message`:
+  * `Пользователь еще не вошел`
+
+#### `user disconnected`
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user.username | String | Username |
+
+#### `user info`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| username | String | Username |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user | Object | `user` object from DB (see schema) |
+
+`error_message`:
+  * `Пользователь должен войти`
+  * `Пользователь не найден`
+
+#### `user list`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| users | Array | array of `user` objects from DB (see schema) |
+
+`error_message`:
+  * `Пользователь должен войти`
+  * `Пользователей не найдено`
+
+#### `user start typing`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user.username | String | Username |
+
+`error_message`:
+  * `Пользователь должен войти`
+  * `Пользователь уже печатает`
+
+#### `user stop typing`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user.username | String | Username |
+
+`error_message`:
+  * `Пользователь должен начать печатать`
+
+#### `channel create`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| name | String | Название чата |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| channel | Object | `channel` object from DB (see schema) |
+
+`error_message`:
+  * `Ошибка создания чата`
+
+#### `channel info`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| slug | String | Слаг чата |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| channel | Object | `channel` object from DB (see schema) |
+
+`error_message`:
+  * `Ошибка получения чата`
+
+#### `channel list`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| channels | Array | array of `channel` objects from DB (see schema) |
+
+`error_message`:
+  * `Ошибка получения чата`
+
+#### `channel get`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| channel | String | Слаг канала |
+| limit | Integer | Кол-во сообщений |
+| skip | Integer | Начиная с какого |
+| date | ISODate | С какой даты |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| messages | Array | Array of `message` objects from DB (see schema) |
+
+`error_message`:
+  * `Ошибка получения сообщений`
+
+#### `message send`
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| username | String | Username |
+| text | String | Message |
+| channel | String | (optional) Slug of channel, default: `general` |
+| type | String | (optional) Type of message, default: `text` |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| message | Object | `message` object from DB (see schema) |
+
+`error_message`:
+  * `Ошибка создания сообщения`
+
+### Schema
+
+#### User
+
+| Field | Type | Other |
+|-------|------ | -------|
+| username | String | `required`, `unique` |
+| hashedPassword | String | `required` |
+| salt | String | `required` |
+| created_at | ISODate | `default: now` |
+| updated_at | ISODate | `default: now` |
+
+`username` from 5 to 29 letters. Only latin letters and underscore (`_`).
+
+`password` from 6 letters.
+
+#### Channel
+
+| Field | Type | Other |
+|-------|------ | -------|
+| name | String | `required` |
+| slug | String | `required`, `unique` |
+| created_at | ISODate | `default: now` |
+| updated_at | ISODate | `default: now` |
+
+#### Message
+
+| Field | Type | Other |
+|-------|------ | -------|
+| username | String | `required` |
+| channel | String | `required` |
+| text | String | `required` |
+| type | String | `required` |
+| created_at | ISODate | `default: now` |

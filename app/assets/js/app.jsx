@@ -1,4 +1,5 @@
 var app = app || {};
+// Если убираем test.js, то надо раскомментить
 // var socket = io();
 
 // CHAT MODULE

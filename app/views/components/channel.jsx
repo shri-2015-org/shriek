@@ -48,7 +48,7 @@ var ChannelComponent = function(socket, ChatComponent) {
         <div className="group">
           <div className="heading heading_group">
             <h3 className="heading__header">Каналы</h3>
-            <span className="heading__plus"><i class="fa fa-plus-square-o fa-lg"></i></span>
+            <span className="heading__plus"><i className="fa fa-plus-square-o fa-lg"></i></span>
           </div>
           <ul className="list list_channels">
             {Channels}

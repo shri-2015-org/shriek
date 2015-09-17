@@ -338,8 +338,16 @@ socket.emit('<name-of-event>', data);
 | salt | String | `required` |
 | created_at | ISODate | `default: now` |
 | updated_at | ISODate | `default: now` |
+| setting | Object | see below |
 
-`username` from 5 to 29 letters. Only latin letters and underscore (`_`).
+**settings**
+
+| Field | Type | Other |
+|-------|------ | -------|
+| email | String | Email |
+| image | String | Url of image |
+
+`username` from 5 to 29 letters. Only latin letters, figures and underscore (`_`).
 
 `password` from 6 letters.
 

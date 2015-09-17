@@ -53,11 +53,6 @@ var ChatComponent = function(socket) {
   var MessagesList = React.createClass({
     componentDidMount: function() {
       var msglist = $(React.findDOMNode(this.refs.msg_list));
-
-      // listener
-      $(window).on('resize', function() {
-        console.log('resized');
-      });
     },
 
     render: function () {
@@ -65,7 +60,7 @@ var ChatComponent = function(socket) {
 
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
-          return (<Message message={message} />);
+          return (<Message message={message} key={message._id}/>);
         });
       }
 

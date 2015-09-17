@@ -3,27 +3,30 @@ var LoginComponent = function(socket) {
 // askLogin component
   var AskLogin = React.createClass({
 
+    getInitialState: function() {
+      return {logged: false};
+    },
 
     componentDidMount: function() {
       var username;
       var storage = sessionStorage.key(0);
+      var overlay = React.findDOMNode(this.refs.overlay);
 
       if (storage != null) {
         socket.emit('user enter', {username: storage, password: sessionStorage.getItem(storage)});
-
-        $('.overflow').css("display", 'none');
+      } else {
+        $(overlay).css('visibility', 'visible');
       }
 
-      socket.on('user enter', function(data) {
+      socket.on('user enter', function(data,state) {
         if (data.status == 'ok') {
           socket.username = username;
           socket.emit('user list');
-          console.log(data.user);
           sessionStorage.setItem(data.user.username,data.user.hashedPassword);
+          $(overlay).attr('style','');
         }
       });
     },
-
 
     handleNameChange: function(e) {
       this.setState({name: e.target.value});
@@ -34,12 +37,11 @@ var LoginComponent = function(socket) {
     },
 
     handleLogin: function(e) {
-      e.preventDefault();
       if (this.state != null && this.state.name && this.state.password) {
         socket.emit('user enter', {username: this.state.name, password: this.state.password});
-        $('.overflow').css("display", 'none');
-      } else {
       }
+
+      return false;
     },
 
     render: function() {
@@ -61,7 +63,7 @@ var LoginComponent = function(socket) {
       );
 
       return (
-        <div className="overflow">
+        <div className="overflow" ref="overlay">
           {formAuth}
         </div>
       );

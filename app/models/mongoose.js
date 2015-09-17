@@ -63,8 +63,8 @@ User.methods.checkPassword = function(password) {
  return this.encryptPassword(password) === this.hashedPassword;
 };
 
-User.methods.checkHashedPassword = function(password) {
- return password === this.hashedPassword;
+User.methods.checkHashedPassword = function(hashedPassword) {
+ return hashedPassword === this.hashedPassword;
 };
 
 User.path('username').validate(function (v) {

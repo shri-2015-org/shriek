@@ -91,8 +91,7 @@ var channelModule = function(socket) {
   socket.on('channel get', function (data) {
 
     // строим запрос в БД
-
-    console.log(data);
+    var indata = data;
 
     var query = {
       channel: data.channel // канал нужно учитывать всегда
@@ -110,6 +109,7 @@ var channelModule = function(socket) {
       if (!err) {
         out.status = 'ok';
         out.messages = (data.length > 0?data:[]); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
+        out.slug = indata.channel;
       } else {
         out.status = 'error';
         out.error_message = 'Ошибка получения сообщений';

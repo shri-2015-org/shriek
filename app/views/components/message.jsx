@@ -12,14 +12,25 @@ var ChatComponent = function(socket) {
         var messagesAll = that.state.messages.slice();
         messagesAll.push(data.message);
         that.setState({ messages: messagesAll });
+        $(".msg__list").scrollTop(10000);
       });
-      socket.emit('channel get', {channel: 'general', date: new Date()});
+      socket.on('channel get', function (data) {
+        if (socket.activeChannel == undefined) {
+          socket.activeChannel = 'general';
+        } else {
+          socket.activeChannel = data.slug;
+        }
+        that.setState({messages: data.messages});
+        $(".msg__list").scrollTop(10000);
+      });
+
+      socket.emit('channel get', {channel: 'general', date: new Date(), limit: 100, offset: 0});
     },
 
     submitMessage: function (text, callback) {
       var message = {
         username: socket.username,
-        channel: 'general',
+        channel: socket.activeChannel,
         text: text,
         type: 'text'
       };
@@ -48,7 +59,7 @@ var ChatComponent = function(socket) {
       }
 
       return (
-        <div className="msg__list">
+        <div className="msg__list" ref="msglist">
           {Messages}
         </div>
       );

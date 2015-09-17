@@ -8,15 +8,18 @@ var ChatComponent = function(socket) {
 
     componentDidMount: function () {
       var that = this;
+
       socket.on('message send', function (data) {
         var messagesAll = that.state.messages.slice();
         messagesAll.push(data.message);
         that.setState({ messages: messagesAll });
       });
       socket.emit('channel get', {channel: 'general', date: new Date()});
+
     },
 
     submitMessage: function (text, callback) {
+
       var message = {
         username: socket.username,
         channel: 'general',
@@ -38,6 +41,15 @@ var ChatComponent = function(socket) {
   });
 
   var MessagesList = React.createClass({
+    componentDidMount: function() {
+      var msglist = $(React.findDOMNode(this.refs.msg_list));
+
+      // listener
+      $(window).on('resize', function() {
+        console.log('resized');
+      });
+    },
+
     render: function () {
       var Messages = (<div>Loading messages...</div>);
 
@@ -48,10 +60,11 @@ var ChatComponent = function(socket) {
       }
 
       return (
-        <div className="msg__list">
+        <div className="msg__list" ref="msg_list">
           {Messages}
         </div>
       );
+
     }
   });
 
@@ -79,6 +92,7 @@ var ChatComponent = function(socket) {
         submitButton.innerHTML = 'Post message';
         submitButton.removeAttribute('disabled');
       });
+
     },
 
     render: function () {

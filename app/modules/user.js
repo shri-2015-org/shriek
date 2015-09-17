@@ -1,5 +1,4 @@
-var mongoose = require('../models/mongoose');
-var UserModel = mongoose.UserModel;
+var UserModel = require('../models/user');
 
 var userModule = function(socket) {
 

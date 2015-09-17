@@ -18,6 +18,7 @@ var LoginComponent = function(socket) {
         if (data.status == 'ok') {
           socket.username = username;
           socket.emit('user list');
+          socket.emit('user info', {username: socket.username});
           console.log(data.user);
           sessionStorage.setItem(data.user.username,data.user.hashedPassword);
         }

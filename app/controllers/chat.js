@@ -3,16 +3,22 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
+var mongoose = require('mongoose');
 var config = require('../configs/config');
 var port = config.get('port') || 3000;
 
-var mongoose = require('../models/mongoose');
-var UserModel = mongoose.UserModel;
-var ChannelModel = mongoose.ChannelModel;
-var MessageModel = mongoose.MessageModel;
-
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
+
+  mongoose.connect(config.get('mongoose:uri'));
+  var db = mongoose.connection;
+
+  db.on('error', function (err) {
+    console.error('Connection error:', err.message);
+  });
+  db.once('open', function callback () {
+    console.info('Connected to DB!');
+  });
 });
 
 // Routing

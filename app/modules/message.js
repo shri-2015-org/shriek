@@ -1,5 +1,4 @@
-var mongoose = require('../models/mongoose');
-var MessageModel = mongoose.MessageModel;
+var MessageModel = require('../models/message');
 
 var messageModule = function(socket) {
 

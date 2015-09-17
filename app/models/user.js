@@ -1,16 +1,5 @@
 var mongoose = require('mongoose');
-var crypto =require('crypto');
-var config = require('../configs/config');
-
-mongoose.connect(config.get('mongoose:uri'));
-var db = mongoose.connection;
-
-db.on('error', function (err) {
-  console.error('Connection error:', err.message);
-});
-db.once('open', function callback () {
-  console.info('Connected to DB!');
-});
+var crypto = require('crypto');
 
 var Schema = mongoose.Schema;
 
@@ -35,6 +24,15 @@ var User = new Schema({
   updated_at: {
     type: Date,
     default: Date.now
+  },
+  setting: {
+    email: {
+      type: String
+    },
+    image: {
+      type: String,
+      default: "http://media.steampowered.com/steamcommunity/public/images/avatars/78/78acf20c6efa57fcadad137ff7ababb6f8210305_full.jpg"
+    }
   }
 });
 
@@ -60,11 +58,11 @@ User
   });
 
 User.methods.checkPassword = function(password) {
- return this.encryptPassword(password) === this.hashedPassword;
+  return this.encryptPassword(password) === this.hashedPassword;
 };
 
-User.methods.checkHashedPassword = function(password) {
- return password === this.hashedPassword;
+User.methods.checkHashedPassword = function(hashedPassword) {
+  return hashedPassword === this.hashedPassword;
 };
 
 User.path('username').validate(function (v) {
@@ -83,54 +81,4 @@ User.path('hashedPassword').validate(function(v) {
   }
 }, null);
 
-var Channel = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  created_at: {
-    type: Date,
-    default: Date.now
-  },
-  updated_at: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-var Message = new Schema({
-  username: {
-    type: String,
-    required: true
-  },
-  channel: {
-    type: String,
-    required: true
-  },
-  text: {
-    type: String,
-    required: true
-  },
-  type: {
-    type: String,
-    required: true
-  },
-  created_at: {
-    type: Date,
-    default: Date.now
-  },
-  attachments: {}
-});
-
-var UserModel = mongoose.model('User', User);
-var ChannelModel = mongoose.model('Channel', Channel);
-var MessageModel = mongoose.model('Message', Message);
-
-module.exports.UserModel = UserModel;
-module.exports.ChannelModel = ChannelModel;
-module.exports.MessageModel = MessageModel;
+module.exports = mongoose.model('User', User);

@@ -1,7 +1,6 @@
-var mongoose = require('../models/mongoose');
 var slugify = require('transliteration').slugify;
-var ChannelModel = mongoose.ChannelModel;
-var MessageModel = mongoose.MessageModel;
+var ChannelModel = require('../models/channel');
+var MessageModel = require('../models/message');
 
 var channelModule = function(socket) {
 

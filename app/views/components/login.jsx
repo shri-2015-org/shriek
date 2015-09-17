@@ -10,6 +10,7 @@ var LoginComponent = function(socket) {
 
       if (storage != null) {
         socket.emit('user enter', {username: storage, password: sessionStorage.getItem(storage)});
+
         $('.overflow').css("display", 'none');
       }
 

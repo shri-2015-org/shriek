@@ -27,6 +27,7 @@ var ChannelComponent = function(socket, ChatComponent) {
       socket.activeChannel = event.target.dataset.slug;
       socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
       socket.emit('channel list');
+      console.log(socket.activeChannel);
     },
     render: function () {
       var Channels = (<div>Loading channels...</div>);

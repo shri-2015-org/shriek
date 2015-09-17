@@ -60,7 +60,7 @@ User
   });
 
 User.methods.checkPassword = function(password) {
- return this.encryptPassword(password) || password === this.hashedPassword;
+ return this.encryptPassword(password) === this.hashedPassword || password === this.hashedPassword;
 };
 
 User.path('username').validate(function (v) {

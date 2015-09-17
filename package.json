@@ -33,6 +33,9 @@
     "transliteration": "^0.1.1",
     "vinyl-fs": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "wiredep": "^3.0.0-beta"
+    "wiredep": "^3.0.0-beta",
+    "mocha": "*",
+    "chai": "*",
+    "socket.io-client": "*"
   }
 }

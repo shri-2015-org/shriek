@@ -26,6 +26,9 @@ var userModule = function(socket) {
         if (doc.checkPassword(password)) {
           out.status = 'ok';
           out.user = doc;
+        } else if (doc.checkHashedPassword(password)) {
+          out.status = 'ok';
+          out.user = doc;
         } else {
           out.status = 'error';
           out.error_message = 'Неверный пароль';

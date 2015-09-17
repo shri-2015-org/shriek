@@ -63,6 +63,10 @@ User.methods.checkPassword = function(password) {
  return this.encryptPassword(password) === this.hashedPassword;
 };
 
+User.methods.checkHashedPassword = function(password) {
+ return password === this.hashedPassword;
+};
+
 User.path('username').validate(function (v) {
   return v.length > 4 && v.length < 30 && !/[^a-z_\w]+/i.test(v)
 }, 'Никнейм не прошел валидацию');

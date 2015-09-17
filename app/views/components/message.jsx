@@ -8,6 +8,7 @@ var ChatComponent = function(socket) {
 
     componentDidMount: function () {
       var that = this;
+
       socket.on('message send', function (data) {
         var messagesAll = that.state.messages.slice();
         messagesAll.push(data.message);
@@ -28,6 +29,7 @@ var ChatComponent = function(socket) {
     },
 
     submitMessage: function (text, callback) {
+
       var message = {
         username: socket.username,
         channel: socket.activeChannel,
@@ -49,6 +51,15 @@ var ChatComponent = function(socket) {
   });
 
   var MessagesList = React.createClass({
+    componentDidMount: function() {
+      var msglist = $(React.findDOMNode(this.refs.msg_list));
+
+      // listener
+      $(window).on('resize', function() {
+        console.log('resized');
+      });
+    },
+
     render: function () {
       var Messages = (<div>Loading messages...</div>);
 
@@ -63,6 +74,7 @@ var ChatComponent = function(socket) {
           {Messages}
         </div>
       );
+
     }
   });
 
@@ -90,6 +102,7 @@ var ChatComponent = function(socket) {
         submitButton.innerHTML = 'Post message';
         submitButton.removeAttribute('disabled');
       });
+
     },
 
     render: function () {

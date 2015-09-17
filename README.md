@@ -15,6 +15,12 @@ Yet another chat
 
 `node .`
 
+## Тестирование сервера
+
+1. Установите глобально Mocha: `npm install -g mocha`
+2. Стартоните приложение: `node .`
+3. В другом окне консоли запустите тесты: `mocha`
+
 # Files structure
 * app — основное приложение
   * assets

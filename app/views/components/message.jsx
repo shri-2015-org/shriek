@@ -43,7 +43,11 @@ var ChatComponent = function(socket) {
     render: function() {
       return (
         <div className="msg">
-          <MessagesList messages={this.state.messages}/>
+          <div className="msg__wrap">
+            <div className="msg__body">
+            <MessagesList messages={this.state.messages}/>
+            </div>
+          </div>
           <MessageForm submitMessage={this.submitMessage}/>
         </div>
       );

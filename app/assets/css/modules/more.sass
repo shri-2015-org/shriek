@@ -1,13 +1,20 @@
 .more
   margin: 15px 0 0 0
   padding: 0 30px
+  user-select: none
 
   &:hover
     background: transparent
   &:before
-    content: none
+    content: ""
+    position: absolute
+    right: -10px
+    border-width: 12px 10px
+    border-color: transparent #2c2c2c transparent transparent
+    border-style: solid
+    display: none
 
-.more span
+.more > span
   border-bottom: 1px dotted rgba(255,255,255,0.2)
   font-size: 14px
   padding-bottom: 2px
@@ -16,3 +23,10 @@
 
   &:hover
     opacity: 1
+
+.active_list + .drop-box
+  visibility: visible
+
+.active_list
+  &:before
+    display: block

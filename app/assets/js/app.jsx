@@ -9,7 +9,7 @@ var ChatComponent = require('../../views/components/message.jsx')(socket);
 var ChannelComponent = require('../../views/components/channel.jsx')(socket, ChatComponent);
 
 // USERS LIST
-var UserComponent = require('../../views/components/user.jsx')(socket);
+var UserComponent = require('../../views/components/userlist.jsx')(socket);
 
 // LOGIN MODULE
 var LoginComponent = require('../../views/components/login.jsx')(socket);

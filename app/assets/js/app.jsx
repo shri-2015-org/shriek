@@ -14,8 +14,11 @@ var UserComponent = require('../../views/components/userlist.jsx')(socket);
 // LOGIN MODULE
 var LoginComponent = require('../../views/components/login.jsx')(socket);
 
-// LOGIN MODULE
+// PROFILE MODULE
 var ProfileComponent = require('../../views/components/profile.jsx')(socket);
+
+// SETTING MODULE
+var SettingComponent = require('../../views/components/setting.jsx')(socket);
 
 (function () {
   'use strict';
@@ -62,6 +65,7 @@ var ProfileComponent = require('../../views/components/profile.jsx')(socket);
     render: function() {
       return (
         <div className="layout">
+          <SettingComponent />
           <LoginComponent />
           <ChatApp />
         </ div >

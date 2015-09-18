@@ -149,6 +149,41 @@ var userModule = function(socket) {
   });
 
   /**
+   * Update user information
+   * @param data
+   * @param data.username Username
+   * @param data.setting Object:
+   *        email
+   *        image
+   */
+  socket.on('user update', function (data) {
+    var out = {};
+
+    if (socket.username === undefined) {
+      return socket.emit('user update', {
+        status: 'error',
+        error_message: 'Пользователь должен войти'
+      });
+    }
+
+    UserModel.findOneAndUpdate(
+      {username: socket.username},
+      {setting: data.setting},
+      function (err, user) {
+        if (!err && user) {
+          out.status = 'ok';
+          out.user = user;
+        } else {
+          out.status = 'error';
+          out.error_message = 'Пользователь не найден';
+        }
+        socket.emit('user update', out);
+      }
+    );
+
+  });
+
+  /**
    * when the client emits 'typing', we broadcast it to others
    * @param  data
    */

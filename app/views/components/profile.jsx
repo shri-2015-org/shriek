@@ -19,7 +19,7 @@ var ProfileComponent = function(socket) {
     },
 
     handleSettingOpen: function (e) {
-      console.log('open setting');
+      window.dispatchEvent(new Event('openSetting'));
     },
 
     render: function() {

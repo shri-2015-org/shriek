@@ -2,6 +2,13 @@ var SettingComponent = function(socket) {
 
   var SettingBlock = React.createClass({
 
+    getInitialState: function() {
+      return {
+        email: '',
+        image: ''
+      };
+    },
+
     componentDidMount: function() {
       var that = this;
       var username;
@@ -14,15 +21,16 @@ var SettingComponent = function(socket) {
       socket.on('user info', function (data) {
         if (data.status === 'ok') {
           that.setState({
-            image: data.user.setting.image,
-            email: data.user.setting.email
-          })
+            email: data.user.setting.email,
+            image: data.user.setting.image
+          });
         }
       });
 
       socket.on('user update', function (data) {
         if (data.status == 'ok') {
           socket.emit('user info', {username: data.user.username});
+          that.handleClose();
         }
       });
     },
@@ -36,7 +44,9 @@ var SettingComponent = function(socket) {
     },
 
     handleSave: function(e) {
-      if (this.state != null && (this.state.email || this.state.image)) {
+      e.preventDefault();
+      if (this.state != null) {
+      console.log(this.state);
         socket.emit('user update', {
           username: socket.username,
           setting: {
@@ -45,8 +55,6 @@ var SettingComponent = function(socket) {
           }
         });
       }
-
-      return false;
     },
 
     handleClose: function(e) {

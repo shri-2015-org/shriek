@@ -25,7 +25,6 @@ var LoginComponent = function(socket) {
 
           // Load info about current user
           socket.emit('user info', {username: socket.username});
-          console.log(data.user);
 
           sessionStorage.setItem(data.user.username,data.user.hashedPassword);
           $(overlay).attr('style','');

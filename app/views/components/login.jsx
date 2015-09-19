@@ -4,8 +4,7 @@ var LoginComponent = function(socket) {
   var AskLogin = React.createClass({
 
     getInitialState: function() {
-      var state;
-      sessionStorage.key(0) ? state = true : state = false
+      var state = Boolean(sessionStorage.key(0));
 
       return {
         logged: state
@@ -15,7 +14,7 @@ var LoginComponent = function(socket) {
     componentDidMount: function() {
       var username;
       var storage = sessionStorage.key(0);
-      var component = this;
+      var _this = this;
 
       if (storage != null) {
         socket.emit('user enter', {
@@ -26,12 +25,14 @@ var LoginComponent = function(socket) {
 
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
-          socket.username = username;
-          socket.emit('user list');
-
-          component.setState({
+          _this.setState({
             logged: true
           });
+
+          socket.username = username;
+
+          socket.emit('user list');
+          socket.emit('channel list');
 
           // Load info about current user
           socket.emit('user info', {username: socket.username});
@@ -65,13 +66,13 @@ var LoginComponent = function(socket) {
               <form className="auth" onSubmit={this.handleLogin}>
                 <div className="auth__row">
                   <label className="auth__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
-                  <input className="auth__text" onChange={this.handleNameChange} type="username" id="inputUsername" placeholder="Username"/>
+                  <input className="auth__text" onChange={this.handleNameChange} type="username" id="inputUsername" placeholder="Username" />
                 </div>
                 <div className="auth__row">
                   <label className="auth__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
                   <input className="auth__text" onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
                 </div>
-                <button className="auth__sbmt" onClick={this.handleLogin} type="submit">Sign in</button>
+                <button className="auth__sbmt" type="submit">Sign in</button>
               </form>
             </div>
           )}

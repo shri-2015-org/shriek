@@ -73,7 +73,6 @@ var ChatComponent = function(socket) {
           {Messages}
         </div>
       );
-
     }
   });
 
@@ -108,7 +107,7 @@ var ChatComponent = function(socket) {
       return (
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit}>
-            <input className="send__text" name="text" ref="text" placeholder="Сообщение" required />
+            <input className="send__text" name="text" ref="text" placeholder="Сообщение" autoFocus required />
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>

@@ -2,20 +2,20 @@ var UserComponent = function(socket) {
   var Users;
 
   var UsersList = React.createClass({
-    getInitialState: function () {
+    getInitialState: function() {
       return {
         users: []
       };
     },
 
-    componentDidMount: function () {
+    componentDidMount: function() {
       var that = this;
-      socket.on('user list', function (data) {
+
+      socket.on('user list', function(data) {
         if (data.status === 'ok') {
-          that.setState({users: data.users})
+          that.setState({users: data.users});
         }
       });
-      // socket.emit('user list');
     },
 
     render: function() {
@@ -24,13 +24,15 @@ var UserComponent = function(socket) {
       var that = this;
 
       if (this.state.users) {
-        Users = this.state.users.map(function (user) {
+        Users = this.state.users.map(function(user) {
           var currentUser = '';
+
           if (socket.username === user.username) {
             currentUser = 'list__item_active';
           }
+
           return (<User key={user._id} user={user} current={currentUser} />);
-        })
+        });
       }
 
       return (
@@ -52,6 +54,7 @@ var UserComponent = function(socket) {
   var User = React.createClass({
     render: function() {
       var className = 'list__item ' + this.props.current;
+
       return (
         <li className={className}>
           <a className="name">{this.props.user.username}</a>
@@ -61,41 +64,40 @@ var UserComponent = function(socket) {
   });
 
   var UsersFullList = React.createClass({
+    componentDidMount: function() {
+      var dropBox = React.findDOMNode(this.refs.dropBox);
+      var OFFSET = 30;
+      var geometry = dropBox.getBoundingClientRect();
 
-      componentDidMount: function(){
-        var dropBox = React.findDOMNode(this.refs.dropBox);
-        var OFFSET = 30;
-        var geometry = dropBox.getBoundingClientRect();
+      var height = window.innerHeight - geometry.top - dropBox.offsetHeight;
+      dropBox.style.top = (height > 0 ? geometry.top : geometry.top + height) - OFFSET + 'px';
+    },
 
-        var height = window.innerHeight - geometry.top - dropBox.offsetHeight;
-        dropBox.style.top = (height > 0 ? geometry.top : geometry.top + height) - OFFSET + 'px';
-      },
+    handleClick: function() {
+      $(React.findDOMNode(this.refs.dropBox)).prev().toggleClass('active_list');
+    },
 
-      handleClick: function() {
-          $(React.findDOMNode(this.refs.dropBox)).prev().toggleClass('active_list');
-      },
-
-      render: function() {
-        return (
-          <div className="drop-box" ref="dropBox">
-            <div className="drop-box__wrap">
-              <div className="heading heading_group heading_dropdown">
-                <h3 className="heading__header">Полный список</h3>
-                <span className="heading__plus"><i className="fa fa-times" ref="dropBoxClose" onClick={this.handleClick}></i></span>
-              </div>
-              <ul className="list list_users list_dropdown">
-                {Users}
-              </ul>
+    render: function() {
+      return (
+        <div className="drop-box" ref="dropBox">
+          <div className="drop-box__wrap">
+            <div className="heading heading_group heading_dropdown">
+              <h3 className="heading__header">Полный список</h3>
+              <span className="heading__plus"><i className="fa fa-times" ref="dropBoxClose" onClick={this.handleClick}></i></span>
             </div>
+            <ul className="list list_users list_dropdown">
+              {Users}
+            </ul>
           </div>
-        );
-      }
+        </div>
+      );
+    }
   });
 
   var MoreUsers = React.createClass({
 
-    handleClick: function(){
-       $(React.findDOMNode(this.refs.moreUsers)).toggleClass("active_list");
+    handleClick: function() {
+      $(React.findDOMNode(this.refs.moreUsers)).toggleClass("active_list");
     },
 
     render: function() {

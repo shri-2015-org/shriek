@@ -65,25 +65,25 @@ var SettingComponent = function(socket) {
       var formSetting;
 
       formSetting = (
-        <form className="auth" onSubmit={this.handleSave}>
-          <div className="auth__row">
-            <label className="auth__label" htmlFor="inputEmail"><i className="fa fa-envelope-o"></i></label>
-            <input className="auth__text" onChange={this.handleEmailChange} type="email" id="inputEmail" placeholder="Email" value={this.state.email} />
+        <form className="form modal__body" onSubmit={this.handleSave}>
+          <div className="form__row">
+            <label className="form__label" htmlFor="inputEmail"><i className="fa fa-envelope-o"></i></label>
+            <input className="form__text" onChange={this.handleEmailChange} type="email" id="inputEmail" placeholder="Email" value={this.state.email} />
           </div>
-          <div className="auth__row">
-            <label className="auth__label" htmlFor="inputImage"><i className="fa fa-picture-o"></i></label>
-            <input className="auth__text" onChange={this.handleImageChange} type="url" id="inputImage" placeholder="Url of Image" value={this.state.image} />
+          <div className="form__row">
+            <label className="form__label" htmlFor="inputImage"><i className="fa fa-picture-o"></i></label>
+            <input className="form__text" onChange={this.handleImageChange} type="url" id="inputImage" placeholder="Url of Image" value={this.state.image} />
           </div>
-          <button className="auth__sbmt" onClick={this.handleSave} type="submit">Update</button>
+          <button className="btn" onClick={this.handleSave} type="submit">Update</button>
           <span> </span>
-          <button className="auth__sbmt" onClick={this.handleClose} type="button">Close</button>
+          <button className="btn" onClick={this.handleClose} type="button">Close</button>
         </form>
       );
 
       return (
       <div>
         {this.state.opened == true && (
-        <div className="overflow" ref="overlaySetting">
+        <div className="modal" ref="overlaySetting">
             {formSetting}
         </div>
         )}

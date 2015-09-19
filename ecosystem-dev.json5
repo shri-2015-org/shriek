@@ -4,8 +4,7 @@
     {
       name      : "Shriek-dev",
       script    : "index.js",
-      instances : "1",
-      cwd: "/home/shriek/projects/dev"
+      cwd: "/home/shriek/projects/dev/source"
     }
 
   ]

@@ -28,11 +28,12 @@ var UserComponent = function(socket) {
           var currentUser = '';
 
           if (socket.username === user.username) {
-            currentUser = 'list__item_active';
+            currentUser = 'active';
           }
 
           return (<User key={user._id} user={user} current={currentUser} />);
-        });
+        })
+        console.log(Users);
       }
 
       return (
@@ -41,6 +42,7 @@ var UserComponent = function(socket) {
             <h3 className="heading__header">Пользователи</h3>
           </div>
           <ul className="list list_users">
+
             {Users.slice(0,3)}
           </ul>
           <MoreUsers/>
@@ -48,19 +50,18 @@ var UserComponent = function(socket) {
         </div>
       );
     }
-
   });
 
   var User = React.createClass({
-    render: function() {
-      var className = 'list__item ' + this.props.current;
+      render: function() {
+        var className = 'list__item ' + this.props.current;
 
-      return (
-        <li className={className}>
-          <a className="name">{this.props.user.username}</a>
-        </li>
-      );
-    }
+        return (
+          <li className={className}>
+            <a className="name">{this.props.user.username}</a>
+          </li>
+        );
+      }
   });
 
   var UsersFullList = React.createClass({
@@ -95,17 +96,15 @@ var UserComponent = function(socket) {
   });
 
   var MoreUsers = React.createClass({
-
     handleClick: function() {
       $(React.findDOMNode(this.refs.moreUsers)).toggleClass("active_list");
     },
 
     render: function() {
-      var len = Users.length;
       var that = this;
       return (
         <div className="more" ref="moreUsers" onClick={that.handleClick}>
-          <span>Показать +{len}</span>
+          <span>Показать все</span>
         </div>
       );
     }

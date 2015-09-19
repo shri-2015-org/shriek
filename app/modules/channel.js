@@ -21,7 +21,7 @@ var channelModule = function(socket) {
 
       var out = {};
 
-      if ( ! err) {
+      if (!err) {
         out.status = 'ok';
         out.channel = data; // здесь будет запись из БД со всеми полями (см схему)
       } else {
@@ -46,7 +46,7 @@ var channelModule = function(socket) {
     ChannelModel.findOne({ slug: data.slug }, function(err, data) {
       var out = {};
 
-      if ( ! err) {
+      if (!err) {
         out.status = 'ok';
         out.channel = data;
       } else {
@@ -66,7 +66,7 @@ var channelModule = function(socket) {
   socket.on('channel list', function() {
     ChannelModel.find(function(err, data) {
       var out = {};
-      if ( ! err) {
+      if (!err) {
         out.status = 'ok';
         out.channels = data;
       } else {
@@ -106,7 +106,7 @@ var channelModule = function(socket) {
     q.exec(function(err, data) { // выполняем запрос
       var out = {};
 
-      if ( ! err) {
+      if (!err) {
         out.status = 'ok';
         out.messages = (data.length > 0?data:[]); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
         out.slug = indata.channel;

@@ -46,6 +46,7 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
           socket.emit('user info', {username: socket.username});
           sessionStorage.setItem(data.user.username,data.user.hashedPassword);
         } else {
+          console.log(data);
           component.setState({error: data.error_message});
         }
       });

@@ -51,9 +51,13 @@ var userModule = function(socket) {
             out.user = saved_data;
           } else {
             out.status = 'error';
-            if (err.errors.password || err.errors.password) {
+            if (err.errors.user && err.errors.password) {
               // Validation failed
-              out.error_message = 'Not enough symbols';
+              out.error_message = 'not enough symbols';
+            } else if (err.errors.user) {
+              out.error_message = err.errors.user.message;
+            } else if (err.errors.password) {
+              out.error_message = err.errors.password.message;
             } else {
               out.error_message = 'Пользователь не найден';
             }

@@ -1,7 +1,7 @@
-var ChannelsStore = require('./../../stores/ChannelsStore'); // подключаем стор
-var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
+var ChannelComponent = function(socket) {
 
-var ChannelComponent = function(socket, ChatComponent) {
+var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
+var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
 
   var ChannelsList = React.createClass({
     getInitialState: function () {
@@ -15,7 +15,7 @@ var ChannelComponent = function(socket, ChatComponent) {
     },
 
     componentWillUnmount() {
-      LocationStore.unlisten(this.onChange); // отписываемся от изменений store
+      ChannelsStore.unlisten(this.onChange); // отписываемся от изменений store
     },
 
     // эта функция выполняется когда store триггерит изменения внутри себя
@@ -26,7 +26,6 @@ var ChannelComponent = function(socket, ChatComponent) {
     changeChannel: function(event) {
       socket.activeChannel = event.target.dataset.slug;
       socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
-      socket.emit('channel list');
     },
     render: function () {
       var Channels = (<div>Loading channels...</div>);
@@ -34,12 +33,12 @@ var ChannelComponent = function(socket, ChatComponent) {
 
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
-          if (channel.slug == socket.activeChannel) {
-            activeClass = 'active';
-          } else {
-            activeClass = '';
-          }
-          return (<Channel channel={channel} changeChannel={that.changeChannel} activeClass={activeClass}/>);
+          // if (channel.slug == socket.activeChannel) {
+            // activeClass = 'active';
+          // } else {
+            // activeClass = '';
+          // }
+          return (<Channel channel={channel} changeChannel={that.changeChannel}/>);
         });
       }
 
@@ -65,7 +64,7 @@ var ChannelComponent = function(socket, ChatComponent) {
 
     render: function () {
 
-      var className = 'list__item ' + this.props.activeClass;
+      var className = 'list__item ' + (this.props.channel.isActive?'active':'');
 
       return (
         <li className={className}>

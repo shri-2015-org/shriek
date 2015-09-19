@@ -22,6 +22,8 @@ var path = {
   HTML: 'app/views/layouts/index.html',
   MINIFIED_OUT: 'assets/js/components.min.js',
   REACT_COMPONENTS: 'app/views/components/*.jsx',
+  ALT_ACTIONS: 'app/actions/*.js',
+  ALT_STORES: 'app/stores/*.js',
   OUT: 'app/assets/js/components.js',
   SASS_FILE: 'app/assets/css/*.sass',
   SASS_MODULES: 'app/assets/css/modules/*.sass',

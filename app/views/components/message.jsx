@@ -1,31 +1,25 @@
+var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
+var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
+
 var ChatComponent = function(socket) {
   var ChatBox = React.createClass({
     getInitialState: function () {
-      return {
-        messages: []
-      };
+      return MessagesStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
     },
 
     componentDidMount: function () {
-      var that = this;
+      MessagesStore.listen(this.onChange); // подписываемся на изменения store
+      MessagesActions.initMessages(socket);
+      MessagesActions.getMessages(socket);
+    },
 
-      socket.on('message send', function (data) {
-        var messagesAll = that.state.messages.slice();
-        messagesAll.push(data.message);
-        that.setState({ messages: messagesAll });
-        $(".msg__list").scrollTop(10000);
-      });
-      socket.on('channel get', function (data) {
-        if (socket.activeChannel == undefined) {
-          socket.activeChannel = 'general';
-        } else {
-          socket.activeChannel = data.slug;
-        }
-        that.setState({messages: data.messages});
-        $(".msg__list").scrollTop(10000);
-      });
+    componentWillUnmount() {
+      MessagesStore.unlisten(this.onChange); // отписываемся от изменений store
+    },
 
-      socket.emit('channel get', {channel: 'general', date: new Date(), limit: 100, offset: 0});
+    // эта функция выполняется когда store триггерит изменения внутри себя
+    onChange(state) {
+      this.setState(state);
     },
 
     submitMessage: function (text, callback) {
@@ -38,6 +32,7 @@ var ChatComponent = function(socket) {
       };
       socket.emit('message send', message);
       callback();
+
     },
 
     render: function() {

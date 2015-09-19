@@ -6,15 +6,20 @@ var ChannelsActions = alt_obj.createActions({
   updateChannels: function (channels) {  // на эту функцию мы будем подписываться в сторе
     this.dispatch(channels); // это блин ТРИГГЕР, на который реагирует стор
   },
+  setActiveChannel: function (channelSlug) {
+    this.dispatch(channelSlug);
+  },
 
   initChannels: function(socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var that = this;
     socket.on('channel list', function (data) {
-      if (socket.activeChannel == undefined) {
-        socket.activeChannel = 'general';
-      }
-      that.actions.updateChannels(data.channels); // получили данные и передали в функцию, которая умеет триггерить стор
+      that.actions.updateChannels(data); // получили данные и передали в функцию, которая умеет триггерить стор
     });
+    socket.on('channel get', function (data) {
+      that.actions.setActiveChannel(data.slug);
+    });
+
+
   },
 
   getChannels: function(socket) {

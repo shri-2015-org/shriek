@@ -6,7 +6,7 @@ var app = app || {};
 var ChatComponent = require('../../views/components/message.jsx')(socket);
 
 // CHANNEL LIST MODULE
-var ChannelComponent = require('../../views/components/channel.jsx')(socket, ChatComponent);
+var ChannelComponent = require('../../views/components/channel.jsx')(socket);
 
 // USERS LIST
 var UserComponent = require('../../views/components/userlist.jsx')(socket);

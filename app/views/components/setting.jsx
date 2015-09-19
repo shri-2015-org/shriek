@@ -5,17 +5,17 @@ var SettingComponent = function(socket) {
     getInitialState: function() {
       return {
         email: '',
-        image: ''
+        image: '',
+        opened: false
       };
     },
 
     componentDidMount: function() {
       var that = this;
       var username;
-      var overlaySetting = React.findDOMNode(this.refs.overlaySetting);
 
       window.addEventListener('openSetting', function () {
-        $(overlaySetting).css('visibility', 'visible');
+        that.setState({opened: true});
       });
 
       socket.on('user info', function (data) {
@@ -58,9 +58,7 @@ var SettingComponent = function(socket) {
     },
 
     handleClose: function(e) {
-      var overlaySetting = React.findDOMNode(this.refs.overlaySetting);
-
-      $(overlaySetting).attr('style', '');
+      this.setState({opened: false});
     },
 
     render: function() {
@@ -83,9 +81,13 @@ var SettingComponent = function(socket) {
       );
 
       return (
+      <div>
+        {this.state.opened == true && (
         <div className="overflow" ref="overlaySetting">
-          {formSetting}
+            {formSetting}
         </div>
+        )}
+      </div>
       );
     }
 

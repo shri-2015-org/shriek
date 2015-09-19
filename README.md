@@ -405,3 +405,7 @@ Configuration file `config.json` example
 }
 
 ```
+
+### Удалить все данные из БД
+
+`mongo shriek --eval "db.dropDatabase();"`

@@ -88,29 +88,29 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
     render: function() {
       var cx = require('classnames');
       var classesUser = cx({
-        'auth__text': true,
+        'form__text': true,
         'invalid': this.state.userInvalid
       });
       var classesPassword = cx({
-        'auth__text': true,
+        'form__text': true,
         'invalid': this.state.passInvalid
       });
       return (
         <div>
           {this.state.logged == false && (
-            <div className="overflow">
-              <form className="auth" onSubmit={this.handleLogin}>
-                <div className="auth__row">
+            <div className="modal">
+              <form className="form modal__body" onSubmit={this.handleLogin}>
+                <div className="form__row">
                   {this.state.error && (
                     <LoginError error={this.state.error} />
                   )}
                 </div>
-                <div className="auth__row">
-                  <label className="auth__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
+                <div className="form__row">
+                  <label className="form__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
                   <input className={classesUser} onChange={this.handleNameChange} type="username" id="inputUsername" placeholder="Username"/>
                 </div>
-                <div className="auth__row">
-                  <label className="auth__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
+                <div className="form__row">
+                  <label className="form__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
                   <input className={classesPassword} onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
                 </div>
                 <button className="btn" onClick={this.handleLogin} type="submit">Sign in</button>

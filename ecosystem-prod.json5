@@ -1,0 +1,11 @@
+{
+  apps : [
+
+    {
+      name      : "Shriek-prod",
+      script    : "index.js",
+      instances : "1"
+    }
+
+  ]
+}

@@ -1,21 +1,9 @@
 {
-  /**
-   * This is a sample configuration file for PM2
-   */
-
-  /**
-   * Here we declare the apps that must be managed by PM2
-   * All options are listed here:
-   * https://github.com/Unitech/PM2/blob/master/ADVANCED_README.md#json-app-declaration
-   *
-   */
   apps : [
 
-    // First application
     {
-      name      : "Shriek-{{ NODE_ENV | dev}}",
-      script    : "index.js",
-      instances : "1",
+      name      : "Shriek",
+      script    : "index.js"
       env: {
         NODE_ENV: "dev"
       },
@@ -26,12 +14,6 @@
 
   ],
 
-
-  /**
-   * PM2 help you to deploy apps over your servers
-   * For more help go to :
-   * https://github.com/Unitech/PM2/blob/master/ADVANCED_README.md#deployment-pm2--090
-   */
   deploy : {
     production : {
       user : "shriek",
@@ -39,7 +21,7 @@
       ref  : "origin/feature/deploy-pm2",
       repo : "git@github.com:shri-2015-org/shriek.git",
       path : "/home/shriek/projects/production",
-      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem.json5 --env production"
+      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem-prod.json5 --env production"
     },
     dev : {
       user : "shriek",
@@ -47,7 +29,7 @@
       ref  : "origin/feature/deploy-pm2",
       repo : "git@github.com:shri-2015-org/shriek.git",
       path : "/home/shriek/projects/dev",
-      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem.json5 --env dev",
+      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem-dev.json5 --env dev",
       env  : {
         NODE_ENV: "dev"
       }

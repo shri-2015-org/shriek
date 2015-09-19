@@ -26,7 +26,6 @@ var LoginComponent = function(socket) {
 
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
-          socket.username = username;
           socket.emit('user list');
 
           component.setState({
@@ -61,17 +60,17 @@ var LoginComponent = function(socket) {
       return (
         <div>
           {this.state.logged == false && (
-            <div className="overflow">
-              <form className="auth" onSubmit={this.handleLogin}>
-                <div className="auth__row">
-                  <label className="auth__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
-                  <input className="auth__text" onChange={this.handleNameChange} type="username" id="inputUsername" placeholder="Username"/>
+            <div className="modal">
+              <form className="form modal__body" onSubmit={this.handleLogin}>
+                <div className="form__row">
+                  <label className="form__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
+                  <input className="form__text" onChange={this.handleNameChange} type="username" id="inputUsername" placeholder="Username"/>
                 </div>
-                <div className="auth__row">
-                  <label className="auth__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
-                  <input className="auth__text" onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
+                <div className="form__row">
+                  <label className="form__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
+                  <input className="form__text" onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
                 </div>
-                <button className="auth__sbmt" onClick={this.handleLogin} type="submit">Sign in</button>
+                <button className="btn" onClick={this.handleLogin} type="submit">Sign in</button>
               </form>
             </div>
           )}

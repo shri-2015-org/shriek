@@ -3,7 +3,7 @@
 
     {
       name      : "Shriek",
-      script    : "index.js"
+      script    : "index.js",
       env: {
         NODE_ENV: "dev"
       },

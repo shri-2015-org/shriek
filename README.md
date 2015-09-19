@@ -5,37 +5,6 @@ Yet another chat
 1. `npm install`
 2. `gulp`
 
-# Deployment to remote server
-
-## SSH Key for server (on local machine)
-1. `ssh-keygen -t rsa`
-  * Можно изменить имя файла, но лучше этого не делать. Default: `id_rsa`
-  * passphrase не пишите, оставьте пустым
-2. `cat ~/.ssh/id_rsa.pub | ssh [user]@[hostname] 'cat >> ~/.ssh/authorized_keys'`
-  * `host` и `user` - соответственно адрес сервера и имя юзера на нем
-
-Если все сделано правильно, то выполните:
-
-```bash
-ssh [user]@[hostname] "ssh -T git@github.com"
-```
-
-Вы должны увидеть такое сообщение:
-
-> Hi `sigorilla`! You've successfully authenticated, but GitHub does not provide shell access.
-
-## PM2
-
-Для удаленного обновления используем NPM пакет `pm2`
-
-1. `npm install -g pm2@latest`
-3. `pm2 deploy <environment_key>`, где `environment_key` - либо `develop` (тестирование, разработка), либо `production` (`master` ветка)
-
-## Результат
-
-* Production будет доступна по адресу: [host]
-* Development - по адресу: [host]:81
-
 # Development workflow
 
 ## Собрать проект и смотреть на изменения файлов
@@ -77,13 +46,12 @@ ssh [user]@[hostname] "ssh -T git@github.com"
 1. `ssh-keygen -t rsa`
   * Можно изменить имя файла, но лучше этого не делать. Default: `id_rsa`
   * passphrase не пишите, оставьте пустым
-2. `cat ~/.ssh/id_rsa.pub | ssh [user]@[hostname] 'cat >> ~/.ssh/authorized_keys'`
-  * `host` и `user` - соответственно адрес сервера и имя юзера на нем
+2. `cat ~/.ssh/id_rsa.pub | ssh shriek@128.199.39.245 'cat >> ~/.ssh/authorized_keys'`
 
 Если все сделано правильно, то выполните:
 
 ```bash
-ssh [user]@[hostname] "ssh -T git@github.com"
+ssh shriek@128.199.39.245 "ssh -T git@github.com"
 ```
 
 Вы должны увидеть такое сообщение:
@@ -99,8 +67,8 @@ ssh [user]@[hostname] "ssh -T git@github.com"
 
 ## Результат
 
-* Production будет доступна по адресу: [host]
-* Development - по адресу: [host]:81
+* Production будет доступна по адресу: shriek-chat.tk
+* Development - по адресу: shriek-chat.tk:81
 
 ## API
 ### Description

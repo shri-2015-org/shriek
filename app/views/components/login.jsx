@@ -35,7 +35,6 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
 
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
-          socket.username = username;
           socket.emit('user list');
 
           component.setState({
@@ -114,7 +113,7 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
                   <label className="auth__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
                   <input className={classesPassword} onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
                 </div>
-                <button className="auth__sbmt" onClick={this.handleLogin} type="submit">Sign in</button>
+                <button className="btn" onClick={this.handleLogin} type="submit">Sign in</button>
               </form>
             </div>
           )}

@@ -4,30 +4,39 @@ var LoginComponent = function(socket) {
   var AskLogin = React.createClass({
 
     getInitialState: function() {
-      return {logged: false};
+      var state;
+      sessionStorage.key(0) ? state = true : state = false
+
+      return {
+        logged: state
+      };
     },
 
     componentDidMount: function() {
       var username;
       var storage = sessionStorage.key(0);
-      var overlay = React.findDOMNode(this.refs.overlay);
+      var component = this;
 
       if (storage != null) {
-        socket.emit('user enter', {username: storage, password: sessionStorage.getItem(storage)});
-      } else {
-        $(overlay).css('visibility', 'visible');
+        socket.emit('user enter', {
+          username: storage,
+          password: sessionStorage.getItem(storage)
+        }, this.state);
       }
 
-      socket.on('user enter', function(data,state) {
+      socket.on('user enter', function(data) {
         if (data.status == 'ok') {
           socket.username = username;
           socket.emit('user list');
+
+          component.setState({
+            logged: true
+          });
 
           // Load info about current user
           socket.emit('user info', {username: socket.username});
 
           sessionStorage.setItem(data.user.username,data.user.hashedPassword);
-          $(overlay).attr('style','');
         }
       });
     },
@@ -41,34 +50,31 @@ var LoginComponent = function(socket) {
     },
 
     handleLogin: function(e) {
+      e.preventDefault();
+
       if (this.state != null && this.state.name && this.state.password) {
         socket.emit('user enter', {username: this.state.name, password: this.state.password});
       }
-
-      return false;
     },
 
     render: function() {
-
-      var formAuth;
-
-      formAuth = (
-        <form className="auth" onSubmit={this.handleLogin}>
-          <div className="auth__row">
-            <label className="auth__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
-            <input className="auth__text" onChange={this.handleNameChange} type="username" id="inputUsername" placeholder="Username"/>
-          </div>
-          <div className="auth__row">
-            <label className="auth__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
-            <input className="auth__text" onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
-          </div>
-          <button className="auth__sbmt" onClick={this.handleLogin} type="submit">Sign in</button>
-        </form>
-      );
-
       return (
-        <div className="overflow" ref="overlay">
-          {formAuth}
+        <div>
+          {this.state.logged == false && (
+            <div className="overflow">
+              <form className="auth" onSubmit={this.handleLogin}>
+                <div className="auth__row">
+                  <label className="auth__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
+                  <input className="auth__text" onChange={this.handleNameChange} type="username" id="inputUsername" placeholder="Username"/>
+                </div>
+                <div className="auth__row">
+                  <label className="auth__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
+                  <input className="auth__text" onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
+                </div>
+                <button className="auth__sbmt" onClick={this.handleLogin} type="submit">Sign in</button>
+              </form>
+            </div>
+          )}
         </div>
       );
     }

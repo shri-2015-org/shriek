@@ -46,7 +46,7 @@
       ref  : "origin/feature/deploy-pm2",
       repo : "git@github.com:shri-2015-org/shriek.git",
       path : "/home/shriek/projects/dev",
-      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem.json5 --env dev --name 'Shriek-dev'",
+      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem.json5 --env dev --name \"Shriek-dev\"",
       env  : {
         NODE_ENV: "dev"
       }

@@ -3,7 +3,6 @@
 var gulp = require('gulp'),
   sass = require('gulp-ruby-sass'),
   useref = require('gulp-useref'),
-  gulpif = require('gulp-if'),
   rename = require('gulp-rename'),
   concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),

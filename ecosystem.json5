@@ -13,20 +13,14 @@
 
     // First application
     {
-      name      : "API",
-      script    : "app.js",
+      name      : "Shriek",
+      script    : "index.js",
       env: {
         COMMON_VARIABLE: "true"
       },
       env_production : {
-        NODE_ENV: "production"
+        NODE_ENV: "dev"
       }
-    },
-
-    // Second application
-    {
-      name      : "WEB",
-      script    : "web.js"
     }
 
   ],
@@ -39,19 +33,19 @@
    */
   deploy : {
     production : {
-      user : "node",
-      host : "212.83.163.1",
-      ref  : "origin/master",
-      repo : "git@github.com:repo.git",
-      path : "/var/www/production",
+      user : "shriek",
+      host : "128.199.39.245",
+      ref  : "origin/develop",
+      repo : "git@github.com:shri-2015-org/shriek.git",
+      path : "/home/shriek/projects/production",
       "post-deploy" : "pm2 startOrRestart ecosystem.json5 --env production"
     },
     dev : {
-      user : "node",
-      host : "212.83.163.1",
-      ref  : "origin/master",
-      repo : "git@github.com:repo.git",
-      path : "/var/www/development",
+      user : "shriek",
+      host : "128.199.39.245",
+      ref  : "origin/develop",
+      repo : "git@github.com:shri-2015-org/shriek.git",
+      path : "/home/shriek/projects/dev",
       "post-deploy" : "pm2 startOrRestart ecosystem.json5 --env dev",
       env  : {
         NODE_ENV: "dev"

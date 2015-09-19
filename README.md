@@ -163,6 +163,28 @@ socket.emit('<name-of-event>', data);
   * `Пользователь должен войти`
   * `Пользователь не найден`
 
+##### `user update`
+
+Получить информацию о пользователе
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| username | String | Username |
+| setting | Object | Field: `email`, `image` |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user | Object | `user` object from DB (see schema) |
+
+`error_message`:
+  * `Пользователь должен войти`
+  * `Пользователь не найден`
+
 ##### `user list`
 
 Получить список пользователей
@@ -338,8 +360,16 @@ socket.emit('<name-of-event>', data);
 | salt | String | `required` |
 | created_at | ISODate | `default: now` |
 | updated_at | ISODate | `default: now` |
+| setting | Object | see below |
 
-`username` from 5 to 29 letters. Only latin letters and underscore (`_`).
+**settings**
+
+| Field | Type | Other |
+|-------|------ | -------|
+| email | String | Email |
+| image | String | Url of image |
+
+`username` from 5 to 29 letters. Only latin letters, figures and underscore (`_`).
 
 `password` from 6 letters.
 

@@ -18,7 +18,10 @@ var LoginComponent = function(socket) {
       var component = this;
 
       if (storage != null) {
-        socket.emit('user enter', {username: storage, password: sessionStorage.getItem(storage)},this.state);
+        socket.emit('user enter', {
+          username: storage,
+          password: sessionStorage.getItem(storage)
+        }, this.state);
       }
 
       socket.on('user enter', function(data) {
@@ -29,6 +32,9 @@ var LoginComponent = function(socket) {
           component.setState({
             logged: true
           });
+
+          // Load info about current user
+          socket.emit('user info', {username: socket.username});
 
           sessionStorage.setItem(data.user.username,data.user.hashedPassword);
         }

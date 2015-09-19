@@ -1,33 +1,32 @@
+var ChannelsStore = require('./../../stores/ChannelsStore'); // подключаем стор
+var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
+
 var ChannelComponent = function(socket, ChatComponent) {
 
   var ChannelsList = React.createClass({
     getInitialState: function () {
-      return {
-        channels: []
-      };
+      return ChannelsStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
     },
 
     componentDidMount: function () {
-      var that = this;
-      socket.on('channel list', function (data) {
-        if (socket.activeChannel == undefined) {
-          socket.activeChannel = 'general';
-        }
-        that.setState({ channels: data.channels });
-      });
-      socket.emit('channel list');
-      socket.on('channel get', function (data) {
-        console.log('change chat room');
-        // console.log(ChatComponent);
-        // ChatComponent({messages: data.messages});
-      });
+      ChannelsStore.listen(this.onChange); // подписываемся на изменения store
+      ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
+      ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
+    },
+
+    componentWillUnmount() {
+      LocationStore.unlisten(this.onChange); // отписываемся от изменений store
+    },
+
+    // эта функция выполняется когда store триггерит изменения внутри себя
+    onChange(state) {
+      this.setState(state);
     },
 
     changeChannel: function(event) {
       socket.activeChannel = event.target.dataset.slug;
       socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
       socket.emit('channel list');
-      console.log(socket.activeChannel);
     },
     render: function () {
       var Channels = (<div>Loading channels...</div>);

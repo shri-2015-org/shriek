@@ -46,7 +46,6 @@ var SettingComponent = function(socket) {
     handleSave: function(e) {
       e.preventDefault();
       if (this.state != null) {
-      console.log(this.state);
         socket.emit('user update', {
           username: socket.username,
           setting: {

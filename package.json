@@ -37,5 +37,8 @@
     "mocha": "*",
     "chai": "*",
     "socket.io-client": "*"
+  },
+  "dependencies": {
+    "alt": "^0.17.3"
   }
 }

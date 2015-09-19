@@ -1,6 +1,6 @@
 var app = app || {};
 // Если убираем test.js, то надо раскомментить
-// var socket = io();
+var socket = io();
 
 // CHAT MODULE
 var ChatComponent = require('../../views/components/message.jsx')(socket);

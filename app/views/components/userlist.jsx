@@ -1,21 +1,21 @@
 var UserComponent = function(socket) {
-    var Users;
+  var Users;
 
-    var UsersList = React.createClass({
-      getInitialState: function() {
+  var UsersList = React.createClass({
+    getInitialState: function() {
       return {
         users: []
       };
     },
 
-    componentDidMount: function () {
+    componentDidMount: function() {
       var that = this;
-      socket.on('user list', function (data) {
+
+      socket.on('user list', function(data) {
         if (data.status === 'ok') {
-          that.setState({users: data.users})
+          that.setState({users: data.users});
         }
       });
-      // socket.emit('user list');
     },
 
     render: function() {
@@ -24,11 +24,13 @@ var UserComponent = function(socket) {
       var that = this;
 
       if (this.state.users) {
-        Users = this.state.users.map(function (user) {
+        Users = this.state.users.map(function(user) {
           var currentUser = '';
+
           if (socket.username === user.username) {
             currentUser = 'active';
           }
+
           return (<User key={user._id} user={user} current={currentUser} />);
         })
         console.log(Users);
@@ -48,24 +50,22 @@ var UserComponent = function(socket) {
         </div>
       );
     }
+  });
 
-});
+  var User = React.createClass({
+      render: function() {
+        var className = 'list__item ' + this.props.current;
 
-var User = React.createClass({
-    render: function() {
-      var className = 'list__item ' + this.props.current;
+        return (
+          <li className={className}>
+            <a className="name">{this.props.user.username}</a>
+          </li>
+        );
+      }
+  });
 
-      return (
-        <li className={className}>
-          <a className="name">{this.props.user.username}</a>
-        </li>
-      );
-    }
-});
-
-var UsersFullList = React.createClass({
-
-    componentDidMount: function(){
+  var UsersFullList = React.createClass({
+    componentDidMount: function() {
       var dropBox = React.findDOMNode(this.refs.dropBox);
       var OFFSET = 30;
       var geometry = dropBox.getBoundingClientRect();
@@ -76,7 +76,6 @@ var UsersFullList = React.createClass({
 
     handleClick: function() {
       $(React.findDOMNode(this.refs.dropBox)).prev().toggleClass('active_list');
-
     },
 
     render: function() {
@@ -94,11 +93,10 @@ var UsersFullList = React.createClass({
         </div>
       );
     }
-});
+  });
 
-var MoreUsers = React.createClass({
-
-    handleClick: function(){
+  var MoreUsers = React.createClass({
+    handleClick: function() {
       $(React.findDOMNode(this.refs.moreUsers)).toggleClass("active_list");
     },
 
@@ -110,9 +108,9 @@ var MoreUsers = React.createClass({
         </div>
       );
     }
-});
+  });
 
-return UsersList;
+  return UsersList;
 };
 
 module.exports = UserComponent;

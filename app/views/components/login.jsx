@@ -8,8 +8,7 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
   var AskLogin = React.createClass({
 
     getInitialState: function() {
-      var state;
-      sessionStorage.key(0) ? state = true : state = false
+      var state = Boolean(sessionStorage.key(0));
 
       return {
         logged: state,
@@ -24,7 +23,7 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
     componentDidMount: function() {
       var username;
       var storage = sessionStorage.key(0);
-      var component = this;
+      var _this = this;
 
       if (storage != null) {
         socket.emit('user enter', {
@@ -35,11 +34,14 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
 
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
-          socket.emit('user list');
-
-          component.setState({
+          _this.setState({
             logged: true
           });
+
+          socket.username = username;
+
+          socket.emit('user list');
+          socket.emit('channel list');
 
           // Load info about current user
           socket.emit('user info', {username: socket.username});
@@ -113,7 +115,7 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
                   <label className="form__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
                   <input className={classesPassword} onChange={this.handlePasswordChange} type="password"id="inputPassword" placeholder="Password"/>
                 </div>
-                <button className="btn" onClick={this.handleLogin} type="submit">Sign in</button>
+                <button className="btn" type="submit">Sign in</button>
               </form>
             </div>
           )}

@@ -13,13 +13,23 @@
 
     // First application
     {
-      name      : "Shriek",
+      name      : "Shriek-dev",
       script    : "index.js",
       env: {
         COMMON_VARIABLE: "true"
       },
       env_production : {
         NODE_ENV: "dev"
+      }
+    },
+    {
+      name      : "Shriek-prod",
+      script    : "index.js",
+      env: {
+        COMMON_VARIABLE: "true"
+      },
+      env_production : {
+        NODE_ENV: "production"
       }
     }
 
@@ -38,7 +48,10 @@
       ref  : "origin/feature/deploy-pm2",
       repo : "git@github.com:shri-2015-org/shriek.git",
       path : "/home/shriek/projects/production",
-      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem.json5 --env production"
+      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem.json5 --env production",
+      env  : {
+        NODE_ENV: "production"
+      }
     },
     dev : {
       user : "shriek",
@@ -46,7 +59,7 @@
       ref  : "origin/feature/deploy-pm2",
       repo : "git@github.com:shri-2015-org/shriek.git",
       path : "/home/shriek/projects/dev",
-      "post-deploy" : 'npm install || gulp bower sass build && pm2 startOrRestart ecosystem.json5 --env dev --name "Shriek-dev"',
+      "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem.json5 --env dev",
       env  : {
         NODE_ENV: "dev"
       }

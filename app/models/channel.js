@@ -22,5 +22,14 @@ var Channel = new Schema({
   }
 });
 
+Channel.on('init', function (model) {
+  var newChannel = model({
+    name: 'General',
+    slug: 'general'
+  });
+
+  newChannel.save(newChannel);
+});
+
 module.exports = mongoose.model('Channel', Channel);
 

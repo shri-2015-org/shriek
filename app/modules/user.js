@@ -14,6 +14,11 @@ var userModule = function(socket) {
         status: 'error',
         error_message: 'Пользователь уже вошел.'
       });
+    } else if (!data.username || !data.password) {
+      return socket.emit('user enter', {
+        status: 'error',
+        error_message: 'Empty fields'
+      });
     }
 
     var username = data.username;
@@ -40,16 +45,21 @@ var userModule = function(socket) {
         newUser.set('password', password);
 
         newUser.save(function (err, saved_data) {
+          var message = err;
           if (!err) {
             out.status = 'ok';
             out.user = saved_data;
           } else {
             out.status = 'error';
-            if (err.name === 'ValidationError') {
+            if (err.errors.user && err.errors.password) {
               // Validation failed
-              out.error_message = err.message;
+              out.error_message = 'not enough symbols';
+            } else if (err.errors.user) {
+              out.error_message = err.errors.user.message;
+            } else if (err.errors.password) {
+              out.error_message = err.errors.password.message;
             } else {
-              out.error_message = 'Пользователь не найден'
+              out.error_message = 'Пользователь не найден';
             }
           }
           callbackUserEnter(out);

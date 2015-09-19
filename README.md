@@ -63,7 +63,7 @@ ssh shriek@128.199.39.245 "ssh -T git@github.com"
 Для удаленного обновления используем NPM пакет `pm2`
 
 1. `npm install -g pm2@latest`
-3. `pm2 deploy <environment_key>`, где `environment_key` - либо `develop` (тестирование, разработка), либо `production` (`master` ветка)
+3. `pm2 deploy <environment_key>`, где `environment_key` - либо `dev` (тестирование, разработка), либо `production` (`master` ветка)
 
 ## Результат
 

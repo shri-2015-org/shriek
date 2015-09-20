@@ -24,17 +24,16 @@ Yet another chat
 # Files structure
 * app — основное приложение
   * assets
-    * css — файлы, которые получились от склеивания файлов в modules, потом попадают в public/assets/css
-      * modules — файлы sass для модулей
-    * js — основной файл фронта, гкуда объявляются все инклуды
+    * css — файлы sass для модулей
+    * js — основной файл фронта, куда объявляются все инклуды
   * components — внешние компоненты (включено в gitignore)
   * configs — файлы конфига для express
-  * controllers — основные js файлы экспресс
-  * models — модели для express
-  * modules — модули для express
+  * controllers — основные js-файлы express
+  * models — модели express
+  * modules — модули express
   * views
-    * layouts — тут html шаблон страницы, который потом копируются в public/
-    * components — react компоненты
+    * layouts — тут html-шаблон страницы, который потом копируется в public/
+    * components — react-компоненты
 * public — все статичные файлы, здесь лежит базовый index.html, который собирается из вьюх
   * assets
     * css
@@ -405,3 +404,7 @@ Configuration file `config.json` example
 }
 
 ```
+
+### Удалить все данные из БД
+
+`mongo shriek --eval "db.dropDatabase();"`

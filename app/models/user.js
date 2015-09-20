@@ -72,7 +72,7 @@ User.path('username').validate(function (v) {
 User.path('hashedPassword').validate(function(v) {
   if (this._plainPassword) {
     if (this._plainPassword.length < 6) {
-      this.invalidate('password', 'must be at least 6 characters.');
+      this.invalidate('password', 'password must be at least 6 characters.');
     }
   }
 

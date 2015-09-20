@@ -27,13 +27,15 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       socket.activeChannel = event.target.dataset.slug;
       socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
     },
-    render: function () {
+
+    render: function() {
       var Channels = (<div>Loading channels...</div>);
       var that = this;
 
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
           return (<Channel channel={channel} changeChannel={that.changeChannel}/>);
+
         });
       }
 
@@ -57,7 +59,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       this.props.changeChannel(event);
     },
 
-    render: function () {
+    render: function() {
 
       var className = 'list__item ' + (this.props.channel.isActive?'active':'');
 

@@ -34,7 +34,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
-          return (<Channel channel={channel} changeChannel={_this.changeChannel}/>);
+          return (<Channel channel={channel} changeChannel={_this.changeChannel} key={channel._id}/>);
 
         });
       }

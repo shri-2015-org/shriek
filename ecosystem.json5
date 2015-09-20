@@ -26,7 +26,7 @@
     dev : {
       user : "shriek",
       host : "128.199.39.245",
-      ref  : "origin/develop",
+      ref  : "origin/feature/deploy-pm2",
       repo : "git@github.com:shri-2015-org/shriek.git",
       path : "/home/shriek/projects/dev",
       "post-deploy" : "npm install || gulp bower sass build && pm2 startOrRestart ecosystem-dev.json5 --env dev",

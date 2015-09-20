@@ -146,7 +146,9 @@ var userModule = function(socket) {
       });
     }
 
-    UserModel.find({}, function (err, docs) {
+    UserModel.find({
+      username: { $ne: socket.username }
+    }, function (err, docs) {
       if (!err && docs) {
         out.status = 'ok';
         out.users= docs;

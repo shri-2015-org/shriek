@@ -13,6 +13,7 @@ services:
 
 install:
   - npm install
+  - npm install -g pm2
   - bower install
 
 script:
@@ -21,3 +22,16 @@ script:
 deploy:
   on:
     branch: master
+
+after_success:
+  - chmod 600 deploy_key
+  - mv deploy_key ~/.ssh/id_rsa
+  - pm2 deploy dev
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_48afa7b4060f_key -iv $encrypted_48afa7b4060f_iv
+    -in deploy_key.enc -out deploy_key -d
+
+addons:
+  ssh_known_hosts: 128.199.39.245
+

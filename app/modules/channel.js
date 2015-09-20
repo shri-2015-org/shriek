@@ -4,7 +4,8 @@ var MessageModel = require('../models/message');
 
 var channelModule = function (socket) {
 
-  /** Слушаем создание чата с фронта
+  /**
+  * Слушаем создание чата с фронта
   * @param data
   * @param data.name название чата
   */
@@ -44,7 +45,8 @@ var channelModule = function (socket) {
 
   });
 
-  /** Получение информации о чате
+  /**
+  * Получение информации о чате
   * @param data
   * @param data.slug слаг чата
   */
@@ -75,7 +77,8 @@ var channelModule = function (socket) {
 
   });
 
-  /** Получение всех чатов
+  /**
+  * Получение всех чатов
   */
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {

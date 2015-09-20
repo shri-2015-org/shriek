@@ -12,6 +12,11 @@ var Channel = new Schema({
     required: true,
     unique: true
   },
+  is_private: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   created_at: {
     type: Date,
     default: Date.now
@@ -19,13 +24,18 @@ var Channel = new Schema({
   updated_at: {
     type: Date,
     default: Date.now
+  },
+  users: {
+    type: Array
   }
 });
 
 Channel.on('init', function (model) {
   var newChannel = model({
     name: 'General',
-    slug: 'general'
+    slug: 'general',
+    is_private: false,
+    users: ['superadmin'] // durty hack
   });
 
   newChannel.save(newChannel);

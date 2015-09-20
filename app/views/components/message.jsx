@@ -39,6 +39,7 @@ var ChatComponent = function (socket) {
       return (
         <div className="msg">
           <div className="msg__wrap">
+            <ChannelUsers users={this.state.users}/>
             <div className="msg__body">
             <MessagesList messages={this.state.messages}/>
             </div>
@@ -81,6 +82,35 @@ var ChatComponent = function (socket) {
     }
   });
 
+  var ChannelUsers = React.createClass({
+    render: function () {
+
+      var Users = (<div>Loading users...</div>);
+
+      if (this.props.users) {
+        Users = this.props.users.map(function (user) {
+          return (<ChannelUser user={user} key={user}/>);
+        });
+      }
+
+      return (
+        <div className="msg__users">
+          {Users}
+        </div>
+      );
+    }
+  });
+
+  var ChannelUser = React.createClass({
+    render: function () {
+      return (
+        <div className="user__item">
+          <span className="user__title">{this.props.user}</span>
+        </div>
+      );
+    }
+  });
+
   var MessageForm = React.createClass({
     handleSubmit: function (e) {
       e.preventDefault();
@@ -102,7 +132,7 @@ var ChatComponent = function (socket) {
       return (
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit}>
-            <input className="send__text" name="text" ref="text" placeholder="Сообщение" autoFocus required />
+            <input className="send__text" name="text" ref="text" placeholder="Сообщение" autoComplete="off" autoFocus required />
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>

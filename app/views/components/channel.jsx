@@ -11,7 +11,6 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     componentDidMount: function () {
       ChannelsStore.listen(this.onChange); // подписываемся на изменения store
       ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
-      ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
     },
 
     componentWillUnmount: function() {
@@ -28,6 +27,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       socket.emit('channel get', {
         channel: event.target.dataset.slug,
         date: new Date()
+      });
+      socket.emit('channel join', {
+        channel: event.target.dataset.slug
+      });
+      socket.emit('channel info', {
+        channel: event.target.dataset.slug
       });
     },
 
@@ -69,8 +74,6 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     },
 
     render: function () {
-
-      console.log(this.props.channel.isUnread);
 
       var className = 'list__item ' +
         (this.props.channel.isActive ? ' active' : '') +

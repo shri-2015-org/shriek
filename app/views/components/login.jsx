@@ -48,7 +48,7 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
           sessionStorage.setItem(data.user.username,data.user.hashedPassword);
         } else {
           console.log(data);
-          component.setState({error: data.error_message});
+          _this.setState({error: data.error_message});
         }
       });
     },

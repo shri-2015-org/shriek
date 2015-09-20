@@ -16,7 +16,7 @@ install:
   - npm install -g pm2
   - bower install
 
-script:
+script: 
   # test running
 
 deploy:

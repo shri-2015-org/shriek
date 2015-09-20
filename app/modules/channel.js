@@ -20,7 +20,6 @@ var channelModule = function (socket) {
       });
 
       newChannel.save({ runValidators: true }, function (err, data) {
-
         var out = {};
         if (!err) {
           out.status = 'ok';
@@ -30,7 +29,6 @@ var channelModule = function (socket) {
           var error = new Error('Ошибка создания чата');
           reject(error);
         }
-
       });
     });
 
@@ -54,7 +52,6 @@ var channelModule = function (socket) {
 
     var getChannelInfo = new Promise(function (resolve, reject) {
       ChannelModel.findOne({ slug: data.slug }, function (err, data) {
-
         var out = {};
         if (!err) {
           out.status = 'ok';
@@ -64,9 +61,7 @@ var channelModule = function (socket) {
           var error = new Error('Ошибка получения чата');
           reject(error);
         }
-
       });
-
     });
 
     getChannelInfo
@@ -85,7 +80,6 @@ var channelModule = function (socket) {
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {
       ChannelModel.find(function (err, data) {
-
         var out = {};
         if (!err) {
           out.status = 'ok';
@@ -95,7 +89,6 @@ var channelModule = function (socket) {
           var error = new Error('Ошибка получения чатов');
           reject(error);
         }
-
       });
     });
 
@@ -121,16 +114,15 @@ var channelModule = function (socket) {
     // строим запрос в БД
     var indata = data;
 
-    var getMessages = new Promise(function (resolve, reject){
+    var getMessages = new Promise(function (resolve, reject) {
       var query = { channel: data.channel }; // канал нужно учитывать всегда
-      if (data.date !== undefined) query.created_at = { $lt: data.date }; // дата — если пришла
+      if (date in data) query.created_at = { $lt: data.date }; // дата — если пришла
 
       var q = MessageModel.find(query);
-      if (data.limit !== undefined) q.limit(data.limit); // limit
-      if (data.skip !== undefined) q.skip(data.skip); // offset
+      if (limit in data) q.limit(data.limit); // limit
+      if (skip in data) q.skip(data.skip); // offset
 
       q.exec(function (err, data) { // выполняем запрос
-
         var out = {};
         if (!err) {
           out.status = 'ok';
@@ -141,7 +133,6 @@ var channelModule = function (socket) {
           var error = new Error('Ошибка получения сообщений');
           reject(error);
         }
-
       });
     });
 

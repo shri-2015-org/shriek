@@ -3,7 +3,7 @@ var slugify = require('transliteration').slugify;
 var ChannelModel = mongoose.ChannelModel;
 var MessageModel = mongoose.MessageModel;
 
-var channelModule = function(socket) {
+var channelModule = function (socket) {
 
   /** Слушаем создание чата с фронта
   * @param data
@@ -11,7 +11,7 @@ var channelModule = function(socket) {
   */
   socket.on('channel create', function (data) {
 
-    var createChannel = new Promise(function(resolve, reject) {
+    var createChannel = new Promise(function (resolve, reject) {
       slug = slugify(data.name, {lowercase: true, separator: '_'}); // трансилитирируем name
 
       var newChannel = ChannelModel({
@@ -20,7 +20,6 @@ var channelModule = function(socket) {
       });
 
       newChannel.save({runValidators: true}, function (err, data) {
-        console.log(err);
 
         var out = {};
         if (!err) {
@@ -32,17 +31,17 @@ var channelModule = function(socket) {
           reject(error);
         }
 
-        socket.emit('channel create', out);
       });
     });
 
     createChannel
-    .then(function(data){
-        socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
-      })
-    .catch(function(error){
-        console.log(error);
-      })
+      .then(function (data){
+          socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
+          socket.emit('channel create', out);
+        })
+      .catch(function (error){
+          console.log(error);
+        });
 
   });
 
@@ -52,7 +51,7 @@ var channelModule = function(socket) {
   */
   socket.on('channel info', function (data) {
 
-    var getChannelInfo = new Promise(function(resolve, reject) {
+    var getChannelInfo = new Promise(function (resolve, reject) {
       ChannelModel.findOne({ slug: data.slug }, function (err, data) {
         var out = {};
         if (!err) {
@@ -67,12 +66,12 @@ var channelModule = function(socket) {
     });
 
     getChannelInfo
-    .then(function(data){
-        socket.emit('channel info', out);
-      })
-    .catch(function(error){
-        console.log(error);
-      });
+      .then(function (data){
+          socket.emit('channel info', out);
+        })
+      .catch(function (error){
+          console.log(error);
+        });
 
   });
 
@@ -94,12 +93,12 @@ var channelModule = function(socket) {
     });
 
     getChannelList
-    .then(function(data){
-        socket.emit('channel list', data);
-      })
-    .catch(function(error){
-        console.log(error);
-      });
+      .then(function (data){
+          socket.emit('channel list', data);
+        })
+      .catch(function (error){
+          console.log(error);
+        });
 
   });
 
@@ -115,7 +114,7 @@ var channelModule = function(socket) {
     // строим запрос в БД
     var indata = data;
 
-    var getMessages = new Promise(function(resolve, reject){
+    var getMessages = new Promise(function (resolve, reject){
       var query = {
         channel: data.channel // канал нужно учитывать всегда
       };
@@ -128,7 +127,7 @@ var channelModule = function(socket) {
         var out = {};
         if (!err) {
           out.status = 'ok';
-          out.messages = (data.length > 0?data:[]); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
+          out.messages = (data.length > 0 ? data : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
           out.slug = indata.channel;
           resolve(out);
         } else {
@@ -139,10 +138,10 @@ var channelModule = function(socket) {
     });
 
     getMessages
-      .then( function(data) {
+      .then( function (data) {
         return socket.emit('channel get', data);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 

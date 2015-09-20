@@ -2,7 +2,7 @@ var UserComponent = function (socket) {
   var Users;
 
   var UsersList = React.createClass({
-    getInitialState: function () {
+    getInitialState: function() {
       return {
         users: []
       };
@@ -22,7 +22,7 @@ var UserComponent = function (socket) {
       Users = (<div>Loading users...</div>);
 
       if (this.state.users) {
-        Users = this.state.users.map(function (user) {
+        Users = this.state.users.map(function(user) {
           var currentUser = '';
 
           if (socket.username === user.username) {

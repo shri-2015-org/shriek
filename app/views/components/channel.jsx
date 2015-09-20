@@ -14,7 +14,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
     },
 
-    componentWillUnmount() {
+    componentWillUnmount: function() {
       ChannelsStore.unlisten(this.onChange); // отписываемся от изменений store
     },
 
@@ -25,7 +25,10 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     changeChannel: function (event) {
       socket.activeChannel = event.target.dataset.slug;
-      socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
+      socket.emit('channel get', {
+        channel: event.target.dataset.slug,
+        date: new Date()
+      });
     },
 
     render: function () {
@@ -34,8 +37,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
-          return (<Channel channel={channel} changeChannel={_this.changeChannel} key={channel._id}/>);
-
+          return (
+            <Channel
+              channel={channel}
+              changeChannel={_this.changeChannel}
+              key={channel._id} />
+          );
         });
       }
 
@@ -43,7 +50,9 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         <div className="group">
           <div className="heading heading_group">
             <h3 className="heading__header">Каналы</h3>
-            <span className="heading__plus"><i className="fa fa-plus-square-o fa-lg"></i></span>
+            <span className="heading__plus">
+              <i className="fa fa-plus-square-o fa-lg"></i>
+            </span>
           </div>
           <ul className="list list_channels">
             {Channels}
@@ -63,11 +72,17 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
       console.log(this.props.channel.isUnread);
 
-      var className = 'list__item ' + (this.props.channel.isActive ? ' active' : '') + (this.props.channel.isUnread ? ' unread' : '');
+      var className = 'list__item ' +
+        (this.props.channel.isActive ? ' active' : '') +
+        (this.props.channel.isUnread ? ' unread' : '');
 
       return (
         <li className={className}>
-          <a className="name" onClick={this.clickHandler} data-slug={this.props.channel.slug}>{this.props.channel.name}</a>
+          <a
+            className="name"
+            onClick={this.clickHandler}
+            data-slug={this.props.channel.slug}
+          >{this.props.channel.name}</a>
         </li>
       );
     }

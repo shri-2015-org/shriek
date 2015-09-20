@@ -33,11 +33,6 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
-          // if (channel.slug == socket.activeChannel) {
-            // activeClass = 'active';
-          // } else {
-            // activeClass = '';
-          // }
           return (<Channel channel={channel} changeChannel={that.changeChannel}/>);
         });
       }

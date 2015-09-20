@@ -24,17 +24,16 @@ Yet another chat
 # Files structure
 * app — основное приложение
   * assets
-    * css — файлы, которые получились от склеивания файлов в modules, потом попадают в public/assets/css
-      * modules — файлы sass для модулей
-    * js — основной файл фронта, гкуда объявляются все инклуды
+    * css — файлы sass для модулей
+    * js — основной файл фронта, куда объявляются все инклуды
   * components — внешние компоненты (включено в gitignore)
   * configs — файлы конфига для express
-  * controllers — основные js файлы экспресс
-  * models — модели для express
-  * modules — модули для express
+  * controllers — основные js-файлы express
+  * models — модели express
+  * modules — модули express
   * views
-    * layouts — тут html шаблон страницы, который потом копируются в public/
-    * components — react компоненты
+    * layouts — тут html-шаблон страницы, который потом копируется в public/
+    * components — react-компоненты
 * public — все статичные файлы, здесь лежит базовый index.html, который собирается из вьюх
   * assets
     * css
@@ -151,6 +150,28 @@ socket.emit('<name-of-event>', data);
 | Field | Type | Description |
 |-------|------ | -------|
 | username | String | Username |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| user | Object | `user` object from DB (see schema) |
+
+`error_message`:
+  * `Пользователь должен войти`
+  * `Пользователь не найден`
+
+##### `user update`
+
+Получить информацию о пользователе
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| username | String | Username |
+| setting | Object | Field: `email`, `image` |
 
 *Output* (`on`)
 
@@ -338,8 +359,16 @@ socket.emit('<name-of-event>', data);
 | salt | String | `required` |
 | created_at | ISODate | `default: now` |
 | updated_at | ISODate | `default: now` |
+| setting | Object | see below |
 
-`username` from 5 to 29 letters. Only latin letters and underscore (`_`).
+**settings**
+
+| Field | Type | Other |
+|-------|------ | -------|
+| email | String | Email |
+| image | String | Url of image |
+
+`username` from 5 to 29 letters. Only latin letters, figures and underscore (`_`).
 
 `password` from 6 letters.
 
@@ -375,3 +404,7 @@ Configuration file `config.json` example
 }
 
 ```
+
+### Удалить все данные из БД
+
+`mongo shriek --eval "db.dropDatabase();"`

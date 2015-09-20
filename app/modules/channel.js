@@ -1,7 +1,6 @@
-var mongoose = require('../models/mongoose');
 var slugify = require('transliteration').slugify;
-var ChannelModel = mongoose.ChannelModel;
-var MessageModel = mongoose.MessageModel;
+var ChannelModel = require('../models/channel');
+var MessageModel = require('../models/message');
 
 var channelModule = function (socket) {
 
@@ -63,6 +62,7 @@ var channelModule = function (socket) {
           reject(error);
         }
       });
+
     });
 
     getChannelInfo
@@ -102,15 +102,15 @@ var channelModule = function (socket) {
 
   });
 
-  /** Получение сообщений из чата
-  * @param data
-  * @param data.channel string слаг чата
-  * @param data.limit integer сколько сообщений
-  * @param data.skip integer начиная с
-  * @param data.date date дата от которой брать ( < date )
-  */
-  socket.on('channel get', function (data) {
-
+  /**
+   * Получение сообщений из чата
+   * @param data
+   * @param data.channel string слаг чата
+   * @param data.limit integer сколько сообщений
+   * @param data.skip integer начиная с
+   * @param data.date date дата от которой брать ( < date )
+   */
+  socket.on('channel get', function(data) {
     // строим запрос в БД
     var indata = data;
 
@@ -146,7 +146,6 @@ var channelModule = function (socket) {
       });
 
   });
-
 }
 
 module.exports = channelModule;

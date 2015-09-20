@@ -1,5 +1,4 @@
-var mongoose = require('../models/mongoose');
-var UserModel = mongoose.UserModel;
+var UserModel = require('../models/user');
 
 var userModule = function(socket) {
 
@@ -14,6 +13,11 @@ var userModule = function(socket) {
       return socket.emit('user enter', {
         status: 'error',
         error_message: 'Пользователь уже вошел.'
+      });
+    } else if (!data.username || !data.password) {
+      return socket.emit('user enter', {
+        status: 'error',
+        error_message: 'Empty fields'
       });
     }
 
@@ -41,16 +45,21 @@ var userModule = function(socket) {
         newUser.set('password', password);
 
         newUser.save(function (err, saved_data) {
+          var message = err;
           if (!err) {
             out.status = 'ok';
             out.user = saved_data;
           } else {
             out.status = 'error';
-            if (err.name === 'ValidationError') {
+            if (err.errors.user && err.errors.password) {
               // Validation failed
-              out.error_message = err.message;
+              out.error_message = 'not enough symbols';
+            } else if (err.errors.user) {
+              out.error_message = err.errors.user.message;
+            } else if (err.errors.password) {
+              out.error_message = err.errors.password.message;
             } else {
-              out.error_message = 'Пользователь не найден'
+              out.error_message = 'Пользователь не найден';
             }
           }
           callbackUserEnter(out);
@@ -147,6 +156,41 @@ var userModule = function(socket) {
       }
       socket.emit('user list', out);
     });
+  });
+
+  /**
+   * Update user information
+   * @param data
+   * @param data.username Username
+   * @param data.setting Object:
+   *        email
+   *        image
+   */
+  socket.on('user update', function (data) {
+    var out = {};
+
+    if (socket.username === undefined) {
+      return socket.emit('user update', {
+        status: 'error',
+        error_message: 'Пользователь должен войти'
+      });
+    }
+
+    UserModel.findOneAndUpdate(
+      {username: socket.username},
+      {setting: data.setting},
+      function (err, user) {
+        if (!err && user) {
+          out.status = 'ok';
+          out.user = user;
+        } else {
+          out.status = 'error';
+          out.error_message = 'Пользователь не найден';
+        }
+        socket.emit('user update', out);
+      }
+    );
+
   });
 
   /**

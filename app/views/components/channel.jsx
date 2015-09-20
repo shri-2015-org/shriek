@@ -1,22 +1,24 @@
 var ChannelComponent = function(socket, ChatComponent) {
 
   var ChannelsList = React.createClass({
-    getInitialState: function () {
+    getInitialState: function() {
       return {
         channels: []
       };
     },
 
-    componentDidMount: function () {
+    componentDidMount: function() {
       var that = this;
-      socket.on('channel list', function (data) {
-        if (socket.activeChannel == undefined) {
+
+      socket.on('channel list', function(data) {
+        if (socket.activeChannel === undefined) {
           socket.activeChannel = 'general';
         }
+
         that.setState({ channels: data.channels });
       });
-      socket.emit('channel list');
-      socket.on('channel get', function (data) {
+
+      socket.on('channel get', function(data) {
         console.log('change chat room');
         // console.log(ChatComponent);
         // ChatComponent({messages: data.messages});
@@ -27,15 +29,17 @@ var ChannelComponent = function(socket, ChatComponent) {
       socket.activeChannel = event.target.dataset.slug;
       socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
       socket.emit('channel list');
+
       console.log(socket.activeChannel);
     },
-    render: function () {
+
+    render: function() {
       var Channels = (<div>Loading channels...</div>);
       var that = this;
 
       if (this.state.channels) {
-        Channels = this.state.channels.map(function (channel) {
-          if (channel.slug == socket.activeChannel) {
+        Channels = this.state.channels.map(function(channel) {
+          if (channel.slug === socket.activeChannel) {
             activeClass = 'active';
           } else {
             activeClass = '';
@@ -64,7 +68,7 @@ var ChannelComponent = function(socket, ChatComponent) {
       this.props.changeChannel(event);
     },
 
-    render: function () {
+    render: function() {
 
       var className = 'list__item ' + this.props.activeClass;
 

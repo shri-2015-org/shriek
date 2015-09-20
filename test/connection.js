@@ -5,8 +5,7 @@ var mocha = require('mocha');
 var should = chai.should();
 var io = require('socket.io-client');
 
-describe('Connection test', function () {
-
+describe('Connection test', function() {
   var socket;
   var options = {
     transports: ['websocket'],
@@ -17,22 +16,23 @@ describe('Connection test', function () {
     username: 'testuser',
     password: 'testpass'
   };
+
   var testmsg = 'Echo';
 
-  beforeEach(function (done) {
+  beforeEach(function(done) {
     socket = io.connect('http://localhost:' + port, options);
 
-    socket.on('connect', function () {
+    socket.on('connect', function() {
       // console.log('Worked...');
       done();
     });
 
-    socket.on('disconnect', function () {
+    socket.on('disconnect', function() {
       // console.log('Disconnected...');
     });
   });
 
-  afterEach(function (done) {
+  afterEach(function(done) {
     // Cleanup
     if (socket.connected) {
       // console.log('Disconnecting...');
@@ -44,7 +44,7 @@ describe('Connection test', function () {
     done();
   });
 
-  it('Connection', function (done) {
+  it('Connection', function(done) {
 
     socket.connected.should.equal(true);
 
@@ -53,9 +53,9 @@ describe('Connection test', function () {
 
   });
 
-  it('User entering', function (done) {
+  it('User entering', function(done) {
 
-    socket.once('user enter', function (data) {
+    socket.once('user enter', function(data) {
       data.status.should.equal('ok');
       data.user.username.should.equal(testuser.username);
 
@@ -67,9 +67,9 @@ describe('Connection test', function () {
 
   });
 
-  it('User not entering', function (done) {
+  it('User not entering', function(done) {
 
-    socket.once('user enter', function (data) {
+    socket.once('user enter', function(data) {
       data.status.should.equal('error');
 
       socket.disconnect();

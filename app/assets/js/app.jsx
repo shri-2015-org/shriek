@@ -6,13 +6,19 @@ var app = app || {};
 var ChatComponent = require('../../views/components/message.jsx')(socket);
 
 // CHANNEL LIST MODULE
-var ChannelComponent = require('../../views/components/channel.jsx')(socket, ChatComponent);
+var ChannelComponent = require('../../views/components/channel.jsx')(socket);
 
 // USERS LIST
 var UserComponent = require('../../views/components/userlist.jsx')(socket);
 
 // LOGIN MODULE
 var LoginComponent = require('../../views/components/login.jsx')(socket);
+
+// PROFILE MODULE
+var ProfileComponent = require('../../views/components/profile.jsx')(socket);
+
+// SETTING MODULE
+var SettingComponent = require('../../views/components/setting.jsx')(socket);
 
 (function () {
   'use strict';
@@ -29,18 +35,7 @@ var LoginComponent = require('../../views/components/login.jsx')(socket);
 
   var ChatApp = React.createClass({
     render: function () {
-      var profileUser;
       var menu, main;
-
-      profileUser = (
-        <div className='profile'>
-          <div className="profile__out"><i className="fa fa-power-off fa-lg"></i></div>
-            <div className="profile__tools"><i className="fa fa-cog fa-lg"></i></div>
-            <div className="profile__img">
-            <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/78/78acf20c6efa57fcadad137ff7ababb6f8210305_full.jpg"/>
-          </div>
-        </div>
-      );
 
       menu = (
         <div className='nav'>
@@ -52,7 +47,7 @@ var LoginComponent = require('../../views/components/login.jsx')(socket);
 
       main = (
         <div className="content">
-          {profileUser}
+          <ProfileComponent/>
           <ChatComponent/>
         </div>
       );
@@ -70,6 +65,7 @@ var LoginComponent = require('../../views/components/login.jsx')(socket);
     render: function() {
       return (
         <div className="layout">
+          <SettingComponent />
           <LoginComponent />
           <ChatApp />
         </ div >

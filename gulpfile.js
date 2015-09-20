@@ -60,6 +60,7 @@ gulp.task('build', function () {
     entries: [path.ENTRY_POINT],
     transform: [reactify]
   })
+    .on('error', function (err) {console.log(err);})
     .bundle()
     .pipe(source(path.MINIFIED_OUT))
     .pipe(gulp.dest(path.DEST_BUILD));

@@ -80,9 +80,13 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
           if (!this.state.passInvalid && !this.state.userInvalid) {
             socket.emit('user enter', {username: this.state.name, password: this.state.password})
           }
-        } else {
+        } else if(this.state.userInit && this.state.passInit) {
           this.setState({userInvalid: true});
           this.setState({passInvalid: true});
+        } else if(this.state.passInit) {
+          this.setState({passInvalid: true});
+        } else {
+          this.setState({userInvalid: true});
         }
       }
     },
@@ -100,8 +104,9 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
       return (
         <div>
           {this.state.logged == false && (
-            <div className="modal">
+            <div className="modal login__box">
               <form className="form modal__body" onSubmit={this.handleLogin}>
+                <h2>Sign in</h2>
                 <div className="form__row">
                   {this.state.error && (
                     <LoginError error={this.state.error} />

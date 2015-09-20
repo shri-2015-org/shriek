@@ -9,7 +9,7 @@ var LoginError = function(socket) {
 
     render: function() {
       return (
-        <div>
+        <div className="login__error">
           {this.props.error}
         </div>
       );

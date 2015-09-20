@@ -21,6 +21,7 @@ var channelModule = function (socket) {
 
       newChannel.save({ runValidators: true }, function (err, data) {
         var out = {};
+
         if (!err) {
           out.status = 'ok';
           out.channel = data; // здесь будет запись из БД со всеми полями (см схему)
@@ -53,6 +54,7 @@ var channelModule = function (socket) {
     var getChannelInfo = new Promise(function (resolve, reject) {
       ChannelModel.findOne({ slug: data.slug }, function (err, data) {
         var out = {};
+
         if (!err) {
           out.status = 'ok';
           out.channel = data;
@@ -81,6 +83,7 @@ var channelModule = function (socket) {
     var getChannelList = new Promise(function (resolve, reject) {
       ChannelModel.find(function (err, data) {
         var out = {};
+
         if (!err) {
           out.status = 'ok';
           out.channels = data;
@@ -124,6 +127,7 @@ var channelModule = function (socket) {
 
       q.exec(function (err, data) { // выполняем запрос
         var out = {};
+
         if (!err) {
           out.status = 'ok';
           out.messages = (data.length > 0 ? data : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)

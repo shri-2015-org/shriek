@@ -9,6 +9,9 @@ var ChannelsActions = alt_obj.createActions({
   setActiveChannel: function (channelSlug) {
     this.dispatch(channelSlug);
   },
+  setUnreadChannel: function (channelSlug) {
+    this.dispatch(channelSlug);
+  },
 
   initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
@@ -17,6 +20,11 @@ var ChannelsActions = alt_obj.createActions({
     });
     socket.on('channel get', function (data) {
       _this.actions.setActiveChannel(data.slug);
+    });
+    socket.on('message send', function (data) {
+      if (data.message.channel != socket.activeChannel) { // только если сообщение пришло в не активный канал
+        _this.actions.setUnreadChannel(data.message.channel);
+      }
     });
 
 

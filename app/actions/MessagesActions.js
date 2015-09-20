@@ -14,8 +14,10 @@ var MessagesActions = alt_obj.createActions({
     var _this = this;
 
       socket.on('message send', function (data) {
-        _this.actions.pushMessage({ message: data.message });
-        $(".msg__list").scrollTop(10000); // унести отсюда
+        if (data.message.channel == socket.activeChannel) { // проверяем, правда ли сообщение пришло в текущий чат?
+          _this.actions.pushMessage({ message: data.message });
+          $(".msg__list").scrollTop(10000); // унести отсюда
+        }
       });
       socket.on('channel get', function (data) {
         _this.actions.updateMessages({ messages: data.messages });

@@ -8,7 +8,8 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.displayName = 'ChannelsStore'; // обязательное поле для ES5
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
       updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
-      setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL
+      setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
+      setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL
     });
   }
 
@@ -21,6 +22,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
       this.channels.map(function (channel) {
         if (socket.activeChannel == channel.slug) {
           channel.isActive = true;
+          channel.isUnread = false;
         } else {
           channel.isActive = false;
         }
@@ -39,6 +41,22 @@ var ChannelsActions = require('./../actions/ChannelsActions');
   ChannelsStore.prototype.setActiveChannel = function (channel_slug) {
     socket.activeChannel = channel_slug;
     this.recalcActiveChannel();
+  };
+
+  ChannelsStore.prototype.setUnreadChannel = function (channel_slug) {
+
+    var listOfChannels = [];
+    this.channels.map(function (channel) {
+      if (channel_slug == channel.slug) {
+        channel.isUnread = true;
+      }
+      listOfChannels.push(channel);
+    });
+
+    console.log(listOfChannels);
+
+    this.channels = listOfChannels;
+
   };
 
   return alt_obj.createStore(ChannelsStore);

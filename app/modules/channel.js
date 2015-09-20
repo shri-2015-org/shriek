@@ -35,13 +35,13 @@ var channelModule = function (socket) {
     });
 
     createChannel
-    .then(function (data) {
-      socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
-      socket.emit('channel create', out);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(function (data) {
+        socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
+        socket.emit('channel create', out);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   });
 
@@ -70,12 +70,12 @@ var channelModule = function (socket) {
     });
 
     getChannelInfo
-    .then(function (data) {
-      socket.emit('channel info', out);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(function (data) {
+        socket.emit('channel info', out);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   });
 
@@ -100,12 +100,12 @@ var channelModule = function (socket) {
     });
 
     getChannelList
-    .then(function (data) {
-      socket.emit('channel list', data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(function (data) {
+        socket.emit('channel list', data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   });
 
@@ -146,12 +146,12 @@ var channelModule = function (socket) {
     });
 
     getMessages
-    .then(function (data) {
-      return socket.emit('channel get', data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(function (data) {
+        return socket.emit('channel get', data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   });
 }

@@ -1,8 +1,8 @@
-var SettingComponent = function(socket) {
+var SettingComponent = function (socket) {
 
   var SettingBlock = React.createClass({
 
-    getInitialState: function() {
+    getInitialState: function () {
       return {
         email: '',
         image: '',
@@ -10,7 +10,7 @@ var SettingComponent = function(socket) {
       };
     },
 
-    componentDidMount: function() {
+    componentDidMount: function () {
       var that = this;
       var username;
 
@@ -35,15 +35,15 @@ var SettingComponent = function(socket) {
       });
     },
 
-    handleEmailChange: function(e) {
+    handleEmailChange: function (e) {
       this.setState({email: e.target.value});
     },
 
-    handleImageChange: function(e) {
+    handleImageChange: function (e) {
       this.setState({image: e.target.value});
     },
 
-    handleSave: function(e) {
+    handleSave: function (e) {
       e.preventDefault();
 
       if (this.state != null) {
@@ -58,11 +58,11 @@ var SettingComponent = function(socket) {
       }
     },
 
-    handleClose: function(e) {
+    handleClose: function (e) {
       this.setState({opened: false});
     },
 
-    render: function() {
+    render: function () {
       var formSetting;
 
       formSetting = (

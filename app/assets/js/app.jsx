@@ -25,7 +25,7 @@ var SettingComponent = require('../../views/components/setting.jsx')(socket);
   'use strict';
 
   var Title = React.createClass({
-    render: function() {
+    render: function () {
       return (
         <div className="heading">
           <h3 className="heading__header">Shriek Chat</h3>
@@ -63,7 +63,7 @@ var SettingComponent = require('../../views/components/setting.jsx')(socket);
   });
 
   var Content = React.createClass({
-    render: function() {
+    render: function () {
       return (
         <div className="layout">
           <SettingComponent />

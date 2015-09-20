@@ -10,7 +10,7 @@ var MessagesActions = alt_obj.createActions({
     this.dispatch(message);
   },
 
-  initMessages: function(socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
+  initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var that = this;
 
       socket.on('message send', function (data) {
@@ -24,7 +24,7 @@ var MessagesActions = alt_obj.createActions({
 
   },
 
-  getMessages: function(socket) {
+  getMessages: function (socket) {
     socket.emit('channel get', {channel: socket.activeChannel, date: new Date()});
   }
 

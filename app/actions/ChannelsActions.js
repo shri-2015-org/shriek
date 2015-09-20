@@ -10,7 +10,7 @@ var ChannelsActions = alt_obj.createActions({
     this.dispatch(channelSlug);
   },
 
-  initChannels: function(socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
+  initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var that = this;
     socket.on('channel list', function (data) {
       that.actions.updateChannels(data); // получили данные и передали в функцию, которая умеет триггерить стор
@@ -22,7 +22,7 @@ var ChannelsActions = alt_obj.createActions({
 
   },
 
-  getChannels: function(socket) {
+  getChannels: function (socket) {
     socket.emit('channel list'); // дергаем бекенд, чтобы получить список каналов
   }
 

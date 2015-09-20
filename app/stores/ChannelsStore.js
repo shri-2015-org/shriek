@@ -1,4 +1,4 @@
-var ChannelsStoreFunction = function(socket) {
+var ChannelsStoreFunction = function (socket) {
 
 var alt_obj = require('./../controllers/alt_obj');
 var ChannelsActions = require('./../actions/ChannelsActions');

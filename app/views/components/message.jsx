@@ -1,7 +1,7 @@
 var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
 var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
-var ChatComponent = function(socket) {
+var ChatComponent = function (socket) {
   var ChatBox = React.createClass({
     getInitialState: function () {
       return MessagesStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
@@ -35,7 +35,7 @@ var ChatComponent = function(socket) {
 
     },
 
-    render: function() {
+    render: function () {
       return (
         <div className="msg">
           <div className="msg__wrap">
@@ -50,7 +50,7 @@ var ChatComponent = function(socket) {
   });
 
   var MessagesList = React.createClass({
-    componentDidMount: function() {
+    componentDidMount: function () {
       var msglist = $(React.findDOMNode(this.refs.msg_list));
     },
 

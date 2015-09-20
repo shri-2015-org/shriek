@@ -1,4 +1,4 @@
-var ChannelComponent = function(socket) {
+var ChannelComponent = function (socket) {
 
 var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
 var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
@@ -23,12 +23,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       this.setState(state);
     },
 
-    changeChannel: function(event) {
+    changeChannel: function (event) {
       socket.activeChannel = event.target.dataset.slug;
       socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
     },
 
-    render: function() {
+    render: function () {
       var Channels = (<div>Loading channels...</div>);
       var that = this;
 
@@ -55,11 +55,11 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   });
 
   var Channel = React.createClass({
-    clickHandler: function(event) {
+    clickHandler: function (event) {
       this.props.changeChannel(event);
     },
 
-    render: function() {
+    render: function () {
 
       var className = 'list__item ' + (this.props.channel.isActive ? 'active' : '');
 
@@ -72,7 +72,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   });
 
   var MoreChannels = React.createClass({
-    render: function() {
+    render: function () {
       return (
         <div className="more">
           <span>Показать +7</span>

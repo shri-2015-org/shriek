@@ -45,8 +45,10 @@ var SettingComponent = function(socket) {
 
     handleSave: function(e) {
       e.preventDefault();
+
       if (this.state != null) {
-      console.log(this.state);
+        console.log(this.state);
+
         socket.emit('user update', {
           username: socket.username,
           setting: {
@@ -81,20 +83,19 @@ var SettingComponent = function(socket) {
       );
 
       return (
-      <div>
-        {this.state.opened == true && (
-        <div className="modal" ref="overlaySetting">
-            {formSetting}
+        <div>
+          {this.state.opened == true && (
+            <div className="overflow" ref="overlaySetting">
+                {formSetting}
+            </div>
+          )}
         </div>
-        )}
-      </div>
       );
     }
 
   });
 
   return SettingBlock;
-
 };
 
 module.exports = SettingComponent;

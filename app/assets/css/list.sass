@@ -3,6 +3,26 @@
   margin: 10px 0 4px
   list-style: none
 
+$list-item-height: 35px
+
+.show_all_users_checkbox
+  display: none
+
+  &:checked
+    + ul
+      max-height: none
+
+    ~ .show_all_users_label > span
+      font-size: 0
+
+      &::before
+        content: 'Скрыть'
+        font-size: 14px
+
+.list_users
+  max-height: $list-item-height * 3 // умножаем на количество отображаемых элементов
+  overflow: hidden
+
 .list__item
   display: flex
   align-items: center
@@ -14,16 +34,18 @@
 
   a
     display: block
-    padding: 10px 30px 10px 45px
+    padding: 0 30px 0 45px
     width: 100%
     position: relative
+    line: $list-item-height
+    line-height: $list-item-height
 
     &:before
       content: ""
       display: block
       width: 8px
       height: 8px
-      margin: -2.5px 10px 0 0
+      margin: -4px 10px 0 0
       border-radius: 50%
       background: rgba(255, 255, 255, .5)
       position: absolute

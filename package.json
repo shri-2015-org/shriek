@@ -41,7 +41,7 @@
     "wiredep": "^3.0.0-beta",
     "mocha": "*",
     "chai": "*",
-    "socket.io-client": "*"
+    "socket.io-client": "*",
     "alt": "^0.17.3"
   }
 }

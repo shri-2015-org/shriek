@@ -61,7 +61,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     render: function() {
 
-      var className = 'list__item ' + (this.props.channel.isActive?'active':'');
+      var className = 'list__item ' + (this.props.channel.isActive ? 'active' : '');
 
       return (
         <li className={className}>

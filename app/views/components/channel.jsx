@@ -1,50 +1,41 @@
-var ChannelComponent = function(socket, ChatComponent) {
+var ChannelComponent = function (socket) {
+
+var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
+var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
 
   var ChannelsList = React.createClass({
-    getInitialState: function() {
-      return {
-        channels: []
-      };
+    getInitialState: function () {
+      return ChannelsStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
     },
 
-    componentDidMount: function() {
-      var that = this;
-
-      socket.on('channel list', function(data) {
-        if (socket.activeChannel === undefined) {
-          socket.activeChannel = 'general';
-        }
-
-        that.setState({ channels: data.channels });
-      });
-
-      socket.on('channel get', function(data) {
-        console.log('change chat room');
-        // console.log(ChatComponent);
-        // ChatComponent({messages: data.messages});
-      });
+    componentDidMount: function () {
+      ChannelsStore.listen(this.onChange); // подписываемся на изменения store
+      ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
+      ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
     },
 
-    changeChannel: function(event) {
+    componentWillUnmount() {
+      ChannelsStore.unlisten(this.onChange); // отписываемся от изменений store
+    },
+
+    // эта функция выполняется когда store триггерит изменения внутри себя
+    onChange(state) {
+      this.setState(state);
+    },
+
+    changeChannel: function (event) {
       socket.activeChannel = event.target.dataset.slug;
       socket.emit('channel get', { channel: event.target.dataset.slug, date: new Date() });
-      socket.emit('channel list');
-
-      console.log(socket.activeChannel);
     },
 
-    render: function() {
+    render: function () {
       var Channels = (<div>Loading channels...</div>);
-      var that = this;
+      var _this = this;
 
       if (this.state.channels) {
-        Channels = this.state.channels.map(function(channel) {
-          if (channel.slug === socket.activeChannel) {
-            activeClass = 'active';
-          } else {
-            activeClass = '';
-          }
-          return (<Channel channel={channel} changeChannel={that.changeChannel} activeClass={activeClass}/>);
+        Channels = this.state.channels.map(function (channel) {
+          return (<Channel channel={channel} changeChannel={_this.changeChannel} key={channel._id}/>);
+
         });
       }
 
@@ -64,13 +55,13 @@ var ChannelComponent = function(socket, ChatComponent) {
   });
 
   var Channel = React.createClass({
-    clickHandler: function(event) {
+    clickHandler: function (event) {
       this.props.changeChannel(event);
     },
 
-    render: function() {
+    render: function () {
 
-      var className = 'list__item ' + this.props.activeClass;
+      var className = 'list__item ' + (this.props.channel.isActive ? 'active' : '');
 
       return (
         <li className={className}>
@@ -81,7 +72,7 @@ var ChannelComponent = function(socket, ChatComponent) {
   });
 
   var MoreChannels = React.createClass({
-    render: function() {
+    render: function () {
       return (
         <div className="more">
           <span>Показать +7</span>

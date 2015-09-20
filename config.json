@@ -1,7 +1,0 @@
-{
-  "port": 3001,
-  "mongoose": {
-    "uri": "mongodb://shriek-team:2RG9d8Mu3P@ds041581.mongolab.com:41581/shriek"
-  }
-}
-

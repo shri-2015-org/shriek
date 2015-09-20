@@ -12,14 +12,14 @@ var channelModule = function (socket) {
   socket.on('channel create', function (data) {
 
     var createChannel = new Promise(function (resolve, reject) {
-      slug = slugify(data.name, {lowercase: true, separator: '_'}); // трансилитирируем name
+      slug = slugify(data.name, { lowercase: true, separator: '_' }); // трансилитирируем name
 
       var newChannel = ChannelModel({
         name: data.name,
         slug: slug
       });
 
-      newChannel.save({runValidators: true}, function (err, data) {
+      newChannel.save({ runValidators: true }, function (err, data) {
 
         var out = {};
         if (!err) {
@@ -35,13 +35,13 @@ var channelModule = function (socket) {
     });
 
     createChannel
-      .then(function (data){
-          socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
-          socket.emit('channel create', out);
-        })
-      .catch(function (error){
-          console.log(error);
-        });
+    .then(function (data) {
+      socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
+      socket.emit('channel create', out);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
   });
 
@@ -54,6 +54,7 @@ var channelModule = function (socket) {
 
     var getChannelInfo = new Promise(function (resolve, reject) {
       ChannelModel.findOne({ slug: data.slug }, function (err, data) {
+
         var out = {};
         if (!err) {
           out.status = 'ok';
@@ -63,17 +64,18 @@ var channelModule = function (socket) {
           var error = new Error('Ошибка получения чата');
           reject(error);
         }
+
       });
 
     });
 
     getChannelInfo
-      .then(function (data){
-          socket.emit('channel info', out);
-        })
-      .catch(function (error){
-          console.log(error);
-        });
+    .then(function (data) {
+      socket.emit('channel info', out);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
   });
 
@@ -83,6 +85,7 @@ var channelModule = function (socket) {
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {
       ChannelModel.find(function (err, data) {
+
         var out = {};
         if (!err) {
           out.status = 'ok';
@@ -92,16 +95,17 @@ var channelModule = function (socket) {
           var error = new Error('Ошибка получения чатов');
           reject(error);
         }
+
       });
     });
 
     getChannelList
-      .then(function (data){
-          socket.emit('channel list', data);
-        })
-      .catch(function (error){
-          console.log(error);
-        });
+    .then(function (data) {
+      socket.emit('channel list', data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
   });
 
@@ -118,15 +122,15 @@ var channelModule = function (socket) {
     var indata = data;
 
     var getMessages = new Promise(function (resolve, reject){
-      var query = {
-        channel: data.channel // канал нужно учитывать всегда
-      };
+      var query = { channel: data.channel }; // канал нужно учитывать всегда
       if (data.date !== undefined) query.created_at = { $lt: data.date }; // дата — если пришла
+
       var q = MessageModel.find(query);
       if (data.limit !== undefined) q.limit(data.limit); // limit
       if (data.skip !== undefined) q.skip(data.skip); // offset
 
       q.exec(function (err, data) { // выполняем запрос
+
         var out = {};
         if (!err) {
           out.status = 'ok';
@@ -137,16 +141,17 @@ var channelModule = function (socket) {
           var error = new Error('Ошибка получения сообщений');
           reject(error);
         }
+
       });
     });
 
     getMessages
-      .then( function (data) {
-        return socket.emit('channel get', data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    .then(function (data) {
+      return socket.emit('channel get', data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
   });
 }

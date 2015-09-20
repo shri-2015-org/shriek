@@ -11,16 +11,16 @@ var SettingComponent = function (socket) {
     },
 
     componentDidMount: function () {
-      var that = this;
+      var _this = this;
       var username;
 
       window.addEventListener('openSetting', function () {
-        that.setState({opened: true});
+        _this.setState({opened: true});
       });
 
       socket.on('user info', function (data) {
         if (data.status === 'ok') {
-          that.setState({
+          _this.setState({
             email: data.user.setting.email,
             image: data.user.setting.image
           });
@@ -30,7 +30,7 @@ var SettingComponent = function (socket) {
       socket.on('user update', function (data) {
         if (data.status == 'ok') {
           socket.emit('user info', {username: data.user.username});
-          that.handleClose();
+          _this.handleClose();
         }
       });
     },

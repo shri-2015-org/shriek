@@ -30,11 +30,11 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     render: function () {
       var Channels = (<div>Loading channels...</div>);
-      var that = this;
+      var _this = this;
 
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
-          return (<Channel channel={channel} changeChannel={that.changeChannel}/>);
+          return (<Channel channel={channel} changeChannel={_this.changeChannel}/>);
 
         });
       }

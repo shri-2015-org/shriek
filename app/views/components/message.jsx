@@ -84,14 +84,14 @@ var ChatComponent = function (socket) {
   var MessageForm = React.createClass({
     handleSubmit: function (e) {
       e.preventDefault();
-      var that = this; // чтобы потом найти текстовое поле
+      var _this = this; // чтобы потом найти текстовое поле
       var text = this.refs.text.getDOMNode().value; // получаем текст
       var submitButton = this.refs.submitButton.getDOMNode(); // получаем кнопку
       submitButton.innerHTML = 'Posting message...'; // отключаем кнопку и меняем текст
       submitButton.setAttribute('disabled', 'disabled');
 
       this.props.submitMessage(text, function (err) { // вызываем submitMessage, передаем колбек
-        that.refs.text.getDOMNode().value = '';
+        _this.refs.text.getDOMNode().value = '';
         submitButton.innerHTML = 'Post message';
         submitButton.removeAttribute('disabled');
       });

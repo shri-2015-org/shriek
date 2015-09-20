@@ -11,12 +11,12 @@ var ChannelsActions = alt_obj.createActions({
   },
 
   initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
-    var that = this;
+    var _this = this;
     socket.on('channel list', function (data) {
-      that.actions.updateChannels(data); // получили данные и передали в функцию, которая умеет триггерить стор
+      _this.actions.updateChannels(data); // получили данные и передали в функцию, которая умеет триггерить стор
     });
     socket.on('channel get', function (data) {
-      that.actions.setActiveChannel(data.slug);
+      _this.actions.setActiveChannel(data.slug);
     });
 
 

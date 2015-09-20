@@ -11,14 +11,14 @@ var MessagesActions = alt_obj.createActions({
   },
 
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
-    var that = this;
+    var _this = this;
 
       socket.on('message send', function (data) {
-        that.actions.pushMessage({ message: data.message });
+        _this.actions.pushMessage({ message: data.message });
         $(".msg__list").scrollTop(10000); // унести отсюда
       });
       socket.on('channel get', function (data) {
-        that.actions.updateMessages({ messages: data.messages });
+        _this.actions.updateMessages({ messages: data.messages });
         $(".msg__list").scrollTop(10000); // унести отсюда
       });
 

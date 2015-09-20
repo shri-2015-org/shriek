@@ -9,11 +9,11 @@ var ProfileComponent = function (socket) {
     },
 
     componentDidMount: function () {
-      var that = this;
+      var _this = this;
 
       socket.on('user info', function (data) {
         if (data.status === 'ok') {
-          that.setState({image: data.user.setting.image});
+          _this.setState({image: data.user.setting.image});
         }
       });
     },

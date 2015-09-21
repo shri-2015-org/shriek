@@ -32,6 +32,10 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
         });
       }
 
+      window.addEventListener('userLeave', function () {
+        _this.setState({logged: false});
+      });
+
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
           _this.setState({

@@ -83,11 +83,15 @@ var userModule = function(socket) {
    * @param  data
    */
   socket.on('user leave', function (data) {
+    console.log('user leave init');
+    console.log(socket);
     var out = {};
     if (socket.username === undefined) {
+      console.log('user not logged yet');
       out.status = 'error';
       out.error_message = 'Пользователь еще не вошел';
     } else {
+       console.log('loggin out');
       var username = socket.username;
 
       socket.username = undefined;

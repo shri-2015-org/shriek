@@ -13,6 +13,7 @@
     "url": "https://github.com/shri-2015-org/shriek.git"
   },
   "devDependencies": {
+    "alt": "^0.17.3",
     "bower": "^1.5.2",
     "browserify": "^11.1.0",
     "chai": "*",
@@ -38,7 +39,6 @@
     "transliteration": "^0.1.1",
     "vinyl-fs": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "wiredep": "^3.0.0-beta",
-    "alt": "^0.17.3"
+    "wiredep": "^3.0.0-beta"
   }
 }

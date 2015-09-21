@@ -22,18 +22,25 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
 
     componentDidMount: function() {
       var username;
-      var storage = sessionStorage.key(0);
+      var storageUser = sessionStorage.userName;
+      var storagePass = sessionStorage.userPass;
       var _this = this;
 
-      if (storage != null) {
+      if (storageUser != null && storagePass != null) {
         socket.emit('user enter', {
-          username: storage,
-          password: sessionStorage.getItem(storage)
+          username: storageUser,
+          password: storagePass
         });
       }
 
       window.addEventListener('userLeave', function () {
-        _this.setState({logged: false});
+        _this.setState({
+          logged: false,
+          userInit: true,
+          passInit: true
+        });
+        sessionStorage.removeItem('userName');
+        sessionStorage.removeItem('userPass');
       });
 
       socket.on('user enter', function(data) {
@@ -49,7 +56,8 @@ var LoginError = require('../../views/components/login-error.jsx')(socket);
 
           // Load info about current user
           socket.emit('user info', {username: socket.username});
-          sessionStorage.setItem(data.user.username,data.user.hashedPassword);
+          sessionStorage.setItem('userName',data.user.username);
+          sessionStorage.setItem('userPass',data.user.hashedPassword);
         } else {
           console.log(data);
           _this.setState({error: data.error_message});

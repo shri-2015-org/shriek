@@ -9,13 +9,17 @@ var User = new Schema({
     required: true,
     unique: true
   },
+  twitterId : {
+    type: String,
+    unique: true
+  },
   hashedPassword: {
     type: String,
-    required: true
+    required: false
   },
   salt: {
     type: String,
-    required: true
+    required: false
   },
   created_at: {
     type: Date,
@@ -76,9 +80,9 @@ User.path('hashedPassword').validate(function(v) {
     }
   }
 
-  if (this.isNew && !this._plainPassword) {
-    this.invalidate('password', 'required');
-  }
+  // if (this.isNew && !this._plainPassword) {
+  //   this.invalidate('password', 'required');
+  // }
 }, null);
 
 module.exports = mongoose.model('User', User);

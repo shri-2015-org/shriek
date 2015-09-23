@@ -9,6 +9,7 @@ var userModule = function(socket) {
    * @param  data.password пароль пользователя
    */
   socket.on('user enter', function (data) {
+    console.log(data);
     if (socket.username !== undefined) {
       return socket.emit('user enter', {
         status: 'error',

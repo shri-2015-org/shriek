@@ -106,7 +106,8 @@ var ChatComponent = function (socket) {
     },
 
     handleKeyDown: function (e) {
-      if (e.ctrlKey && e.keyCode === 13) {
+      var pressKeys = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
+      if (pressKeys) {
         this.handleSubmit(e);
       }
     },

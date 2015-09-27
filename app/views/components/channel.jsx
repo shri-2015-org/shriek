@@ -19,7 +19,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     },
 
     // эта функция выполняется когда store триггерит изменения внутри себя
-    onChange(state) {
+    onChange: function(state) {
       this.setState(state);
     },
 

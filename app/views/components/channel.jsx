@@ -14,12 +14,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
       ChannelsStore.unlisten(this.onChange); // отписываемся от изменений store
     },
 
     // эта функция выполняется когда store триггерит изменения внутри себя
-    onChange: function(state) {
+    onChange: function (state) {
       this.setState(state);
     },
 

@@ -35,8 +35,8 @@ var channelModule = function (socket) {
 
     createChannel
       .then(function (data) {
-        socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
-        socket.emit('channel create', out);
+        socket.broadcast.emit('channel create', data); // броадкастим на всех, только если все прошло удачно
+        socket.emit('channel create', data);
       })
       .catch(function (error) {
         console.log(error);
@@ -68,7 +68,7 @@ var channelModule = function (socket) {
 
     getChannelInfo
       .then(function (data) {
-        socket.emit('channel info', out);
+        socket.emit('channel info', data);
       })
       .catch(function (error) {
         console.log(error);
@@ -113,17 +113,23 @@ var channelModule = function (socket) {
    * @param data.skip integer начиная с
    * @param data.date date дата от которой брать ( < date )
    */
-  socket.on('channel get', function(data) {
-    // строим запрос в БД
+  socket.on('channel get', function (data) {
     var indata = data;
 
     var getMessages = new Promise(function (resolve, reject) {
+      // строим запрос в БД
       var query = { channel: data.channel }; // канал нужно учитывать всегда
-      if (date in data) query.created_at = { $lt: data.date }; // дата — если пришла
+      if ('date' in data) {
+        query.created_at = { $lt: data.date }; // дата — если пришла
+      }
 
       var q = MessageModel.find(query);
-      if (limit in data) q.limit(data.limit); // limit
-      if (skip in data) q.skip(data.skip); // offset
+      if ('limit' in data) {
+        q.limit(data.limit); // limit
+      }
+      if ('skip' in data) {
+        q.skip(data.skip); // offset
+      }
 
       q.exec(function (err, data) { // выполняем запрос
         var out = {};
@@ -145,7 +151,7 @@ var channelModule = function (socket) {
         return socket.emit('channel get', data);
       })
       .catch(function (error) {
-        console.log(error);
+        console.log('channel get error', error);
       });
 
   });

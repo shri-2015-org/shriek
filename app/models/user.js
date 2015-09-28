@@ -9,7 +9,15 @@ var User = new Schema({
     required: true,
     unique: true
   },
-  twitterId : {
+  githubId: {
+    type: String,
+    unique: true
+  },
+  twitterId: {
+    type: String,
+    unique: true
+  },
+  googleId: {
     type: String,
     unique: true
   },

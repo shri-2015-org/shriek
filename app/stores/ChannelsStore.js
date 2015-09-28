@@ -9,6 +9,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
       updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
       setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
+      addChannel: ChannelsActions.ADD_CHANNEL,
       setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL
     });
   }
@@ -43,6 +44,10 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.recalcActiveChannel();
   };
 
+  ChannelsStore.prototype.addChannel = function (fetched_data) {
+    this.channels.push(fetched_data);
+  };
+
   ChannelsStore.prototype.setUnreadChannel = function (channel_slug) {
 
     var listOfChannels = [];
@@ -53,13 +58,11 @@ var ChannelsActions = require('./../actions/ChannelsActions');
       listOfChannels.push(channel);
     });
 
-    console.log(listOfChannels);
-
     this.channels = listOfChannels;
 
   };
 
   return alt_obj.createStore(ChannelsStore);
-}
+};
 
 module.exports = ChannelsStoreFunction;

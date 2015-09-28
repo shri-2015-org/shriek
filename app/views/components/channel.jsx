@@ -31,10 +31,14 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       });
     },
 
+    addChannel: function () {
+      var dialog = prompt('','');
+      socket.emit('channel create', {name: dialog});
+    },
+
     render: function () {
       var Channels = (<div>Loading channels...</div>);
       var _this = this;
-
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
           return (
@@ -50,9 +54,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         <div className="group">
           <div className="heading heading_group">
             <h3 className="heading__header">Каналы</h3>
-            <span className="heading__plus">
-              <i className="fa fa-plus-square-o fa-lg"></i>
-            </span>
+            <AddChannel addChannel={this.addChannel}/>
           </div>
           <ul className="list list_channels">
             {Channels}
@@ -69,8 +71,6 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     },
 
     render: function () {
-
-      console.log(this.props.channel.isUnread);
 
       var className = 'list__item ' +
         (this.props.channel.isActive ? ' active' : '') +
@@ -94,6 +94,16 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         <div className="more">
           <span>Показать +7</span>
         </div>
+      );
+    }
+  });
+
+  var AddChannel = React.createClass({
+    render: function () {
+      return (
+        <span className="heading__plus" onClick={this.props.addChannel}>
+          <i className="fa fa-plus-square-o fa-lg"></i>
+        </span>
       );
     }
   });

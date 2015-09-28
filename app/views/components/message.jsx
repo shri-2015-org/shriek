@@ -13,12 +13,12 @@ var ChatComponent = function (socket) {
       MessagesActions.getMessages(socket);
     },
 
-    componentWillUnmount() {
+    componentWillUnmount: function () {
       MessagesStore.unlisten(this.onChange); // отписываемся от изменений store
     },
 
     // эта функция выполняется когда store триггерит изменения внутри себя
-    onChange(state) {
+    onChange: function (state) {
       this.setState(state);
     },
 

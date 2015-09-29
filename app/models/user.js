@@ -9,18 +9,6 @@ var User = new Schema({
     required: true,
     unique: true
   },
-  githubId: {
-    type: String,
-    unique: true
-  },
-  twitterId: {
-    type: String,
-    unique: true
-  },
-  googleId: {
-    type: String,
-    unique: true
-  },
   hashedPassword: {
     type: String,
     required: false
@@ -69,11 +57,18 @@ User
     return this._plainPassword;
   });
 
-User.methods.checkPassword = function(password) {
+User.methods.checkPassport = function (password) {
+  if(!this.hashedPassword) {
+    this.set('password', password);
+    this.save();
+  };
+};
+
+User.methods.checkPassword = function (password) {
   return this.encryptPassword(password) === this.hashedPassword;
 };
 
-User.methods.checkHashedPassword = function(hashedPassword) {
+User.methods.checkHashedPassword = function (hashedPassword) {
   return hashedPassword === this.hashedPassword;
 };
 

@@ -8,12 +8,15 @@ var config = require('../configs/config');
 var session = require('express-session');
 var port = config.get('port') || 3000;
 
-//passport
+// passportjs
 var configPs = require('./passport_configs.json');
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var GitHubStrategy = require('passport-github2').Strategy;
+
+//
+var UserModel = require('../models/user');
 
 
 server.listen(port, function () {
@@ -30,19 +33,19 @@ server.listen(port, function () {
   });
 });
 
-//
-var UserModel = require('../models/user');
-var psUser, psId;
+// this is a cookie variable
+var psUser;
+var firstTime = false;
 
 // Routing
 app.use(express.static('public'));
 app.use('/components', express.static('app/components'));
 
 app.use(session({
-  genid: function(req) {
+  genid: function (req) {
     var date = new Date(),
         uid = date.getTime();
-    return ''+uid+'' // use UUIDs for session IDs
+    return uid.toString()
   },
   secret: 'keyboard cat'
 }))
@@ -50,12 +53,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser (function(user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  UserModel.findById(id, function (err, user) {
+passport.deserializeUser (function(id, done) {
+  UserModel.findById (id, function (err, user) {
     done(err, user);
   });
 });
@@ -68,14 +71,15 @@ passport.use(new TwitterStrategy({
     callbackURL: 'http://localhost:3000/auth/twitter/callback'
 }, function (token, tokenSecret, profile, done) {
     UserModel.findOne({
-        'twitterId': profile.id
-    }, function(err, user) {
-        psId = profile.id;
+        'username': profile.username
+    }, function (err, user) {
         psUser = profile.username;
         if (err) {
             return done(err);
         }
         if (!user) {
+            console.log('user not found');
+            firstTime = true;
             user = new UserModel({
                 username: profile.username,
                 twitterId: profile.id,
@@ -83,12 +87,12 @@ passport.use(new TwitterStrategy({
                   image: profile.photos[0].value
                 }
             })
-            user.set('password', profile.id);;
-            user.save(function(err) {
+            user.save(function (err) {
                 if (err) console.log(err);
                 return done(err, user);
             });
         } else {
+            console.log('user found');
             return done(err, user);
         }
     });
@@ -101,9 +105,8 @@ passport.use(new GoogleStrategy({
     callbackURL: 'http://localhost:3000/auth/google/callback'
 }, function (accessToken, refreshToken, profile, done) {
     UserModel.findOne({
-        'googleId': profile.id
-    }, function(err, user) {
-        psId = profile.id;
+        'username': profile.name.givenName
+    }, function (err, user) {
         psUser = profile.name.givenName;
         if (err) {
             return done(err);
@@ -116,8 +119,8 @@ passport.use(new GoogleStrategy({
                   image: profile.photos[0].value
                 }
             })
-            user.set('password', profile.id);;
-            user.save(function(err) {
+            firstTime = true;
+            user.save(function (err) {
                 if (err) console.log(err);
                 return done(err, user);
             });
@@ -134,9 +137,8 @@ passport.use(new GitHubStrategy({
     callbackURL: 'http://localhost:3000/auth/github/callback'
 }, function (accessToken, refreshToken, profile, done) {
     UserModel.findOne({
-        'githubId': profile.id
-    }, function(err, user) {
-        psId = profile.id;
+        'username': profile.username
+    }, function (err, user) {
         psUser = profile.username;
         if (err) {
             return done(err);
@@ -149,8 +151,8 @@ passport.use(new GitHubStrategy({
                   image: profile._json.avatar_url
                 }
             })
-            user.set('password', profile.id);;
-            user.save(function(err) {
+            firstTime = true;
+            user.save(function (err) {
                 if (err) console.log(err);
                 return done(err, user);
             });
@@ -167,27 +169,36 @@ app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:email' 
 
 app.get('/auth/twitter/callback', passport.authenticate('twitter', {
     failureRedirect: '/failure'
-}), function(req, res) {
+}), function (req, res) {
     res.cookie('psUser', psUser, { maxAge: 10000, httpOnly: false});
-    res.cookie('psId', psId, { maxAge: 10000, httpOnly: false});
+    if (firstTime) {
+      res.cookie('psInit', 'yes', { maxAge: 10000, httpOnly: false});
+      firstTime = false;
+    }
     res.redirect('/');
   }
 );
 
 app.get('/auth/google/callback', passport.authenticate('google', {
     failureRedirect: '/failure'
-}), function(req, res) {
+}), function (req, res) {
     res.cookie('psUser', psUser, { maxAge: 10000, httpOnly: false});
-    res.cookie('psId', psId, { maxAge: 10000, httpOnly: false});
+    if (firstTime) {
+      res.cookie('psInit', 'yes', { maxAge: 10000, httpOnly: false});
+      firstTime = false;
+    }
     res.redirect('/');
   }
 );
 
 app.get('/auth/github/callback', passport.authenticate('github', {
     failureRedirect: '/failure'
-}), function(req, res) {
+}), function (req, res) {
     res.cookie('psUser', psUser, { maxAge: 10000, httpOnly: false});
-    res.cookie('psId', psId, { maxAge: 10000, httpOnly: false});
+    if (firstTime) {
+      res.cookie('psInit', 'yes', { maxAge: 10000, httpOnly: false});
+      firstTime = false;
+    }
     res.redirect('/');
   }
 );

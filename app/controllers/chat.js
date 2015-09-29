@@ -17,6 +17,19 @@ var GitHubStrategy = require('passport-github2').Strategy;
 
 var UserModel = require('../models/user');
 
+var domain = '';
+switch (process.env.NODE_ENV) {
+  case 'dev':
+    domain = 'localhost:3000';
+    break;
+  case 'prod':
+    domain = 'shriek-chat.tk';
+    break;
+  default:
+    domain = 'localhost:3000';
+    break;
+}
+
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 
@@ -68,7 +81,7 @@ passport.deserializeUser(function (id, done) {
 passport.use(new TwitterStrategy({
   consumerKey: configPs.twitter.key,
   consumerSecret: configPs.twitter.secret,
-  callbackURL: 'http://localhost:3000/auth/twitter/callback'
+  callbackURL: 'http://' + domain + '/auth/twitter/callback'
 }, function (token, tokenSecret, profile, done) {
   UserModel.findOne({
     'username': profile.username
@@ -104,7 +117,7 @@ passport.use(new TwitterStrategy({
 passport.use(new GoogleStrategy({
   clientID: configPs.google.key,
   clientSecret: configPs.google.secret,
-  callbackURL: 'http://localhost:3000/auth/google/callback'
+  callbackURL: 'http://' + domain + '/auth/google/callback'
 }, function (accessToken, refreshToken, profile, done) {
   UserModel.findOne({
     'username': profile.name.givenName
@@ -138,7 +151,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
   clientID: configPs.github.key,
   clientSecret: configPs.github.secret,
-  callbackURL: 'http://localhost:3000/auth/github/callback'
+  callbackURL: 'http://' + domain + '/auth/github/callback'
 }, function (accessToken, refreshToken, profile, done) {
   UserModel.findOne({
     'username': profile.username

@@ -21,7 +21,11 @@ var ProfileComponent = function (socket) {
         console.log('user leave, dispatchEvent');
         if (data.status === 'ok') {
           console.log('user leave', data);
-          window.dispatchEvent(new Event('userLeave'));
+          if ('username' in data.user) {
+            if (socket.username === data.user.username) {
+              window.dispatchEvent(new Event('userLeave'));
+            }
+          }
         } else {
           alert('something unpredictable happened');
         }

@@ -18,7 +18,9 @@ var ProfileComponent = function (socket) {
       });
 
       socket.on('user leave', function (data) {
+        console.log('user leave, dispatchEvent');
         if (data.status === 'ok') {
+          console.log('user leave', data);
           window.dispatchEvent(new Event('userLeave'));
         } else {
           alert('something unpredictable happened');

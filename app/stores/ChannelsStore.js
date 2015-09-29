@@ -5,7 +5,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
   function ChannelsStore() {
     this.channels = []; // это бывший initState у компонента
-    this.addchannel = false;
+    this.show_modal = false;
     this.displayName = 'ChannelsStore'; // обязательное поле для ES5
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
       updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена

@@ -32,12 +32,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     },
 
     showModal: function () {
-      this.setState({addchannel: true});
+      this.setState({show_modal: true});
     },
 
     hideModal: function (e) {
       e.preventDefault();
-      this.setState({addchannel: false});
+      this.setState({show_modal: false});
     },
 
     addChannel: function (e) {
@@ -50,7 +50,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     render: function () {
       var Channels = (<div>Loading channels...</div>);
-      var _this = this;
+      var _this = this, len_channels = 0;
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
           return (
@@ -60,19 +60,22 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
               key={channel._id} />
           );
         });
+
+        len_channels = Channels.length;
       }
 
       return (
         <div className="group">
           <div className="heading heading_group">
             <h3 className="heading__header">Каналы</h3>
-            <AddChannelButton showModal={this.showModal} />
+            <ButtonAddChannel handleClick={this.showModal} />
           </div>
+          <input type="checkbox" id="showAllChannels" className="show_all_checkbox" />
           <ul className="list list_channels">
             {Channels}
           </ul>
-          <MoreChannels />
-          {this.state.addchannel == true && (
+          <MoreChannels len = {len_channels}/>
+          {this.state.show_modal == true && (
             <AddChannelModal handleSubmit={this.addChannel} handleClose={this.hideModal}/>
           )}
         </div>
@@ -105,18 +108,22 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
   var MoreChannels = React.createClass({
     render: function () {
-      return (
-        <div className="more">
-          <span>Показать +7</span>
-        </div>
+      var usersDisplaying = 3;
+      var hiddenUsersCount = this.props.len - usersDisplaying;
+
+      // Отображаем «Показать» только в случае избыточного количества каналов
+      return hiddenUsersCount > 0 && (
+        <label className="more show_all_label" htmlFor="showAllChannels">
+          <span>Показать +{hiddenUsersCount}</span>
+        </label>
       );
     }
   });
 
-  var AddChannelButton = React.createClass({
+  var ButtonAddChannel = React.createClass({
     render: function () {
       return (
-        <span className="heading__plus" onClick={this.props.showModal}>
+        <span className="heading__plus" onClick={this.props.handleClick}>
           <i className="fa fa-plus-square-o fa-lg"></i>
         </span>
       );

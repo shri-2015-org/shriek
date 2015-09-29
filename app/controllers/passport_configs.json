@@ -1,16 +1,16 @@
 {
-    "twitter": {
-      "key": "HEt5IuGQPv4bj75wNTqyLux8x",
-      "secret": "h3FVM0GryVVdIGx7qMU4WxBzOudreASS3MPJvEH1DBYkXBiETC"
-    },
+  "twitter": {
+    "key": "HEt5IuGQPv4bj75wNTqyLux8x",
+    "secret": "h3FVM0GryVVdIGx7qMU4WxBzOudreASS3MPJvEH1DBYkXBiETC"
+  },
 
-    "google": {
-      "key": "391117681817-3c1mfb4g97vkfvmftprkvq9tlaqvp8rj.apps.googleusercontent.com",
-      "secret": "ty0v0NVN6OUVb35weCQ_0KPi"
-    },
+  "google": {
+    "key": "391117681817-3c1mfb4g97vkfvmftprkvq9tlaqvp8rj.apps.googleusercontent.com",
+    "secret": "ty0v0NVN6OUVb35weCQ_0KPi"
+  },
 
-    "github": {
-      "key": "d5e6db20f77252718eee",
-      "secret": "24c0014b9e850ca91dab7e3880e760c11a5cd6f7"
-    }
+  "github": {
+    "key": "d5e6db20f77252718eee",
+    "secret": "24c0014b9e850ca91dab7e3880e760c11a5cd6f7"
+  }
 }

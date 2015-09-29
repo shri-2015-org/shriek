@@ -36,7 +36,7 @@ var User = new Schema({
   }
 });
 
-User.methods.encryptPassword = function(password) {
+User.methods.encryptPassword = function (password) {
   return crypto.Hmac('sha1', this.salt).update(password).digest('hex');
 };
 
@@ -76,7 +76,7 @@ User.path('username').validate(function (v) {
   return v.length > 4 && v.length < 30 && !/[^a-z_\w]+/i.test(v)
 }, 'Никнейм не прошел валидацию');
 
-User.path('hashedPassword').validate(function(v) {
+User.path('hashedPassword').validate(function (v) {
   if (this._plainPassword) {
     if (this._plainPassword.length < 6) {
       this.invalidate('password', 'password must be at least 6 characters.');

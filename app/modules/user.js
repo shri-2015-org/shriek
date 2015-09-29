@@ -103,7 +103,7 @@ var userModule = function (socket) {
       out.status = 'error';
       out.error_message = 'Пользователь еще не вошел';
     } else {
-       console.log('loggin out');
+      console.log('loggin out');
       var username = socket.username;
 
       socket.username = undefined;

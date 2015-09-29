@@ -47,7 +47,9 @@ app.use(session({
         uid = date.getTime();
     return uid.toString()
   },
-  secret: 'keyboard cat'
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
 }))
 
 app.use(passport.initialize());

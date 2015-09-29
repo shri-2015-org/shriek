@@ -1,6 +1,8 @@
 var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
 var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
+var markDownConverter = new showdown.Converter();
+
 var ChatComponent = function (socket) {
   var ChatBox = React.createClass({
     getInitialState: function () {
@@ -13,12 +15,12 @@ var ChatComponent = function (socket) {
       MessagesActions.getMessages(socket);
     },
 
-    componentWillUnmount() {
+    componentWillUnmount: function () {
       MessagesStore.unlisten(this.onChange); // отписываемся от изменений store
     },
 
     // эта функция выполняется когда store триггерит изменения внутри себя
-    onChange(state) {
+    onChange: function (state) {
       this.setState(state);
     },
 
@@ -75,7 +77,12 @@ var ChatComponent = function (socket) {
     render: function () {
       return (
         <div className="msg__item">
-          <span className="msg__author">{this.props.message.username}: </span><span className="msg__text">{this.props.message.text}</span>
+          <span className="msg__author">{this.props.message.username}: </span>
+          <div
+            className="msg__text"
+            dangerouslySetInnerHTML={{
+              __html: markDownConverter.makeHtml(this.props.message.text)
+            }} />
         </div>
       );
     }
@@ -98,11 +105,18 @@ var ChatComponent = function (socket) {
 
     },
 
+    handleKeyDown: function (e) {
+      var pressKeys = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
+      if (pressKeys) {
+        this.handleSubmit(e);
+      }
+    },
+
     render: function () {
       return (
         <div className='send'>
-          <form className="send__form" onSubmit={this.handleSubmit}>
-            <input className="send__text" name="text" ref="text" placeholder="Сообщение" autoFocus required />
+          <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
+            <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>

@@ -32,6 +32,19 @@ var User = new Schema({
     image: {
       type: String,
       default: "http://media.steampowered.com/steamcommunity/public/images/avatars/78/78acf20c6efa57fcadad137ff7ababb6f8210305_full.jpg"
+    },
+    first_name: {
+      type: String
+    },
+    last_name: {
+      type: String
+    },
+    sex: {
+      type: String,
+      enum: ['female', 'male']
+    },
+    description: {
+      type: String
     }
   }
 });
@@ -87,5 +100,16 @@ User.path('hashedPassword').validate(function(v) {
   //   this.invalidate('password', 'required');
   // }
 }, null);
+
+User
+  .virtual('full_name')
+  .set(function (full_name) {
+    var arr_name = full_name.split(' ');
+    this.first_name = arr_name[0];
+    this.last_name = arr_name[1];
+  })
+  .get(function () {
+    return [this.first_name, this.last_name].join(' ');
+  });
 
 module.exports = mongoose.model('User', User);

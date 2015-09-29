@@ -36,7 +36,6 @@ var ChannelsActions = alt_obj.createActions({
     socket.on('channel create', function (data) {
       _this.actions.addChannel(data.channel);
     });
-    
   },
 
   getChannels: function (socket) {

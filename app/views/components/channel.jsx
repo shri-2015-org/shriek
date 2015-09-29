@@ -31,9 +31,21 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       });
     },
 
-    addChannel: function () {
-      var dialog = prompt('','');
-      socket.emit('channel create', {name: dialog});
+    showModal: function () {
+      this.setState({addchannel: true});
+    },
+
+    hideModal: function (e) {
+      e.preventDefault();
+      this.setState({addchannel: false});
+    },
+
+    addChannel: function (e) {
+      e.preventDefault();
+      var name = $(e.target).find('#channel').val();
+      if (name) {
+        socket.emit('channel create', {name: name});
+      }
     },
 
     render: function () {
@@ -54,12 +66,15 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         <div className="group">
           <div className="heading heading_group">
             <h3 className="heading__header">Каналы</h3>
-            <AddChannel addChannel={this.addChannel}/>
+            <AddChannelButton showModal={this.showModal} />
           </div>
           <ul className="list list_channels">
             {Channels}
           </ul>
           <MoreChannels />
+          {this.state.addchannel == true && (
+            <AddChannelModal handleSubmit={this.addChannel} handleClose={this.hideModal}/>
+          )}
         </div>
       );
     }
@@ -98,12 +113,31 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     }
   });
 
-  var AddChannel = React.createClass({
+  var AddChannelButton = React.createClass({
     render: function () {
       return (
-        <span className="heading__plus" onClick={this.props.addChannel}>
+        <span className="heading__plus" onClick={this.props.showModal}>
           <i className="fa fa-plus-square-o fa-lg"></i>
         </span>
+      );
+    }
+  });
+
+  var AddChannelModal = React.createClass({
+    render: function () {
+      return (
+        <div className="modal">
+          <form className="form modal__body" onSubmit={this.props.handleSubmit}>
+            <h2 className="modal__heading">Назовите канал</h2>
+            <div className="form__row">
+              <label className="form__label" htmlFor="channel"><i className="fa fa-users"></i></label>
+              <input className="form__text" type="text" id="channel" ref="inputNameChannel" placeholder="Канал" />
+            </div>
+            <button className="btn" type="submit">Добавить</button>
+            <span> </span>
+            <button className="btn" onClick={this.props.handleClose} type="button">Close</button>
+          </form>
+        </div>
       );
     }
   });

@@ -35,8 +35,8 @@ var channelModule = function (socket) {
 
     createChannel
       .then(function (data) {
-        socket.broadcast.emit('channel create', out); // броадкастим на всех, только если все прошло удачно
-        socket.emit('channel create', out);
+        socket.broadcast.emit('channel create', data); // броадкастим на всех, только если все прошло удачно
+        socket.emit('channel create', data);
       })
       .catch(function (error) {
         console.log(error);
@@ -68,7 +68,7 @@ var channelModule = function (socket) {
 
     getChannelInfo
       .then(function (data) {
-        socket.emit('channel info', out);
+        socket.emit('channel info', data);
       })
       .catch(function (error) {
         console.log(error);

@@ -367,6 +367,11 @@ socket.emit('<name-of-event>', data);
 |-------|------ | -------|
 | email | String | Email |
 | image | String | Url of image |
+| first_name | String | First name |
+| last_name | String | Last name |
+| full_name | String | **virtual**, full name |
+| sex | String | `['male', 'female']` Gender of user |
+| description | String | About himself |
 
 `username` from 5 to 29 letters. Only latin letters, figures and underscore (`_`).
 

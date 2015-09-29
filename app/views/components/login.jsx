@@ -78,6 +78,7 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
       }
 
       window.addEventListener('userLeave', function () {
+        console.log('user leave, remove session Storage and change state');
         _this.setState({
           logged: false,
           userInit: true,

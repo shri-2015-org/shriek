@@ -18,8 +18,14 @@ var ProfileComponent = function (socket) {
       });
 
       socket.on('user leave', function (data) {
+        console.log('user leave, dispatchEvent');
         if (data.status === 'ok') {
-          window.dispatchEvent(new Event('userLeave'));
+          console.log('user leave', data);
+          if ('username' in data.user) {
+            if (socket.username === data.user.username) {
+              window.dispatchEvent(new Event('userLeave'));
+            }
+          }
         } else {
           alert('something unpredictable happened');
         }

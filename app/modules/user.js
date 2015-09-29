@@ -1,6 +1,6 @@
 var UserModel = require('../models/user');
 
-var userModule = function(socket) {
+var userModule = function (socket) {
 
   /**
    * Регистрация или вход пользователя
@@ -9,11 +9,15 @@ var userModule = function(socket) {
    * @param  data.password пароль пользователя
    */
   socket.on('user enter', function (data) {
+    console.log(data);
+    var passportLogin = false;
     if (socket.username !== undefined) {
       return socket.emit('user enter', {
         status: 'error',
         error_message: 'Пользователь уже вошел.'
       });
+    } else if (data.oAuth) {
+      passportLogin = true;
     } else if (!data.username || !data.password) {
       return socket.emit('user enter', {
         status: 'error',
@@ -27,7 +31,17 @@ var userModule = function(socket) {
 
     UserModel.findOne({username: username}, function (err, doc) {
       if (!err && doc) {
-        if (doc.checkPassword(password)) {
+        if (data.passposrtInit) {
+          if (doc.checkPassport(password)) {
+            out.status = 'ok';
+            out.user = doc;
+          }
+        }
+
+        if (passportLogin == true) {
+          out.status = 'ok';
+          out.user = doc;
+        } else if (doc.checkPassword(password)) {
           out.status = 'ok';
           out.user = doc;
         } else if (doc.checkHashedPassword(password)) {
@@ -83,15 +97,13 @@ var userModule = function(socket) {
    * @param  data
    */
   socket.on('user leave', function (data) {
-    console.log('user leave init');
-    console.log(socket);
     var out = {};
     if (socket.username === undefined) {
       console.log('user not logged yet');
       out.status = 'error';
       out.error_message = 'Пользователь еще не вошел';
     } else {
-       console.log('loggin out');
+      console.log('loggin out');
       var username = socket.username;
 
       socket.username = undefined;

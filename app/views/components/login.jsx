@@ -96,15 +96,15 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
             logged: true
           });
 
-          socket.username = username;
+          socket.username = data.user.username;
 
           socket.emit('user list');
           socket.emit('channel list');
 
           // Load info about current user
           socket.emit('user info', {username: socket.username});
-          sessionStorage.setItem('userName',data.user.username);
-          sessionStorage.setItem('userPass',data.user.hashedPassword);
+          sessionStorage.setItem('userName', data.user.username);
+          sessionStorage.setItem('userPass', data.user.hashedPassword);
         } else {
           _this.setState({error: data.error_message});
         }

@@ -135,7 +135,7 @@ var SettingComponent = function (socket) {
       return (
         <div>
           {this.state.opened == true && (
-            <div className="overflow" ref="overlaySetting">
+            <div className="modal" ref="overlaySetting">
                 {formSetting}
             </div>
           )}

@@ -42,7 +42,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     addChannel: function (e) {
       e.preventDefault();
-      var name = $(e.target).find('#channel').val();
+      var name = ($(e.target).find('#channel').val()).trim();
       if (name) {
         socket.emit('channel create', {name: name});
       }
@@ -108,8 +108,8 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
   var MoreChannels = React.createClass({
     render: function () {
-      var usersDisplaying = 3;
-      var hiddenUsersCount = this.props.len - usersDisplaying;
+      var channelsDisplaying = 3;
+      var hiddenUsersCount = this.props.len - channelsDisplaying;
 
       // Отображаем «Показать» только в случае избыточного количества каналов
       return hiddenUsersCount > 0 && (

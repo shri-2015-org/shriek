@@ -34,7 +34,9 @@ var ChannelsActions = alt_obj.createActions({
     });
 
     socket.on('channel create', function (data) {
-      _this.actions.addChannel(data.channel);
+      if (data.status === 'ok') {
+        _this.actions.addChannel(data.channel);
+      }
     });
   },
 

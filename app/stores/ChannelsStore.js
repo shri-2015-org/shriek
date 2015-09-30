@@ -25,10 +25,11 @@ var ChannelsActions = require('./../actions/ChannelsActions');
         if (socket.activeChannel == channel.slug) {
           channel.isActive = true;
           channel.isUnread = false;
+          listOfChannels.unshift(channel);
         } else {
           channel.isActive = false;
+          listOfChannels.push(channel);
         }
-        listOfChannels.push(channel);
       });
 
       this.channels = listOfChannels;

@@ -42,7 +42,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     addChannel: function (e) {
       e.preventDefault();
-      var name = ($(e.target).find('#channel').val()).trim();
+      var name = $(e.target).find('#channel').val().trim();
       if (name) {
         socket.emit('channel create', {name: name});
       }
@@ -50,7 +50,8 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     render: function () {
       var Channels = (<div>Loading channels...</div>);
-      var _this = this, len_channels = 0;
+      var _this = this;
+      var len_channels = 0;
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
           return (
@@ -109,12 +110,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   var MoreChannels = React.createClass({
     render: function () {
       var channelsDisplaying = 3;
-      var hiddenUsersCount = this.props.len - channelsDisplaying;
+      var hiddenChannelsCount = this.props.len - channelsDisplaying;
 
       // Отображаем «Показать» только в случае избыточного количества каналов
-      return hiddenUsersCount > 0 && (
+      return hiddenChannelsCount > 0 && (
         <label className="more show_all_label" htmlFor="showAllChannels">
-          <span>Показать +{hiddenUsersCount}</span>
+          <span>Показать +{hiddenChannelsCount}</span>
         </label>
       );
     }

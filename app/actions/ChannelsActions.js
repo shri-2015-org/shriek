@@ -36,7 +36,13 @@ var ChannelsActions = alt_obj.createActions({
     socket.on('channel create', function (data) {
       if (data.status === 'ok') {
         _this.actions.addChannel(data.channel);
-        _this.actions.setActiveChannel(data.channel.slug);
+        if (data.creator === socket.username) {
+          _this.actions.setActiveChannel(data.channel.slug);
+          socket.emit('channel get', {
+            channel: data.channel.slug,
+            date: new Date()
+          });
+        }
       }
     });
   },

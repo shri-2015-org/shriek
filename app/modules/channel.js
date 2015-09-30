@@ -24,6 +24,7 @@ var channelModule = function (socket) {
 
         if (!err) {
           out.status = 'ok';
+          out.creator = socket.username;
           out.channel = data; // здесь будет запись из БД со всеми полями (см схему)
           resolve(out);
         } else {

@@ -15,6 +15,9 @@ var ChannelsActions = alt_obj.createActions({
   setUnreadChannel: function (channelSlug) {
     this.dispatch(channelSlug);
   },
+  setStateShowModal: function (stateShowModal) {
+    this.dispatch(stateShowModal);
+  },
 
   initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
@@ -35,7 +38,8 @@ var ChannelsActions = alt_obj.createActions({
 
     socket.on('channel create', function (data) {
       if (data.status === 'ok') {
-        _this.actions.addChannel(data.channel);
+        _this.actions.addChannel(data);
+
         if (data.creator === socket.username) {
           _this.actions.setActiveChannel(data.channel.slug);
           socket.emit('channel get', {
@@ -46,7 +50,13 @@ var ChannelsActions = alt_obj.createActions({
       }
     });
   },
+  modalHadlers: function (showModal) {
+    var _this = this;
 
+    showModal.onclick = function () {
+      _this.actions.setStateShowModal(true);
+    };
+  },
   getChannels: function (socket) {
     socket.emit('channel list'); // дергаем бекенд, чтобы получить список каналов
   }

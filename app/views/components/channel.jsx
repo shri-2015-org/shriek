@@ -9,9 +9,11 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     },
 
     componentDidMount: function () {
+      var showModalButton = React.findDOMNode(this.refs.showModalButton);
       ChannelsStore.listen(this.onChange); // подписываемся на изменения store
       ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
       ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
+      ChannelsActions.modalHadlers(showModalButton);
     },
 
     componentWillUnmount: function () {
@@ -29,10 +31,6 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         channel: event.target.dataset.slug,
         date: new Date()
       });
-    },
-
-    showModal: function () {
-      this.setState({show_modal: true});
     },
 
     hideModal: function (e) {
@@ -69,7 +67,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         <div className="group">
           <div className="heading heading_group">
             <h3 className="heading__header">Каналы</h3>
-            <ButtonAddChannel handleClick={this.showModal} />
+            <ButtonAddChannel ref="showModalButton"/>
           </div>
           <input type="checkbox" id="showAllChannels" className="show_all_checkbox" />
           <ul className="list list_channels">

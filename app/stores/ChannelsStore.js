@@ -20,19 +20,19 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
   ChannelsStore.prototype.recalcActiveChannel = function (fetched_data) {
 
-      var listOfChannels = [];
-      this.channels.map(function (channel) {
-        if (socket.activeChannel == channel.slug) {
-          channel.isActive = true;
-          channel.isUnread = false;
-          listOfChannels.unshift(channel);
-        } else {
-          channel.isActive = false;
-          listOfChannels.push(channel);
-        }
-      });
+    var listOfChannels = [];
+    this.channels.map(function (channel) {
+      if (socket.activeChannel == channel.slug) {
+        channel.isActive = true;
+        channel.isUnread = false;
+        listOfChannels.unshift(channel);
+      } else {
+        channel.isActive = false;
+        listOfChannels.push(channel);
+      }
+    });
 
-      this.channels = listOfChannels;
+    this.channels = listOfChannels;
 
   };
 

@@ -26,14 +26,18 @@ var ChatComponent = function (socket) {
 
     submitMessage: function (text, callback) {
 
-      var message = {
-        username: socket.username,
-        channel: socket.activeChannel,
-        text: text,
-        type: 'text'
-      };
-      socket.emit('message send', message);
-      callback();
+      if (!text) {
+        callback('Enter message, please!');
+      } else {
+        var message = {
+          username: socket.username,
+          channel: socket.activeChannel,
+          text: text,
+          type: 'text'
+        };
+        socket.emit('message send', message);
+        callback();
+      }
 
     },
 

@@ -120,6 +120,7 @@ var ChatComponent = function (socket) {
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
+            <EmojiBtn/>
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>
@@ -127,6 +128,66 @@ var ChatComponent = function (socket) {
     }
   });
 
+  var EmojiBtn = React.createClass({
+    getInitialState: function () {
+      return { showEmojiMenu : false };
+    },
+    toggleEmojiMenu: function (e) {
+      var active = this.state.showEmojiMenu ? false : true;
+      this.setState({ showEmojiMenu : active });
+    },
+    render: function () {
+      var classes = this.state.showEmojiMenu ? 'emoji-btn active' : 'emoji-btn';
+      return (
+        <div>
+          <a className={classes} onClick={this.toggleEmojiMenu}></a>
+          <EmojiMenu show={this.state.showEmojiMenu}/>
+        </div>
+      )
+    }
+  });
+
+  var EmojiMenu = React.createClass({
+    render: function () {
+      var classes = this.props.show ? 'emoji-menu active' : 'emoji-menu';
+      return (
+        <div className={classes}>
+          <span className="emoji emoji-smile"></span>
+          <span className="emoji emoji-grin"></span>
+          <span className="emoji emoji-wink"></span>
+          <span className="emoji emoji-laugh"></span>
+          <span className="emoji emoji-tongue"></span>
+          <span className="emoji emoji-yum"></span>
+          <span className="emoji emoji-inlove"></span>
+          <span className="emoji emoji-business"></span>
+          <span className="emoji emoji-sad"></span>
+          <span className="emoji emoji-yeah"></span>
+          <span className="emoji emoji-pensive"></span>
+          <span className="emoji emoji-tears"></span>
+          <span className="emoji emoji-cry"></span>
+          <span className="emoji emoji-weary"></span>
+          <span className="emoji emoji-shout"></span>
+          <span className="emoji emoji-pokerface"></span>
+          <span className="emoji emoji-relieved"></span>
+          <span className="emoji emoji-angry"></span>
+          <span className="emoji emoji-rage"></span>
+          <span className="emoji emoji-angel"></span>
+          <span className="emoji emoji-fearful"></span>
+          <span className="emoji emoji-shoked"></span>
+          <span className="emoji emoji-astonished"></span>
+          <span className="emoji emoji-mask"></span>
+          <span className="emoji emoji-kisses"></span>
+          <span className="emoji emoji-devil"></span>
+          <span className="emoji emoji-heart"></span>
+          <span className="emoji emoji-thumbsup"></span>
+          <span className="emoji emoji-thumbsdown"></span>
+          <span className="emoji emoji-pointup"></span>
+          <span className="emoji emoji-victory"></span>
+          <span className="emoji emoji-okey"></span>
+        </div>
+      )
+    }
+  });
   return ChatBox;
 };
 

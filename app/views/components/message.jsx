@@ -137,53 +137,68 @@ var ChatComponent = function (socket) {
       this.setState({ showEmojiMenu : active });
     },
     render: function () {
+      var emojiValues = ['smile',
+        'grin',
+        'wink',
+        'laugh',
+        'tongue',
+        'yum',
+        'inlove',
+        'business',
+        'sad',
+        'yeah',
+        'pensive',
+        'tears',
+        'cry',
+        'weary',
+        'shout',
+        'pokerface',
+        'relieved',
+        'angry',
+        'rage',
+        'angel',
+        'fearful',
+        'shoked',
+        'astonished',
+        'mask',
+        'kisses',
+        'devil',
+        'heart',
+        'thumbsup',
+        'thumbsdown',
+        'pointup',
+        'victory',
+        'okey'
+      ];
       var classes = this.state.showEmojiMenu ? 'emoji-btn active' : 'emoji-btn';
       return (
         <div>
           <a className={classes} onClick={this.toggleEmojiMenu}></a>
-          <EmojiMenu show={this.state.showEmojiMenu}/>
+          <EmojiMenu show={this.state.showEmojiMenu} items={emojiValues}/>
         </div>
       )
     }
   });
 
   var EmojiMenu = React.createClass({
+    addEmoji: function(type) {
+      var emoji = ' :' + type + ': ';
+      var area = document.getElementsByName('text').item(0);
+      if ( (area.selectionStart) || (area.selectionStart == '0') ) {
+        var start = area.selectionStart;
+        var end = area.selectionEnd;
+        area.value = area.value.substring(0, start) + emoji + area.value.substring(end, area.value.length);
+      }
+    },
     render: function () {
+      var self = this;
       var classes = this.props.show ? 'emoji-menu active' : 'emoji-menu';
       return (
         <div className={classes}>
-          <span className="emoji emoji-smile"></span>
-          <span className="emoji emoji-grin"></span>
-          <span className="emoji emoji-wink"></span>
-          <span className="emoji emoji-laugh"></span>
-          <span className="emoji emoji-tongue"></span>
-          <span className="emoji emoji-yum"></span>
-          <span className="emoji emoji-inlove"></span>
-          <span className="emoji emoji-business"></span>
-          <span className="emoji emoji-sad"></span>
-          <span className="emoji emoji-yeah"></span>
-          <span className="emoji emoji-pensive"></span>
-          <span className="emoji emoji-tears"></span>
-          <span className="emoji emoji-cry"></span>
-          <span className="emoji emoji-weary"></span>
-          <span className="emoji emoji-shout"></span>
-          <span className="emoji emoji-pokerface"></span>
-          <span className="emoji emoji-relieved"></span>
-          <span className="emoji emoji-angry"></span>
-          <span className="emoji emoji-rage"></span>
-          <span className="emoji emoji-angel"></span>
-          <span className="emoji emoji-fearful"></span>
-          <span className="emoji emoji-shoked"></span>
-          <span className="emoji emoji-astonished"></span>
-          <span className="emoji emoji-mask"></span>
-          <span className="emoji emoji-kisses"></span>
-          <span className="emoji emoji-devil"></span>
-          <span className="emoji emoji-heart"></span>
-          <span className="emoji emoji-thumbsup"></span>
-          <span className="emoji emoji-thumbsdown"></span>
-          <span className="emoji emoji-pointup"></span>
-          <span className="emoji emoji-victory"></span>
-          <span className="emoji emoji-okey"></span>
+          { this.props.items.map(function(value){
+            var classes = 'emoji emoji-' + value;
+            return <span className={classes} onClick={self.addEmoji.bind(self, value)}></span>;
+          }) }
         </div>
       )
     }

@@ -106,9 +106,20 @@ var ChatComponent = function (socket) {
     },
 
     handleKeyDown: function (e) {
-      var pressKeys = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
-      if (pressKeys) {
+      var pressSubmit = !(e.metaKey || e.ctrlKey) && e.keyCode === 13;
+      var pressNewLine = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
+      if (pressSubmit) {
         this.handleSubmit(e);
+      }
+      if (pressNewLine) {
+        var area = document.getElementsByName('text').item(0);
+        if ( (area.selectionStart) || (area.selectionStart == '0') ) {
+          var start = area.selectionStart;
+          var end = area.selectionEnd;
+          area.value = area.value.substring(0, start) +
+            '\n' + area.value.substring(end, area.value.length);
+          area.setSelectionRange(start + 1, start + 1);
+        }
       }
     },
 

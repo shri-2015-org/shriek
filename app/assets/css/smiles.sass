@@ -4,6 +4,7 @@
   height: 16px
   background: white url("im_emoji.png") no-repeat 0 0
   margin-bottom: -3px
+
 .emoji-smile
   background-position: 0 0
 .emoji-grin
@@ -68,3 +69,45 @@
   background-position: 0 -510px
 .emoji-okey
   background-position: 0 -527px
+
+.emoji-btn
+  position: absolute
+  display: block
+  width: 30px
+  height: 30px
+  right: 10px
+  bottom: 10px
+  z-index: 5
+  background: transparent url(smile-icon.png) no-repeat 0 0
+  opacity: .5
+  background-size: cover
+
+.emoji-btn:hover
+  opacity: .8
+
+.emoji-btn.active
+  opacity: 1
+
+.emoji-menu
+  position: absolute
+  display: none
+  width: 208px
+  height: 116px
+  right: 10px
+  bottom: 50px
+  background: white
+  box-shadow: 2px 3px 15px 5px rgba(0, 0, 0, 0.5)
+
+.emoji-menu > .emoji
+  margin: 5px
+
+.emoji-menu.active
+  display: block
+
+.emoji-menu:after
+  content: ''
+  position: absolute
+  right: 6px
+  bottom: -20px
+  border: 10px solid transparent
+  border-top: 10px solid white

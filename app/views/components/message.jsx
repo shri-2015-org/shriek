@@ -3,6 +3,8 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
 
 var markDownConverter = new showdown.Converter();
 
+var Emoji = require('../../views/components/emoji.jsx');
+
 var ChatComponent = function (socket) {
   var ChatBox = React.createClass({
     getInitialState: function () {
@@ -120,7 +122,7 @@ var ChatComponent = function (socket) {
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
-            <EmojiBtn/>
+            <Emoji/>
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>
@@ -128,81 +130,6 @@ var ChatComponent = function (socket) {
     }
   });
 
-  var EmojiBtn = React.createClass({
-    getInitialState: function () {
-      return { showEmojiMenu : false };
-    },
-    toggleEmojiMenu: function (e) {
-      var active = this.state.showEmojiMenu ? false : true;
-      this.setState({ showEmojiMenu : active });
-    },
-    render: function () {
-      var emojiValues = ['smile',
-        'grin',
-        'wink',
-        'laugh',
-        'tongue',
-        'yum',
-        'inlove',
-        'business',
-        'sad',
-        'yeah',
-        'pensive',
-        'tears',
-        'cry',
-        'weary',
-        'shout',
-        'pokerface',
-        'relieved',
-        'angry',
-        'rage',
-        'angel',
-        'fearful',
-        'shoked',
-        'astonished',
-        'mask',
-        'kisses',
-        'devil',
-        'heart',
-        'thumbsup',
-        'thumbsdown',
-        'pointup',
-        'victory',
-        'okey'
-      ];
-      var classes = this.state.showEmojiMenu ? 'emoji-btn active' : 'emoji-btn';
-      return (
-        <div>
-          <a className={classes} onClick={this.toggleEmojiMenu}></a>
-          <EmojiMenu show={this.state.showEmojiMenu} items={emojiValues}/>
-        </div>
-      )
-    }
-  });
-
-  var EmojiMenu = React.createClass({
-    addEmoji: function(type) {
-      var emoji = ' :' + type + ': ';
-      var area = document.getElementsByName('text').item(0);
-      if ( (area.selectionStart) || (area.selectionStart == '0') ) {
-        var start = area.selectionStart;
-        var end = area.selectionEnd;
-        area.value = area.value.substring(0, start) + emoji + area.value.substring(end, area.value.length);
-      }
-    },
-    render: function () {
-      var self = this;
-      var classes = this.props.show ? 'emoji-menu active' : 'emoji-menu';
-      return (
-        <div className={classes}>
-          { this.props.items.map(function(value){
-            var classes = 'emoji emoji-' + value;
-            return <span className={classes} onClick={self.addEmoji.bind(self, value)}></span>;
-          }) }
-        </div>
-      )
-    }
-  });
   return ChatBox;
 };
 

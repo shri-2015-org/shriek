@@ -29,7 +29,8 @@ var path = {
   DEST_BUILD: 'public',
   DEST_SRC: 'dist/assets',
   ENTRY_POINT: 'app/assets/js/app.jsx',
-  BOWER_DIR: 'app/components'
+  BOWER_DIR: 'app/components',
+  IMGS: 'app/assets/img/*.*'
 };
 
 
@@ -80,9 +81,14 @@ gulp.task('fontawesome', ['icons'], function () {
     .pipe(gulp.dest('./public/assets/css'));
 });
 
+// images
+gulp.task('images', function () {
+  return gulp.src(path.IMGS).pipe(gulp.dest('./public/assets/img'));
+});
+
 // sass
 
-gulp.task('sass', ['fontawesome'], function () {
+gulp.task('sass', ['fontawesome', 'images'], function () {
   return gulp.src('app/assets/css/**/*.sass')
     .pipe(sass().on('error', sass.logError))
     .pipe(concat('bundle.min.css'))

@@ -1,2 +1,7 @@
-* text eol=lf
-*/img/* binary
+* text=auto
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

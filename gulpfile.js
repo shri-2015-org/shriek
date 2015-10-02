@@ -30,7 +30,7 @@ var path = {
   DEST_SRC: 'dist/assets',
   ENTRY_POINT: 'app/assets/js/app.jsx',
   BOWER_DIR: 'app/components',
-  IMGS: 'app/assets/img/*.*'
+  IMGS: 'app/assets/img/**/*'
 };
 
 
@@ -83,7 +83,8 @@ gulp.task('fontawesome', ['icons'], function () {
 
 // images
 gulp.task('images', function () {
-  return gulp.src(path.IMGS).pipe(gulp.dest('./public/assets/img'));
+  return gulp.src(path.IMGS)
+    .pipe(gulp.dest('./public/assets/img'));
 });
 
 // sass

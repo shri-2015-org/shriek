@@ -14,7 +14,7 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
   var AskLogin = React.createClass({
 
     getInitialState: function() {
-      var state = Boolean(sessionStorage.userName);
+      var state = Boolean(localStorage.userName);
 
       return {
         logged: state,
@@ -30,8 +30,8 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
 
     componentDidMount: function() {
       var username;
-      var storageUser = sessionStorage.userName;
-      var storagePass = sessionStorage.userPass;
+      var storageUser = localStorage.userName;
+      var storagePass = localStorage.userPass;
       var _this = this;
 
       if (storageUser != null && storagePass != null) {
@@ -86,8 +86,8 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
           passportInit: false,
           passportUser: false
         });
-        sessionStorage.removeItem('userName');
-        sessionStorage.removeItem('userPass');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userPass');
       });
 
       socket.on('user enter', function(data) {
@@ -103,8 +103,8 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
 
           // Load info about current user
           socket.emit('user info', {username: socket.username});
-          sessionStorage.setItem('userName', data.user.username);
-          sessionStorage.setItem('userPass', data.user.hashedPassword);
+          localStorage.setItem('userName', data.user.username);
+          localStorage.setItem('userPass', data.user.hashedPassword);
         } else {
           _this.setState({error: data.error_message});
         }

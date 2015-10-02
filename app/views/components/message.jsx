@@ -3,6 +3,8 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
 
 var markDownConverter = new showdown.Converter();
 
+var Emoji = require('../../views/components/emoji.jsx');
+
 var ChatComponent = function (socket) {
   var ChatBox = React.createClass({
     getInitialState: function () {
@@ -79,6 +81,13 @@ var ChatComponent = function (socket) {
 
   var Message = React.createClass({
     render: function () {
+      this.props.message.text = this.props.message.text.replace(/:(\w{3,10}):/gmi, function(string, firstVal) {
+        if (Emoji.emojiValues.indexOf(firstVal) >= 0) {
+          return '<span class="emoji emoji-'+firstVal+'"></span>';
+        } else {
+          return string;
+        }
+      });
       return (
         <div className="msg__item">
           <span className="msg__author">{this.props.message.username}: </span>
@@ -132,6 +141,7 @@ var ChatComponent = function (socket) {
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
+            <Emoji/>
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>

@@ -41,6 +41,7 @@ var EmojiBtn = React.createClass({
       'victory',
       'okey'
     ];
+    module.exports.emojiValues = emojiValues;
     var classes = this.state.showEmojiMenu ? 'emoji-btn active' : 'emoji-btn';
     return (
       <div>

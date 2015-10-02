@@ -11,7 +11,8 @@ var ChannelsActions = require('./../actions/ChannelsActions');
       updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
       setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
       addChannel: ChannelsActions.ADD_CHANNEL,
-      setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL
+      setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
+      setStateShowModal:ChannelsActions.SET_STATE_SHOW_MODAL
     });
   }
 
@@ -46,8 +47,19 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.recalcActiveChannel();
   };
 
+  ChannelsStore.prototype.setStateShowModal = function (stateShowModal) {
+    this.show_modal = stateShowModal;
+  };
+
   ChannelsStore.prototype.addChannel = function (fetched_data) {
-    this.channels.push(fetched_data);
+    var oldstate  = this.show_modal;
+
+    if (fetched_data.creator === socket.username) {
+      oldstate = false;
+    }
+
+    this.show_modal = oldstate;
+    this.channels.push(fetched_data.channel);
   };
 
   ChannelsStore.prototype.setUnreadChannel = function (channel_slug) {

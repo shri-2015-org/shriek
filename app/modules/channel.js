@@ -122,13 +122,6 @@ var channelModule = function (socket) {
     var getMessages = new Promise(function (resolve, reject) {
       // строим запрос в БД
       var query = { channel: data.channel }; // канал нужно учитывать всегда
-<<<<<<< HEAD
-      if (data.date !== undefined) query.created_at = { $lt: data.date }; // дата — если пришла
-
-      var q = MessageModel.find(query);
-      if (data.limit !== undefined) q.limit(data.limit); // limit
-      if (data.skip !== undefined) q.skip(data.skip); // offset
-=======
       if ('date' in data) {
         query.created_at = { $lt: data.date }; // дата — если пришла
       }
@@ -140,7 +133,6 @@ var channelModule = function (socket) {
       if ('skip' in data) {
         q.skip(data.skip); // offset
       }
->>>>>>> origin/develop
 
       q.exec(function (err, data) { // выполняем запрос
         var out = {};

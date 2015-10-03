@@ -18,6 +18,8 @@ AuthStore.prototype.logOut = function (newState) {
 	for (key in newState) {
 		_this[key] = newState[key];
 	}
+	localStorage.removeItem('userName');
+    localStorage.removeItem('userPass');
 };
 
 

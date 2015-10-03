@@ -59,7 +59,18 @@ var ChannelsActions = alt_obj.createActions({
   },
   getChannels: function (socket) {
     socket.emit('channel list'); // дергаем бекенд, чтобы получить список каналов
+  },
+
+  addUserToNewChannel: function(username) {
+    console.log('addUserToChannelWhen');
+    this.dispatch(username);
+  },
+
+  deleteUserFromNewChannel: function(username) {
+    console.log('deleteUserFromNewChannel');
+    this.dispatch(username);
   }
+
 
 });
 

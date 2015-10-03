@@ -46,9 +46,10 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     addChannel: function (e) {
       e.preventDefault();
+
       var name = $(e.target).find('#channel').val().trim();
       if (name) {
-        socket.emit('channel create', {name: name});
+        socket.emit('channel create', {name: name, userslist: this.state.newChannel.userList});
       }
     },
 
@@ -131,6 +132,44 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         <span className="heading__plus" onClick={this.props.handleClick}>
           <i className="fa fa-plus-square-o fa-lg"></i>
         </span>
+      );
+    }
+  });
+
+  var UserList = React.createClass({
+    render: function() {
+      var List = [];
+      List = Users.map(function (user) {
+        return ( <User key = {user._id} user = {user} />);
+      });
+
+      return (
+        <ul className="userlist" id="userlistadd">
+          <li className="userlist__item">Выберите пользователя</li>
+          {List}
+        </ ul>
+      );
+    }
+  });
+
+  var User = React.createClass({
+    clickCheckboxHandler: function(e) {
+
+
+      if (e.target.checked) {
+        ChannelsActions.addUserToNewChannel(this.props.user.username);
+      } else {
+        ChannelsActions.deleteUserFromNewChannel(this.props.user.username);
+      }
+    },
+    render: function() {
+      return (
+        <li className="userlist__item">
+          <label>
+            <input type="checkbox" onClick={this.clickCheckboxHandler} />
+            <span>{this.props.user.username}</span>
+          </label>
+        </li>
       );
     }
   });

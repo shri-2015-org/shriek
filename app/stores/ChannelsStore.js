@@ -6,13 +6,22 @@ var ChannelsActions = require('./../actions/ChannelsActions');
   function ChannelsStore() {
     this.channels = []; // это бывший initState у компонента
     this.show_modal = false;
+
+    // для создания нового канала
+    this.newChannel={};
+    this.newChannel.name;
+    this.newChannel.userList = [];
+    // для создания нового канала
+
     this.displayName = 'ChannelsStore'; // обязательное поле для ES5
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
       updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
       setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
       addChannel: ChannelsActions.ADD_CHANNEL,
       setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
-      setStateShowModal:ChannelsActions.SET_STATE_SHOW_MODAL
+      setStateShowModal:ChannelsActions.SET_STATE_SHOW_MODAL,
+      addUserToNewChannel:ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
+      deleteUserFromNewChannel:ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
     });
   }
 
@@ -74,6 +83,25 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
     this.channels = listOfChannels;
 
+  };
+
+  ChannelsStore.prototype.addUserToNewChannel = function(username) {
+    console.log('store addUserToNewChannel');
+    this.newChannel.userList.push(username);
+    console.log(this.newChannel);
+  };
+
+  ChannelsStore.prototype.deleteUserFromNewChannel = function(username) {
+    console.log('store deleteUserFromNewChannel', username);
+    var nowUserList = this.newChannel.userList;
+    this.newChannel.userList = [];
+    var _this = this;
+    nowUserList.map(function(names) {
+      if (names != username) {
+        _this.newChannel.userList.push(names);
+      }
+    });
+    console.log(this.newChannel);
   };
 
   return alt_obj.createStore(ChannelsStore);

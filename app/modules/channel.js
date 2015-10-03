@@ -14,11 +14,20 @@ var channelModule = function (socket) {
     var createChannel = new Promise(function (resolve, reject) {
       slug = slugify(data.name, { lowercase: true, separator: '_' }); // трансилитирируем name
 
+      var channelUserList = [socket.username];
+
+      if (data.userslist.length > 0) {
+        channelUserList = data.userslist;
+        channelUserList.unshift(socket.username);
+      }
+
+      console.log(channelUserList);
+
       var newChannel = ChannelModel({
         name: data.name,
         slug: slug,
         is_private: false,
-        users: [socket.username]
+        users: channelUserList
       });
 
       newChannel.save({ runValidators: true }, function (err, data) {

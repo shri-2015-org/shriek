@@ -1,6 +1,10 @@
 var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
 var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
+var markDownConverter = new showdown.Converter();
+
+var Emoji = require('../../views/components/emoji.jsx');
+
 var ChatComponent = function (socket) {
   var ChatBox = React.createClass({
     getInitialState: function () {
@@ -13,25 +17,29 @@ var ChatComponent = function (socket) {
       MessagesActions.getMessages(socket);
     },
 
-    componentWillUnmount() {
+    componentWillUnmount: function () {
       MessagesStore.unlisten(this.onChange); // отписываемся от изменений store
     },
 
     // эта функция выполняется когда store триггерит изменения внутри себя
-    onChange(state) {
+    onChange: function (state) {
       this.setState(state);
     },
 
     submitMessage: function (text, callback) {
 
-      var message = {
-        username: socket.username,
-        channel: socket.activeChannel,
-        text: text,
-        type: 'text'
-      };
-      socket.emit('message send', message);
-      callback();
+      if (!text) {
+        callback('Enter message, please!');
+      } else {
+        var message = {
+          username: socket.username,
+          channel: socket.activeChannel,
+          text: text,
+          type: 'text'
+        };
+        socket.emit('message send', message);
+        callback();
+      }
 
     },
 
@@ -74,9 +82,21 @@ var ChatComponent = function (socket) {
 
   var Message = React.createClass({
     render: function () {
+      this.props.message.text = this.props.message.text.replace(/:(\w{3,10}):/gmi, function(string, firstVal) {
+        if (Emoji.emojiValues.indexOf(firstVal) >= 0) {
+          return '<span class="emoji emoji-'+firstVal+'"></span>';
+        } else {
+          return string;
+        }
+      });
       return (
         <div className="msg__item">
-          <span className="msg__author">{this.props.message.username}: </span><span className="msg__text">{this.props.message.text}</span>
+          <span className="msg__author">{this.props.message.username}: </span>
+          <div
+            className="msg__text"
+            dangerouslySetInnerHTML={{
+              __html: markDownConverter.makeHtml(this.props.message.text)
+            }} />
         </div>
       );
     }
@@ -128,11 +148,30 @@ var ChatComponent = function (socket) {
 
     },
 
+    handleKeyDown: function (e) {
+      var pressSubmit = !(e.metaKey || e.ctrlKey) && e.keyCode === 13;
+      var pressNewLine = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
+      if (pressSubmit) {
+        this.handleSubmit(e);
+      }
+      if (pressNewLine) {
+        var area = document.getElementsByName('text').item(0);
+        if ( (area.selectionStart) || (area.selectionStart == '0') ) {
+          var start = area.selectionStart;
+          var end = area.selectionEnd;
+          area.value = area.value.substring(0, start) +
+            '\n' + area.value.substring(end, area.value.length);
+          area.setSelectionRange(start + 1, start + 1);
+        }
+      }
+    },
+
     render: function () {
       return (
         <div className='send'>
-          <form className="send__form" onSubmit={this.handleSubmit}>
-            <input className="send__text" name="text" ref="text" placeholder="Сообщение" autoComplete="off" autoFocus required />
+          <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
+            <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
+            <Emoji/>
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>

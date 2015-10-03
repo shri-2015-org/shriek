@@ -16,6 +16,20 @@ var ProfileComponent = function (socket) {
           _this.setState({image: data.user.setting.image});
         }
       });
+
+      socket.on('user leave', function (data) {
+        console.log('user leave, dispatchEvent');
+        if (data.status === 'ok') {
+          console.log('user leave', data);
+          if ('username' in data.user) {
+            if (socket.username === data.user.username) {
+              window.dispatchEvent(new Event('userLeave'));
+            }
+          }
+        } else {
+          alert('something unpredictable happened');
+        }
+      });
     },
 
     handleSettingOpen: function (e) {

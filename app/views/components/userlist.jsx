@@ -39,7 +39,7 @@ var UserComponent = function (socket) {
             <h3 className="heading__header">Пользователи</h3>
           </div>
 
-          <input type="checkbox" id="showAllUsers" className="show_all_users_checkbox" />
+          <input type="checkbox" id="showAllUsers" className="show_all_checkbox" />
           <ul className="list list_users">
             {Users}
           </ul>
@@ -69,7 +69,7 @@ var UserComponent = function (socket) {
 
       // Отображаем «Показать» только в случае избыточного количества пользователей
       return hiddenUsersCount > 0 && (
-        <label className="more show_all_users_label" htmlFor="showAllUsers">
+        <label className="more show_all_label" htmlFor="showAllUsers">
           <span>Показать +{hiddenUsersCount}</span>
         </label>
       );

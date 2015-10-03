@@ -9,16 +9,19 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     },
 
     componentDidMount: function () {
+      var showModalButton = React.findDOMNode(this.refs.showModalButton);
       ChannelsStore.listen(this.onChange); // подписываемся на изменения store
       ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
+      ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
+      ChannelsActions.modalHadlers(showModalButton);
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
       ChannelsStore.unlisten(this.onChange); // отписываемся от изменений store
     },
 
     // эта функция выполняется когда store триггерит изменения внутри себя
-    onChange(state) {
+    onChange: function (state) {
       this.setState(state);
     },
 
@@ -36,10 +39,23 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       });
     },
 
+    hideModal: function (e) {
+      e.preventDefault();
+      this.setState({show_modal: false});
+    },
+
+    addChannel: function (e) {
+      e.preventDefault();
+      var name = $(e.target).find('#channel').val().trim();
+      if (name) {
+        socket.emit('channel create', {name: name});
+      }
+    },
+
     render: function () {
       var Channels = (<div>Loading channels...</div>);
       var _this = this;
-
+      var len_channels = 0;
       if (this.state.channels) {
         Channels = this.state.channels.map(function (channel) {
           return (
@@ -49,20 +65,24 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
               key={channel._id} />
           );
         });
+
+        len_channels = Channels.length;
       }
 
       return (
         <div className="group">
           <div className="heading heading_group">
             <h3 className="heading__header">Каналы</h3>
-            <span className="heading__plus">
-              <i className="fa fa-plus-square-o fa-lg"></i>
-            </span>
+            <ButtonAddChannel ref="showModalButton"/>
           </div>
+          <input type="checkbox" id="showAllChannels" className="show_all_checkbox" />
           <ul className="list list_channels">
             {Channels}
           </ul>
-          <MoreChannels />
+          <MoreChannels len = {len_channels}/>
+          {this.state.show_modal == true && (
+            <AddChannelModal handleSubmit={this.addChannel} handleClose={this.hideModal}/>
+          )}
         </div>
       );
     }
@@ -93,9 +113,42 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
   var MoreChannels = React.createClass({
     render: function () {
+      var channelsDisplaying = 3;
+      var hiddenChannelsCount = this.props.len - channelsDisplaying;
+
+      // Отображаем «Показать» только в случае избыточного количества каналов
+      return hiddenChannelsCount > 0 && (
+        <label className="more show_all_label" htmlFor="showAllChannels">
+          <span>Показать +{hiddenChannelsCount}</span>
+        </label>
+      );
+    }
+  });
+
+  var ButtonAddChannel = React.createClass({
+    render: function () {
       return (
-        <div className="more">
-          <span>Показать +7</span>
+        <span className="heading__plus" onClick={this.props.handleClick}>
+          <i className="fa fa-plus-square-o fa-lg"></i>
+        </span>
+      );
+    }
+  });
+
+  var AddChannelModal = React.createClass({
+    render: function () {
+      return (
+        <div className="modal">
+          <form className="form modal__body" onSubmit={this.props.handleSubmit}>
+            <h2 className="modal__heading">Назовите канал</h2>
+            <div className="form__row">
+              <label className="form__label" htmlFor="channel"><i className="fa fa-users"></i></label>
+              <input className="form__text" type="text" id="channel" ref="inputNameChannel" placeholder="Канал" />
+            </div>
+            <button className="btn" type="submit">Добавить</button>
+            <span> </span>
+            <button className="btn" onClick={this.props.handleClose} type="button">Close</button>
+          </form>
         </div>
       );
     }

@@ -5,21 +5,21 @@
 
 $list-item-height: 35px
 
-.show_all_users_checkbox
+.show_all_checkbox
   display: none
 
   &:checked
     + ul
       max-height: none
 
-    ~ .show_all_users_label > span
+    ~ .show_all_label > span
       font-size: 0
 
       &::before
         content: 'Скрыть'
         font-size: 14px
 
-.list_users
+.list
   max-height: $list-item-height * 3 // умножаем на количество отображаемых элементов
   overflow: hidden
 

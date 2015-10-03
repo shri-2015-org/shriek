@@ -89,7 +89,7 @@ var ChatComponent = function (socket) {
         });
       }
       return (
-        <div className="msg__list" id="testYa" ref="msglist" onScroll={this.handleScroll}>
+        <div className="msg__list" ref="msglist" onScroll={this.handleScroll}>
           {Messages}
         </div>
       );

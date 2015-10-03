@@ -141,6 +141,9 @@ var channelModule = function (socket) {
           if (indata.skip) {
             out.type = 'scroll';
           }
+          if (data.length < limit) {
+            out.stopScroll = true;
+          }
           resolve(out);
         } else {
           var error = new Error('Ошибка получения сообщений');

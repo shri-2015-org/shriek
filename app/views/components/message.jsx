@@ -58,10 +58,19 @@ var ChatComponent = function (socket) {
   });
 
   var MessagesList = React.createClass({
+    getInitialState: function () {
+      return ( { scrollValue: 0 } );
+    },
     componentDidMount: function () {
       var msglist = $(React.findDOMNode(this.refs.msg_list));
     },
-
+    handleScroll: function () {
+      if (this.getDOMNode().scrollTop === 0) {
+        this.state.scrollValue++;
+        MessagesActions.getMessages(socket, this.state.scrollValue);
+        this.forceUpdate();
+      }
+    },
     render: function () {
       var Messages = (<div>Loading messages...</div>);
 
@@ -72,7 +81,7 @@ var ChatComponent = function (socket) {
       }
 
       return (
-        <div className="msg__list" ref="msglist">
+        <div className="msg__list" ref="msglist" onScroll={this.handleScroll}>
           {Messages}
         </div>
       );

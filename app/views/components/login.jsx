@@ -9,6 +9,9 @@ var LoginDefault = require('../../views/components/login-default.jsx')(socket);
 // LOGIN PASSPORT MODULE
 var LoginPassport = require('../../views/components/login-passport.jsx')(socket);
 
+var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
+var AuthActions = require('./../../actions/AuthActions'); // подключаем экшены
+
 
 // askLogin component
   var AskLogin = React.createClass({
@@ -29,6 +32,9 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
     },
 
     componentDidMount: function() {
+
+      AuthStore.listen(this.onChange); // подписываемся на изменения store
+
       var username;
       var storageUser = localStorage.userName;
       var storagePass = localStorage.userPass;
@@ -77,19 +83,6 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
         deleteCookie('psInit');
       }
 
-      window.addEventListener('userLeave', function () {
-        console.log('user leave, remove session Storage and change state');
-        _this.setState({
-          logged: false,
-          userInit: true,
-          passInit: true,
-          passportInit: false,
-          passportUser: false
-        });
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userPass');
-      });
-
       socket.on('user enter', function(data) {
         if (data.status == 'ok') {
           _this.setState({
@@ -110,6 +103,20 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
         }
       });
     },
+
+    componentWillUnmount: function () {
+      AuthStore.unlisten(this.onChange); // отписываемся от изменений store
+    },
+
+    // эта функция выполняется когда store триггерит изменения внутри себя
+    onChange: function (state) {
+      this.setState(state);
+    },
+
+    // эта функция выполняется когда store триггерит изменения внутри себя
+    // onChange: function (state) {
+
+    // },
 
     handleNameChange: function(e) {
       this.setState({name: e.target.value});

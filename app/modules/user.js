@@ -1,6 +1,27 @@
 var UserModel = require('../models/user');
 
-var userModule = function (socket) {
+var UserModule = function (socket, io) {
+
+  var getOnline = function (namespace) {
+    var _namespace = io.of(namespace);
+
+    if (!_namespace) {
+      return [];
+    }
+
+    var connected = _namespace.connected;
+    var online = [];
+
+    for (var id in connected) {
+      var userName = connected[id].username;
+
+      if (userName !== undefined) {
+        online.push(userName);
+      }
+    }
+
+    return online;
+  };
 
   /**
    * Регистрация или вход пользователя
@@ -11,6 +32,7 @@ var userModule = function (socket) {
   socket.on('user enter', function (data) {
     console.log(data);
     var passportLogin = false;
+
     if (socket.username !== undefined) {
       return socket.emit('user enter', {
         status: 'error',
@@ -38,6 +60,7 @@ var userModule = function (socket) {
           }
         }
 
+        // TODO: Это эпик. Необходим рефакторинг.
         if (passportLogin === true) {
           out.status = 'ok';
           out.user = doc;
@@ -51,19 +74,19 @@ var userModule = function (socket) {
           out.status = 'error';
           out.error_message = 'Неверный пароль';
         }
+
         callbackUserEnter(out);
       } else {
         var newUser = new UserModel({
           username: username
         });
+
         newUser.set('password', password);
 
         newUser.save(function (err, saved_data) {
-          if (!err) {
-            out.status = 'ok';
-            out.user = saved_data;
-          } else {
+          if (err) {
             out.status = 'error';
+
             if (err.errors.user && err.errors.password) {
               // Validation failed
               out.error_message = 'not enough symbols';
@@ -74,7 +97,11 @@ var userModule = function (socket) {
             } else {
               out.error_message = 'Пользователь не найден';
             }
+          } else {
+            out.status = 'ok';
+            out.user = saved_data;
           }
+
           callbackUserEnter(out);
         });
       }
@@ -84,9 +111,11 @@ var userModule = function (socket) {
       if (out.status === 'ok') {
         // echo globally (all clients) that a person has connected
         socket.broadcast.emit('user connected', out);
+
         // we store the username in the socket session for this client
         socket.username = username;
       }
+
       socket.emit('user enter', out);
     }
   });
@@ -96,10 +125,14 @@ var userModule = function (socket) {
    */
   socket.on('user leave', function () {
     var out = {};
+
     if (socket.username === undefined) {
       console.log('user not logged yet');
-      out.status = 'error';
-      out.error_message = 'Пользователь еще не вошел';
+
+      out = {
+        status: 'error',
+        error_message: 'Пользователь еще не вошел'
+      };
     } else {
       console.log('loggin out');
       var username = socket.username;
@@ -107,13 +140,13 @@ var userModule = function (socket) {
       socket.username = undefined;
       socket.typing = undefined;
 
-      out.status = 'ok';
-      out.user = {
-        username: username
+      out = {
+        status: 'ok',
+        user: {
+          username: username
+        }
       };
-    }
 
-    if (out.status === 'ok') {
       socket.broadcast.emit('user disconnected', out);
     }
 
@@ -129,20 +162,29 @@ var userModule = function (socket) {
     var out = {};
 
     if (socket.username === undefined) {
-      out.status = 'error';
-      out.error_message = 'Пользователь должен войти';
+      out = {
+        status: 'error',
+        error_message: 'Пользователь должен войти'
+      };
+
       return socket.emit('user info', out);
     }
 
     var username = data.username || socket.username;
+
     UserModel.findOne({username: username}, function (err, doc) {
       if (!err && doc) {
-        out.status = 'ok';
-        out.user = doc;
+        out = {
+          status: 'ok',
+          user: doc
+        };
       } else {
-        out.status = 'error';
-        out.error_message = 'Пользователь не найден';
+        out = {
+          status: 'error',
+          error_message: 'Пользователь не найден'
+        };
       }
+
       socket.emit('user info', out);
     });
   });
@@ -151,8 +193,6 @@ var userModule = function (socket) {
    * Список пользователей
    */
   socket.on('user list', function () {
-    var out = {};
-
     if (socket.username === undefined) {
       return socket.emit('user list', {
         status: 'error',
@@ -163,13 +203,33 @@ var userModule = function (socket) {
     UserModel.find({
       username: {$ne: socket.username}
     }, function (err, docs) {
+      var out = {};
+
       if (!err && docs) {
-        out.status = 'ok';
-        out.users = docs;
+        var online = getOnline('/');
+
+        docs = docs.map(function (user) {
+          // Ловкое условие определения статуса пользователя
+          var isOnline = online.indexOf(user.username) > -1;
+
+          // Приводим user к нормальному объекту
+          user = user.toObject();
+          user.online = isOnline;
+
+          return user;
+        });
+
+        out = {
+          status: 'ok',
+          users: docs
+        };
       } else {
-        out.status = 'error';
-        out.error_message = 'Пользователей не найдено';
+        out = {
+          status: 'error',
+          error_message: 'Пользователей не найдено'
+        };
       }
+
       socket.emit('user list', out);
     });
   });
@@ -203,6 +263,7 @@ var userModule = function (socket) {
           out.status = 'error';
           out.error_message = 'Пользователь не найден';
         }
+
         socket.emit('user update', out);
       }
     );
@@ -259,7 +320,6 @@ var userModule = function (socket) {
       socket.emit('user stop typing', out);
     }
   });
-
 };
 
-module.exports = userModule;
+module.exports = UserModule;

@@ -39,7 +39,7 @@ var UserModule = function (socket) {
           }
         }
 
-        if (passportLogin == true) {
+        if (passportLogin === true) {
           out.status = 'ok';
           out.user = doc;
         } else if (doc.checkPassword(password)) {
@@ -62,8 +62,6 @@ var UserModule = function (socket) {
         newUser.set('password', password);
 
         newUser.save(function (err, saved_data) {
-          var message = err;
-
           if (!err) {
             out.status = 'ok';
             out.user = saved_data;
@@ -87,7 +85,7 @@ var UserModule = function (socket) {
     });
 
     function callbackUserEnter(out) {
-      if (out.status == 'ok') {
+      if (out.status === 'ok') {
         // echo globally (all clients) that a person has connected
         socket.broadcast.emit('user connected', out);
 
@@ -101,9 +99,8 @@ var UserModule = function (socket) {
 
   /**
    * Выход пользователя
-   * @param  data
    */
-  socket.on('user leave', function (data) {
+  socket.on('user leave', function () {
     var out = {};
 
     if (socket.username === undefined) {
@@ -171,9 +168,8 @@ var UserModule = function (socket) {
 
   /**
    * Список пользователей
-   * @param  data
    */
-  socket.on('user list', function (data) {
+  socket.on('user list', function () {
     var out = {};
 
     if (socket.username === undefined) {
@@ -184,11 +180,11 @@ var UserModule = function (socket) {
     }
 
     UserModel.find({
-      username: { $ne: socket.username }
+      username: {$ne: socket.username}
     }, function (err, docs) {
       if (!err && docs) {
         out.status = 'ok';
-        out.users= docs;
+        out.users = docs;
       } else {
         out.status = 'error';
         out.error_message = 'Пользователей не найдено';
@@ -236,9 +232,8 @@ var UserModule = function (socket) {
 
   /**
    * when the client emits 'typing', we broadcast it to others
-   * @param  data
    */
-  socket.on('user start typing', function (data) {
+  socket.on('user start typing', function () {
     var out = {};
 
     if (socket.username === undefined) {
@@ -255,7 +250,7 @@ var UserModule = function (socket) {
       };
     }
 
-    if (out.status == 'ok') {
+    if (out.status === 'ok') {
       socket.broadcast.emit('user start typing', out);
     } else {
       socket.emit('user start typing', out);
@@ -264,9 +259,8 @@ var UserModule = function (socket) {
 
   /**
    * when the client emits 'stop typing', we broadcast it to others
-   * @param  data
    */
-  socket.on('user stop typing', function (data) {
+  socket.on('user stop typing', function () {
     var out = {};
 
     if (socket.typing === undefined && !socket.typing) {
@@ -280,12 +274,12 @@ var UserModule = function (socket) {
       socket.typing = false;
     }
 
-    if (out.status == 'ok') {
+    if (out.status === 'ok') {
       socket.broadcast.emit('user stop typing', out);
     } else {
       socket.emit('user stop typing', out);
     }
   });
-}
+};
 
 module.exports = UserModule;

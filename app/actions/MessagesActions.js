@@ -9,7 +9,9 @@ var MessagesActions = alt_obj.createActions({
   pushMessage: function (message) {
     this.dispatch(message);
   },
-
+  prepandMessages: function (messages) {
+    this.dispatch(messages);
+  },
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
 
@@ -23,11 +25,14 @@ var MessagesActions = alt_obj.createActions({
         _this.actions.updateMessages({ messages: data.messages });
         $(".msg__list").scrollTop($(".msg__list").get(0).scrollHeight); // унести отсюда
       });
-
+      socket.on('scroll', function (messages) {
+        _this.actions.prepandMessages(messages);
+      });
   },
 
-  getMessages: function (socket) {
-    socket.emit('channel get', {channel: socket.activeChannel, date: new Date()});
+  getMessages: function (socket, skip) {
+    skip = skip || 0;
+    socket.emit('channel get', {channel: socket.activeChannel, date: new Date(), skip: skip});
   }
 
 });

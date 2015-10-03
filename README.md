@@ -413,3 +413,11 @@ Configuration file `config.json` example
 ### Удалить все данные из БД
 
 `mongo shriek --eval "db.dropDatabase();"`
+
+### Create your own module for chat
+
+You can create NPM package (ex. [shriek-markdown](https://github.com/sigorilla/shriek-markdown)).
+
+1. You should name package with prefix `shriek-`.
+2. Add in code `module.exports.forEvent`.
+ - Different events have different data for your package.

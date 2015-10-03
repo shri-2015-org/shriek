@@ -6,7 +6,8 @@ function MessagesStore() {
   this.displayName = 'MessagesStore'; // обязательное поле для ES5
   this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
     updateMessages: MessagesActions.UPDATE_MESSAGES,  // ключ хеша — функция стора, значение — функция экшена
-    pushMessage: MessagesActions.PUSH_MESSAGE
+    pushMessage: MessagesActions.PUSH_MESSAGE,
+    prepandMessages: MessagesActions.PREPAND_MESSAGES
   });
 }
 
@@ -20,5 +21,7 @@ MessagesStore.prototype.pushMessage = function (fetched_data) {
 MessagesStore.prototype.updateMessages = function (fetched_data) {
     this.messages = fetched_data.messages;
 };
-
+MessagesStore.prototype.prepandMessages = function (fetched_data) {
+  this.messages = fetched_data.messages.concat(this.messages);
+};
 module.exports = alt_obj.createStore(MessagesStore);

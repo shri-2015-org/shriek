@@ -119,26 +119,28 @@ var channelModule = function (socket) {
 
     var getMessages = new Promise(function (resolve, reject) {
       // строим запрос в БД
+      var limit = 20;
       var query = { channel: data.channel }; // канал нужно учитывать всегда
       if ('date' in data) {
         query.created_at = { $lt: data.date }; // дата — если пришла
       }
-
       var q = MessageModel.find(query);
-      if ('limit' in data) {
-        q.limit(data.limit); // limit
-      }
+      q.sort( { created_at: -1 } );
+      q.limit(limit);
       if ('skip' in data) {
-        q.skip(data.skip); // offset
+        q.skip(data.skip * limit); // offset
       }
-
       q.exec(function (err, data) { // выполняем запрос
         var out = {};
 
         if (!err) {
           out.status = 'ok';
-          out.messages = (data.length > 0 ? data : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
+          out.messages = (data.length > 0 ? data.reverse() : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
           out.slug = indata.channel;
+          out.type = 'channel get';
+          if (indata.skip) {
+            out.type = 'scroll';
+          }
           resolve(out);
         } else {
           var error = new Error('Ошибка получения сообщений');
@@ -149,13 +151,13 @@ var channelModule = function (socket) {
 
     getMessages
       .then(function (data) {
-        return socket.emit('channel get', data);
+        return socket.emit(data.type, data);
       })
       .catch(function (error) {
         console.log('channel get error', error);
       });
 
   });
-}
+};
 
 module.exports = channelModule;

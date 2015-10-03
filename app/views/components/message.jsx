@@ -79,13 +79,6 @@ var ChatComponent = function (socket) {
 
   var Message = React.createClass({
     render: function () {
-      this.props.message.text = this.props.message.text.replace(/:(\w{3,10}):/gmi, function(string, firstVal) {
-        if (Emoji.emojiValues.indexOf(firstVal) >= 0) {
-          return '<span class="emoji emoji-'+firstVal+'"></span>';
-        } else {
-          return string;
-        }
-      });
       return (
         <div className="msg__item">
           <span className="msg__author">{this.props.message.username}: </span>

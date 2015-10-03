@@ -1,8 +1,6 @@
 var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
 var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
-var markDownConverter = new showdown.Converter();
-
 var Emoji = require('../../views/components/emoji.jsx');
 
 var ChatComponent = function (socket) {
@@ -94,7 +92,7 @@ var ChatComponent = function (socket) {
           <div
             className="msg__text"
             dangerouslySetInnerHTML={{
-              __html: markDownConverter.makeHtml(this.props.message.text)
+              __html: this.props.message.text
             }} />
         </div>
       );

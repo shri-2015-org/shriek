@@ -41,6 +41,7 @@
     "reactify": "^1.1.1",
     "socket.io": "1.3.6",
     "socket.io-client": "*",
+    "shriek-markdown": "0.2.0",
     "transliteration": "^0.1.1",
     "vinyl-fs": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",

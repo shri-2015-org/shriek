@@ -2,6 +2,8 @@ var slugify = require('transliteration').slugify;
 var ChannelModel = require('../models/channel');
 var MessageModel = require('../models/message');
 
+var shriekModules = require('./modules');
+
 var channelModule = function (socket) {
 
   /**
@@ -136,6 +138,12 @@ var channelModule = function (socket) {
         var out = {};
 
         if (!err) {
+          shriekModules.forEach(function (module) {
+            if (module.forEvent === 'channelGet') {
+              data = module(data);
+            }
+          });
+
           out.status = 'ok';
           out.messages = (data.length > 0 ? data : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
           out.slug = indata.channel;

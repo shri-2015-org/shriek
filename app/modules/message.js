@@ -1,5 +1,7 @@
 var MessageModel = require('../models/message');
 
+var shriekModules = require('./modules');
+
 var messageModule = function(socket) {
 
   /** Слушаем сообщение с фронта
@@ -25,8 +27,14 @@ var messageModule = function(socket) {
 
       var out = {};
       if (!err) {
+        shriekModules.forEach(function (module) {
+          if (module.forEvent === 'channelGet') {
+            data = module([data]);
+          }
+        });
+
         out.status = 'ok';
-        out.message = data; // здесь будет запись из БД со всеми полями (см схему)
+        out.message = data[0]; // здесь будет запись из БД со всеми полями (см схему)
       } else {
         out.status = 'error';
         out.error_message = 'Ошибка создания сообщения';

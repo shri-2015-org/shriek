@@ -2,8 +2,12 @@
 Yet another chat
 
 # Build workflow (short)
-1. `npm install`
-2. `gulp`
+```
+npm install -g jshint
+npm install -g jscs
+npm install
+gulp
+```
 
 # Development workflow
 

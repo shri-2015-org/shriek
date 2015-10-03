@@ -9,8 +9,9 @@ var LoginDefault = require('../../views/components/login-default.jsx')(socket);
 // LOGIN PASSPORT MODULE
 var LoginPassport = require('../../views/components/login-passport.jsx')(socket);
 
-var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
-var AuthActions = require('./../../actions/AuthActions'); // подключаем экшены
+// ALT-JS STORE INIT
+var AuthStore = require('./../../stores/AuthStore')(socket);
+var AuthActions = require('./../../actions/AuthActions');
 
 
 // askLogin component
@@ -51,11 +52,13 @@ var AuthActions = require('./../../actions/AuthActions'); // подключае�
       function readCookie (name) {
           var nameEQ = name + "=";
           var ca = document.cookie.split(';');
+
           for(var i=0; i < ca.length; i++) {
               var c = ca[i];
               while (c.charAt(0)==' ') c = c.substring(1, c.length);
               if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
           }
+
           return null;
       }
 
@@ -112,11 +115,6 @@ var AuthActions = require('./../../actions/AuthActions'); // подключае�
     onChange: function (state) {
       this.setState(state);
     },
-
-    // эта функция выполняется когда store триггерит изменения внутри себя
-    // onChange: function (state) {
-
-    // },
 
     handleNameChange: function(e) {
       this.setState({name: e.target.value});

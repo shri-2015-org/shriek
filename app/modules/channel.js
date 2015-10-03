@@ -138,16 +138,16 @@ var channelModule = function (socket) {
         var out = {};
 
         if (!err) {
-          shriekModules.forEach(function (module) {
-            if (module.forEvent === 'channelGet') {
-              data = module(data);
-            }
+          shriekModules.reduce(function (prev, module) {
+            return prev.then(function (data) {
+              return module(data);
+            });
+          }, Promise.resolve(data)).then(function (result) {
+            out.status = 'ok';
+            out.messages = (result.length > 0 ? result : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
+            out.slug = indata.channel;
+            resolve(out);
           });
-
-          out.status = 'ok';
-          out.messages = (data.length > 0 ? data : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
-          out.slug = indata.channel;
-          resolve(out);
         } else {
           var error = new Error('Ошибка получения сообщений');
           reject(error);

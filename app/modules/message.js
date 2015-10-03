@@ -27,21 +27,30 @@ var messageModule = function(socket) {
 
       var out = {};
       if (!err) {
-        shriekModules.forEach(function (module) {
-          if (module.forEvent === 'channelGet') {
-            data[0] = module([data]);
-          }
+        // shriekModules.forEach(function (module) {
+        //   if (module.forEvent === 'channelGet') {
+        //     data[0] = module([data]);
+        //   }
+        // });
+
+        shriekModules.reduce(function (prev, module) {
+          return prev.then(function (data) {
+            return module(data);
+          });
+        }, Promise.resolve([data])).then(function (result) {
+          out.status = 'ok';
+          out.message = result[0]; // здесь будет запись из БД со всеми полями (см схему)
+          if (out.status == 'ok') socket.broadcast.emit('message send', out); // броадкастим на всех, только если все прошло удачно
+          socket.emit('message send', out);
         });
 
-        out.status = 'ok';
-        out.message = data; // здесь будет запись из БД со всеми полями (см схему)
       } else {
         out.status = 'error';
         out.error_message = 'Ошибка создания сообщения';
-      }
 
-      if (out.status == 'ok') socket.broadcast.emit('message send', out); // броадкастим на всех, только если все прошло удачно
-      socket.emit('message send', out);
+        if (out.status == 'ok') socket.broadcast.emit('message send', out); // броадкастим на всех, только если все прошло удачно
+        socket.emit('message send', out);
+      }
 
     });
 

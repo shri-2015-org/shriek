@@ -15,17 +15,17 @@ var MessagesActions = alt_obj.createActions({
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
 
-      socket.on('message send', function (data) {
-        if (data.message.channel == socket.activeChannel) { // проверяем, правда ли сообщение пришло в текущий чат?
-          _this.actions.pushMessage({ message: data.message });
-          $(".msg__list").scrollTop($(".msg__list").get(0).scrollHeight); // унести отсюда
+    socket.on('message send', function (data) {
+        if (data.message.channel === socket.activeChannel) { // проверяем, правда ли сообщение пришло в текущий чат?
+          _this.actions.pushMessage({message: data.message});
+          $('.msg__list').scrollTop($('.msg__list').get(0).scrollHeight); // унести отсюда
         }
       });
-      socket.on('channel get', function (data) {
-        _this.actions.updateMessages({ messages: data.messages });
-        $(".msg__list").scrollTop($(".msg__list").get(0).scrollHeight); // унести отсюда
+    socket.on('channel get', function (data) {
+        _this.actions.updateMessages({messages: data.messages});
+        $('.msg__list').scrollTop($('.msg__list').get(0).scrollHeight); // унести отсюда
       });
-      socket.on('scroll', function (messages) {
+    socket.on('scroll', function (messages) {
         _this.actions.prepandMessages(messages);
       });
   },
@@ -37,4 +37,5 @@ var MessagesActions = alt_obj.createActions({
 
 });
 
-module.exports = alt_obj.createActions('MessagesActions', MessagesActions); // первый параметр имя экшена — обязательный в ES5
+// первый параметр имя экшена — обязательный в ES5
+module.exports = alt_obj.createActions('MessagesActions', MessagesActions);

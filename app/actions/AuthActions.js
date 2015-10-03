@@ -8,13 +8,14 @@ var AuthActions = altObj.createActions({
   },
 
   makeLogOut: function () {
-    newState = {
+    var newState = {
       logged: false,
       userInit: true,
       passInit: true,
       passportInit: false,
       passportUser: false
     };
+
     this.actions.logOut(newState);
   }
 

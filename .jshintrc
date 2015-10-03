@@ -3,7 +3,6 @@
   "curly": true,
   "eqeqeq": true,
   "eqnull": true,
-  "es3": true,
   "immed": true,
   "noarg": true,
   "onevar": true,
@@ -11,10 +10,10 @@
   "trailing": true,
   "undef": true,
   "unused": true,
-
+  "node": true,
   "browser": true,
 
-  "maxlen": 120,
-
-  "node": true
+  "globals": {
+    "Promise": true
+  }
 }

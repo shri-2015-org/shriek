@@ -1,8 +1,6 @@
 var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
 var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
-var Emoji = require('../../components/shriek-emoji/react-emoji.jsx');
-
 var ChatComponent = function (socket) {
   var ChatBox = React.createClass({
     getInitialState: function () {

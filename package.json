@@ -46,6 +46,12 @@
     "transliteration": "^0.1.1",
     "vinyl-fs": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "wiredep": "^3.0.0-beta"
+    "wiredep": "^3.0.0-beta",
+    "ghooks": "^0.3.2"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "sh ./git-hooks/pre-commit"
+    }
   }
 }

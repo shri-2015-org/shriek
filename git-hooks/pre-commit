@@ -14,15 +14,27 @@ then
   exit 1
 fi
 
+which jscs &> /dev/null
+if [ $? -ne 0 ];
+then
+  echo "error: jscs not found"
+  echo "install with: sudo npm install -g jscs"
+  exit 1
+fi
+
 for i in "${filenames[@]}"
 do
-    if [[ $i =~ \.js$ ]];
+  if [[ $i =~ \.js$ ]];
+  then
+    # Auto fixing js-file codestyle
+    jscs $i --config=./.jscsrc --fix
+    git add $i
+
+    echo jshint $i
+    jshint $i
+    if [ $? -ne 0 ];
     then
-        echo jshint $i
-        jshint $i
-        if [ $? -ne 0 ];
-        then
-            exit 1
-        fi
+        exit 1
     fi
+  fi
 done

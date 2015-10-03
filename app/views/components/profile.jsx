@@ -1,5 +1,9 @@
 var ProfileComponent = function (socket) {
 
+var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
+var AuthActions = require('./../../actions/AuthActions'); // подключаем экшены
+
+
   var ProfileBlock = React.createClass({
 
     getInitialState: function () {
@@ -23,7 +27,7 @@ var ProfileComponent = function (socket) {
           console.log('user leave', data);
           if ('username' in data.user) {
             if (socket.username === data.user.username) {
-              window.dispatchEvent(new Event('userLeave'));
+              AuthActions.makeLogOut();
             }
           }
         } else {

@@ -10,26 +10,27 @@ var ChannelModule = function (socket) {
   * @param data.name название чата
   */
   socket.on('channel create', function (data) {
-
     var createChannel = new Promise(function (resolve, reject) {
-      slug = slugify(data.name, { lowercase: true, separator: '_' }); // трансилитирируем name
+      var slug = slugify(data.name, {lowercase: true, separator: '_'}); // трансилитирируем name
 
       var newChannel = ChannelModel({
         name: data.name,
         slug: slug
       });
 
-      newChannel.save({ runValidators: true }, function (err, data) {
-        var out = {};
-
-        if (!err) {
-          out.status = 'ok';
-          out.creator = socket.username;
-          out.channel = data; // здесь будет запись из БД со всеми полями (см схему)
-          resolve(out);
-        } else {
+      newChannel.save({runValidators: true}, function (err, data) {
+        if (err) {
           var error = new Error('Ошибка создания чата');
+
           reject(error);
+        } else {
+          var out = {
+            status: 'ok',
+            creator: socket.username,
+            channel: data // здесь будет запись из БД со всеми полями (см схему)
+          };
+
+          resolve(out);
         }
       });
     });
@@ -42,7 +43,6 @@ var ChannelModule = function (socket) {
       .catch(function (error) {
         console.log(error);
       });
-
   });
 
   /**
@@ -51,18 +51,19 @@ var ChannelModule = function (socket) {
   * @param data.slug слаг чата
   */
   socket.on('channel info', function (data) {
-
     var getChannelInfo = new Promise(function (resolve, reject) {
-      ChannelModel.findOne({ slug: data.slug }, function (err, data) {
-        var out = {};
-
-        if (!err) {
-          out.status = 'ok';
-          out.channel = data;
-          resolve(out);
-        } else {
+      ChannelModel.findOne({slug: data.slug}, function (err, data) {
+        if (err) {
           var error = new Error('Ошибка получения чата');
+
           reject(error);
+        } else {
+          var out = {
+            status: 'ok',
+            channel: data
+          };
+
+          resolve(out);
         }
       });
     });
@@ -74,7 +75,6 @@ var ChannelModule = function (socket) {
       .catch(function (error) {
         console.log(error);
       });
-
   });
 
   /**
@@ -83,15 +83,17 @@ var ChannelModule = function (socket) {
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {
       ChannelModel.find(function (err, data) {
-        var out = {};
-
-        if (!err) {
-          out.status = 'ok';
-          out.channels = data;
-          resolve(out);
-        } else {
+        if (err) {
           var error = new Error('Ошибка получения чатов');
+
           reject(error);
+        } else {
+          var out = {
+            status: 'ok',
+            channels: data
+          };
+
+          resolve(out);
         }
       });
     });
@@ -103,7 +105,6 @@ var ChannelModule = function (socket) {
       .catch(function (error) {
         console.log(error);
       });
-
   });
 
   /**
@@ -120,34 +121,44 @@ var ChannelModule = function (socket) {
     var getMessages = new Promise(function (resolve, reject) {
       // строим запрос в БД
       var limit = 20;
-      var query = { channel: data.channel }; // канал нужно учитывать всегда
+      var query = {channel: data.channel}; // канал нужно учитывать всегда
+
       if ('date' in data) {
-        query.created_at = { $lt: data.date }; // дата — если пришла
+        query.created_at = {$lt: data.date}; // дата — если пришла
       }
+
       var q = MessageModel.find(query);
-      q.sort( { created_at: -1 } );
+
+      q.sort({created_at: -1});
       q.limit(limit);
+
       if ('skip' in data) {
         q.skip(data.skip * limit); // offset
       }
-      q.exec(function (err, data) { // выполняем запрос
-        var out = {};
 
-        if (!err) {
-          out.status = 'ok';
-          out.messages = (data.length > 0 ? data.reverse() : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
-          out.slug = indata.channel;
-          out.type = 'channel get';
+      q.exec(function (err, data) { // выполняем запрос
+        if (err) {
+          var error = new Error('Ошибка получения сообщений');
+
+          reject(error);
+        } else {
+          var out = {
+            status: 'ok',
+            // возвращаем сообщения или пустой массив, чтобы не возвращать null
+            messages: (data.length > 0 ? data.reverse() : []),
+            slug: indata.channel,
+            type: 'channel get'
+          };
+
           if (indata.skip) {
             out.type = 'scroll';
           }
+
           if (data.length < limit) {
             out.stopScroll = true;
           }
+
           resolve(out);
-        } else {
-          var error = new Error('Ошибка получения сообщений');
-          reject(error);
         }
       });
     });
@@ -159,7 +170,6 @@ var ChannelModule = function (socket) {
       .catch(function (error) {
         console.log('channel get error', error);
       });
-
   });
 };
 

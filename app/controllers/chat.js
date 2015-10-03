@@ -225,7 +225,7 @@ app.get('/auth/github/callback', passport.authenticate('github', {
 // Chatroom
 
 io.on('connection', function (socket) {
-  require('../modules/user')(socket);
+  require('../modules/user')(socket, io);
   require('../modules/message')(socket);
   require('../modules/channel')(socket);
 

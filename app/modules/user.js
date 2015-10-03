@@ -1,6 +1,27 @@
 var UserModel = require('../models/user');
 
-var UserModule = function (socket) {
+var UserModule = function (socket, io) {
+
+  var getOnline = function (namespace) {
+    var _namespace = io.of(namespace);
+
+    if (!_namespace) {
+      return [];
+    }
+
+    var connected = _namespace.connected;
+    var online = [];
+
+    for (var id in connected) {
+      var userName = connected[id].username;
+
+      if (userName !== undefined) {
+        online.push(userName);
+      }
+    }
+
+    return online;
+  };
 
   /**
    * Регистрация или вход пользователя
@@ -39,6 +60,7 @@ var UserModule = function (socket) {
           }
         }
 
+        // TODO: Это эпик. Необходим рефакторинг.
         if (passportLogin === true) {
           out.status = 'ok';
           out.user = doc;
@@ -62,11 +84,9 @@ var UserModule = function (socket) {
         newUser.set('password', password);
 
         newUser.save(function (err, saved_data) {
-          if (!err) {
-            out.status = 'ok';
-            out.user = saved_data;
-          } else {
+          if (err) {
             out.status = 'error';
+
             if (err.errors.user && err.errors.password) {
               // Validation failed
               out.error_message = 'not enough symbols';
@@ -77,6 +97,9 @@ var UserModule = function (socket) {
             } else {
               out.error_message = 'Пользователь не найден';
             }
+          } else {
+            out.status = 'ok';
+            out.user = saved_data;
           }
 
           callbackUserEnter(out);
@@ -170,8 +193,6 @@ var UserModule = function (socket) {
    * Список пользователей
    */
   socket.on('user list', function () {
-    var out = {};
-
     if (socket.username === undefined) {
       return socket.emit('user list', {
         status: 'error',
@@ -182,12 +203,31 @@ var UserModule = function (socket) {
     UserModel.find({
       username: {$ne: socket.username}
     }, function (err, docs) {
+      var out = {};
+
       if (!err && docs) {
-        out.status = 'ok';
-        out.users = docs;
+        var online = getOnline('/');
+
+        docs = docs.map(function (user) {
+          // Ловкое условие определения статуса пользователя
+          var isOnline = online.indexOf(user.username) > -1;
+
+          // Приводим user к нормальному объекту
+          user = user.toObject();
+          user.online = isOnline;
+
+          return user;
+        });
+
+        out = {
+          status: 'ok',
+          users: docs
+        };
       } else {
-        out.status = 'error';
-        out.error_message = 'Пользователей не найдено';
+        out = {
+          status: 'error',
+          error_message: 'Пользователей не найдено'
+        };
       }
 
       socket.emit('user list', out);

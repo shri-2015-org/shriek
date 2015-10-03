@@ -46,13 +46,7 @@ var UserComponent = function (socket) {
 
   var User = React.createClass({
       componentWillMount: function () {
-        var defaults = {
-          online: false
-        };
-
-        var initialState = $.extend(this.props.user, defaults);
-
-        this.setState(initialState);
+        this.setState(this.props.user);
       },
 
       componentDidMount: function () {

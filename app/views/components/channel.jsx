@@ -1,4 +1,5 @@
 var ChannelComponent = function (socket) {
+  var Users = [];
 
 var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
 var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
@@ -14,6 +15,11 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
       ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
       ChannelsActions.modalHadlers(showModalButton);
+      socket.on('user list', function(data) {
+        if (data.status === 'ok') {
+          Users = data.users;
+        }
+      });
     },
 
     componentWillUnmount: function () {
@@ -183,6 +189,9 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
             <div className="form__row">
               <label className="form__label" htmlFor="channel"><i className="fa fa-users"></i></label>
               <input className="form__text" type="text" id="channel" ref="inputNameChannel" placeholder="Канал" />
+            </div>
+            <div className="form__row">
+              <UserList />
             </div>
             <button className="btn" type="submit">Добавить</button>
             <span> </span>

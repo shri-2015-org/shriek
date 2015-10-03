@@ -41,7 +41,12 @@ gulp.task('default', ['bower', 'sass', 'build', 'watch']);
 gulp.task('watch', function () {
   gulp.watch([path.SASS_FILE], ['sass']);
   gulp.watch(['bower.json'], ['bower']);
-  gulp.watch([path.ENTRY_POINT, path.REACT_COMPONENTS], ['build']);
+  gulp.watch([
+    path.ENTRY_POINT,
+    path.REACT_COMPONENTS,
+    path.ALT_ACTIONS,
+    path.ALT_STORES
+  ], ['build']);
 });
 
 // wiredep (bower)

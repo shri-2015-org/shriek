@@ -23,36 +23,38 @@ var messageModule = function(socket) {
       type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст
     });
 
-    newMessage.save({runValidators: true}, function (err, data) {
-
-      var out = {};
-      if (!err) {
-        // shriekModules.forEach(function (module) {
-        //   if (module.forEvent === 'channelGet') {
-        //     data[0] = module([data]);
-        //   }
-        // });
-
-        shriekModules.reduce(function (prev, module) {
-          return prev.then(function (data) {
-            return module(data);
+    var setMessage = new Promise(function (resolve, reject) {
+      newMessage.save({runValidators: true}, function (err, data) {
+        var out = {};
+        if (!err) {
+          shriekModules.reduce(function (prev, module) {
+            return prev.then(function (data) {
+              return module(data);
+            });
+          }, Promise.resolve([data])).then(function (result) {
+            out.status = 'ok';
+            out.message = result[0]; // здесь будет запись из БД со всеми полями (см схему)
+            resolve(out);
           });
-        }, Promise.resolve([data])).then(function (result) {
-          out.status = 'ok';
-          out.message = result[0]; // здесь будет запись из БД со всеми полями (см схему)
-          if (out.status == 'ok') socket.broadcast.emit('message send', out); // броадкастим на всех, только если все прошло удачно
-          socket.emit('message send', out);
-        });
 
-      } else {
-        out.status = 'error';
-        out.error_message = 'Ошибка создания сообщения';
-
-        if (out.status == 'ok') socket.broadcast.emit('message send', out); // броадкастим на всех, только если все прошло удачно
-        socket.emit('message send', out);
-      }
-
+        } else {
+          reject('Ошибка создания сообщения');
+        }
+      });
     });
+
+    setMessage
+      .then(function (data) {
+        socket.broadcast.emit('message send', data);
+        return socket.emit('message send', data);
+      })
+      .catch(function (error) {
+        console.log('message send error', error);
+        return socket.emit('message send', {
+          status: 'error',
+          error_message: error
+        });
+      });
 
   });
 }

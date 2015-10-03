@@ -1,0 +1,6 @@
+{
+  "preset": "yandex",
+  "fileExtensions": [".js", ".jsx"],
+
+  "validateIndentation": 2
+}

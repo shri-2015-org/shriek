@@ -10,9 +10,6 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
 
     componentDidMount: function () {
       var _this = this;
-      socket.on('search text', function (data) {
-        console.log(data);
-      });
     },
 
     handleSearch: function () {
@@ -33,7 +30,7 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
             <label className='form__label' htmlFor='search' onClick={this.handleSearch}>
               <i className='fa fa-search'></i>
             </label>
-            <input className='form__text' type='text' id='search' ref='search' />
+            <input className='form__text' type='text' id='search' ref='search' onChange={this.handleSearch}/>
           </div>
         </div>
       );

@@ -12,6 +12,9 @@ var MessagesActions = alt_obj.createActions({
   prepandMessages: function (messages) {
     this.dispatch(messages);
   },
+  setSearchedMessage: function (_ids) {
+    this.dispatch(_ids);
+  },
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
 
@@ -27,6 +30,15 @@ var MessagesActions = alt_obj.createActions({
       });
       socket.on('scroll', function (messages) {
         _this.actions.prepandMessages(messages);
+      });
+      socket.on('search text', function (data) {
+        if (data.status === 'ok') {
+          var _ids = [];
+          data.messages.forEach(function (message) {
+            _ids.push(message._id);
+          });
+          _this.actions.setSearchedMessage(_ids);
+        }
       });
   },
 

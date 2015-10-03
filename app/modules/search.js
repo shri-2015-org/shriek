@@ -17,8 +17,12 @@ var searchModule = function(socket) {
 
         var terms = [];
         while ((term = findterms.exec(queryString)) !== null) {
-          terms.push(term[0].replace(normspace, ' '));
+          terms.push(new RegExp(term[0].replace(normspace, ' '), 'i'));
         }
+        if (terms.length > 1) {
+          terms.push(new RegExp(queryString.replace(normspace, ' '), 'i'));
+        }
+
         return terms;
       }
 

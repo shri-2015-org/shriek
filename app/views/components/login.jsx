@@ -119,7 +119,7 @@ var AuthActions = require('./../../actions/AuthActions');
     handleNameChange: function(e) {
       this.setState({name: e.target.value});
       this.setState({userInit: false});
-      if (!e.target.value.length) {
+      if (!e.target.value.length || e.target.value.length < 6) {
         this.setState({userInvalid: true});
       } else {
         this.setState({userInvalid: false});

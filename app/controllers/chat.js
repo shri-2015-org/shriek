@@ -53,15 +53,15 @@ app.use(express.static('public'));
 app.use('/components', express.static('app/components'));
 
 app.use(session({
-  genid: function (req) {
+  genid: function () {
     var date = new Date();
     var uid = date.getTime();
-    return uid.toString()
+    return uid.toString();
   },
   secret: 'keyboard cat',
   resave: true,
   saveUninitialized: true
-}))
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -76,6 +76,7 @@ passport.deserializeUser(function (id, done) {
   });
 });
 
+// TODO: Вынести паспорты в модули
 
 // passport: twitter
 passport.use(new TwitterStrategy({
@@ -84,7 +85,7 @@ passport.use(new TwitterStrategy({
   callbackURL: 'http://' + domain + '/auth/twitter/callback'
 }, function (token, tokenSecret, profile, done) {
   UserModel.findOne({
-    'username': profile.username
+    username: profile.username
   }, function (err, user) {
     psUser = profile.username;
     if (err) {
@@ -99,7 +100,7 @@ passport.use(new TwitterStrategy({
         setting: {
           image: profile.photos[0].value
         }
-      })
+      });
       user.save(function (err) {
         if (err) {
           console.log(err);
@@ -120,7 +121,7 @@ passport.use(new GoogleStrategy({
   callbackURL: 'http://' + domain + '/auth/google/callback'
 }, function (accessToken, refreshToken, profile, done) {
   UserModel.findOne({
-    'username': profile.name.givenName
+    username: profile.name.givenName
   }, function (err, user) {
     psUser = profile.name.givenName;
     if (err) {
@@ -133,7 +134,7 @@ passport.use(new GoogleStrategy({
         setting: {
           image: profile.photos[0].value
         }
-      })
+      });
       firstTime = true;
       user.save(function (err) {
         if (err) {
@@ -154,7 +155,7 @@ passport.use(new GitHubStrategy({
   callbackURL: 'http://' + domain + '/auth/github/callback'
 }, function (accessToken, refreshToken, profile, done) {
   UserModel.findOne({
-    'username': profile.username
+    username: profile.username
   }, function (err, user) {
     psUser = profile.username;
     if (err) {
@@ -167,7 +168,7 @@ passport.use(new GitHubStrategy({
         setting: {
           image: profile._json.avatar_url
         }
-      })
+      });
       firstTime = true;
       user.save(function (err) {
         if (err) {
@@ -181,20 +182,19 @@ passport.use(new GitHubStrategy({
   });
 }));
 
-
 app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/google', passport.authenticate(
   'google',
-  { scope: 'https://www.googleapis.com/auth/plus.login' }
+  {scope: 'https://www.googleapis.com/auth/plus.login'}
 ));
-app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
+app.get('/auth/github', passport.authenticate('github', {scope: ['user:email']}));
 
 app.get('/auth/twitter/callback', passport.authenticate('twitter', {
   failureRedirect: '/failure'
 }), function (req, res) {
-  res.cookie('psUser', psUser, { maxAge: 10000, httpOnly: false});
+  res.cookie('psUser', psUser, {maxAge: 10000, httpOnly: false});
   if (firstTime) {
-    res.cookie('psInit', 'yes', { maxAge: 10000, httpOnly: false});
+    res.cookie('psInit', 'yes', {maxAge: 10000, httpOnly: false});
     firstTime = false;
   }
   res.redirect('/');
@@ -203,20 +203,20 @@ app.get('/auth/twitter/callback', passport.authenticate('twitter', {
 app.get('/auth/google/callback', passport.authenticate('google', {
   failureRedirect: '/failure'
 }), function (req, res) {
-  res.cookie('psUser', psUser, { maxAge: 10000, httpOnly: false});
+  res.cookie('psUser', psUser, {maxAge: 10000, httpOnly: false});
   if (firstTime) {
-    res.cookie('psInit', 'yes', { maxAge: 10000, httpOnly: false});
+    res.cookie('psInit', 'yes', {maxAge: 10000, httpOnly: false});
     firstTime = false;
   }
   res.redirect('/');
 });
 
 app.get('/auth/github/callback', passport.authenticate('github', {
-    failureRedirect: '/failure'
+  failureRedirect: '/failure'
 }), function (req, res) {
-  res.cookie('psUser', psUser, { maxAge: 10000, httpOnly: false});
+  res.cookie('psUser', psUser, {maxAge: 10000, httpOnly: false});
   if (firstTime) {
-    res.cookie('psInit', 'yes', { maxAge: 10000, httpOnly: false});
+    res.cookie('psInit', 'yes', {maxAge: 10000, httpOnly: false});
     firstTime = false;
   }
   res.redirect('/');
@@ -225,14 +225,13 @@ app.get('/auth/github/callback', passport.authenticate('github', {
 // Chatroom
 
 io.on('connection', function (socket) {
-
   require('../modules/user')(socket);
   require('../modules/message')(socket);
   require('../modules/channel')(socket);
 
   // when the user disconnects.. perform this
   socket.on('disconnect', function () {
-    socket.broadcast.emit('user leave', {
+    socket.broadcast.emit('user disconnected', {
       status: 'ok',
       user: {
         username: socket.username

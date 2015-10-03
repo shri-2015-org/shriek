@@ -2,7 +2,7 @@ var slugify = require('transliteration').slugify;
 var ChannelModel = require('../models/channel');
 var MessageModel = require('../models/message');
 
-var channelModule = function (socket) {
+var ChannelModule = function (socket) {
 
   /**
   * Слушаем создание чата с фронта
@@ -158,4 +158,4 @@ var channelModule = function (socket) {
   });
 }
 
-module.exports = channelModule;
+module.exports = ChannelModule;

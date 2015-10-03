@@ -1,6 +1,6 @@
 var MessageModel = require('../models/message');
 
-var messageModule = function(socket) {
+var MessageModule = function(socket) {
 
   /** Слушаем сообщение с фронта
   * @param data
@@ -40,4 +40,4 @@ var messageModule = function(socket) {
   });
 }
 
-module.exports = messageModule;
+module.exports = MessageModule;

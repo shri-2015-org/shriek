@@ -1,6 +1,6 @@
 var UserModel = require('../models/user');
 
-var userModule = function (socket) {
+var UserModule = function (socket) {
 
   /**
    * Регистрация или вход пользователя
@@ -11,6 +11,7 @@ var userModule = function (socket) {
   socket.on('user enter', function (data) {
     console.log(data);
     var passportLogin = false;
+
     if (socket.username !== undefined) {
       return socket.emit('user enter', {
         status: 'error',
@@ -51,15 +52,18 @@ var userModule = function (socket) {
           out.status = 'error';
           out.error_message = 'Неверный пароль';
         }
+
         callbackUserEnter(out);
       } else {
         var newUser = new UserModel({
-            username: username
+          username: username
         });
+
         newUser.set('password', password);
 
         newUser.save(function (err, saved_data) {
           var message = err;
+
           if (!err) {
             out.status = 'ok';
             out.user = saved_data;
@@ -76,6 +80,7 @@ var userModule = function (socket) {
               out.error_message = 'Пользователь не найден';
             }
           }
+
           callbackUserEnter(out);
         });
       }
@@ -85,9 +90,11 @@ var userModule = function (socket) {
       if (out.status == 'ok') {
         // echo globally (all clients) that a person has connected
         socket.broadcast.emit('user connected', out);
+
         // we store the username in the socket session for this client
         socket.username = username;
       }
+
       socket.emit('user enter', out);
     }
   });
@@ -98,10 +105,14 @@ var userModule = function (socket) {
    */
   socket.on('user leave', function (data) {
     var out = {};
+
     if (socket.username === undefined) {
       console.log('user not logged yet');
-      out.status = 'error';
-      out.error_message = 'Пользователь еще не вошел';
+
+      out = {
+        status: 'error',
+        error_message: 'Пользователь еще не вошел'
+      };
     } else {
       console.log('loggin out');
       var username = socket.username;
@@ -109,15 +120,16 @@ var userModule = function (socket) {
       socket.username = undefined;
       socket.typing = undefined;
 
-      out.status = 'ok';
-      out.user = {
-        username: username
+      out = {
+        status: 'ok',
+        user: {
+          username: username
+        }
       };
-    }
 
-    if (out.status == 'ok') {
       socket.broadcast.emit('user disconnected', out);
     }
+
     socket.emit('user leave', out);
   });
 
@@ -130,20 +142,29 @@ var userModule = function (socket) {
     var out = {};
 
     if (socket.username === undefined) {
-      out.status = 'error';
-      out.error_message = 'Пользователь должен войти';
+      out = {
+        status: 'error',
+        error_message: 'Пользователь должен войти'
+      };
+
       return socket.emit('user info', out);
     }
 
     var username = data.username || socket.username;
+
     UserModel.findOne({username: username}, function (err, doc) {
       if (!err && doc) {
-        out.status = 'ok';
-        out.user = doc;
+        out = {
+          status: 'ok',
+          user: doc
+        };
       } else {
-        out.status = 'error';
-        out.error_message = 'Пользователь не найден';
+        out = {
+          status: 'error',
+          error_message: 'Пользователь не найден'
+        };
       }
+
       socket.emit('user info', out);
     });
   });
@@ -169,9 +190,10 @@ var userModule = function (socket) {
         out.status = 'ok';
         out.users= docs;
       } else {
-        out.status= 'error';
+        out.status = 'error';
         out.error_message = 'Пользователей не найдено';
       }
+
       socket.emit('user list', out);
     });
   });
@@ -205,6 +227,7 @@ var userModule = function (socket) {
           out.status = 'error';
           out.error_message = 'Пользователь не найден';
         }
+
         socket.emit('user update', out);
       }
     );
@@ -263,7 +286,6 @@ var userModule = function (socket) {
       socket.emit('user stop typing', out);
     }
   });
-
 }
 
-module.exports = userModule;
+module.exports = UserModule;

@@ -31,14 +31,15 @@ MessagesStore.prototype.prepandMessages = function (fetched_data) {
 };
 MessagesStore.prototype.setSearchedMessage = function (_ids) {
   var listOfMessages = [];
+
   this.messages.map(function (message) {
-    if (_ids.indexOf(message._id) !== -1) {
-      message.searched = true;
-    } else {
-      message.searched = false;
-    }
+    var isSearched = _ids.indexOf(message._id) > -1;
+
+    message.searched = isSearched;
+
     listOfMessages.push(message);
   });
+
   this.messages = listOfMessages;
 }
 module.exports = alt_obj.createStore(MessagesStore);

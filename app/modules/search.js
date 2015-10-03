@@ -1,6 +1,6 @@
 var MessageModel = require('../models/message');
 
-var searchModule = function(socket) {
+var SearchModule = function(socket) {
 
   /**
    * Find text in channels
@@ -30,15 +30,17 @@ var searchModule = function(socket) {
         text: {$in: normalizeQuery(data.text)},
         channel: {$in: data.channels}
       }, function (err, data) {
-        var out = {};
-
-        if (!err) {
-          out.status = 'ok';
-          out.messages = data;
-          resolve(out);
-        } else {
+        if (err) {
           var error = new Error('Ошибка поиска');
+
           reject(error);
+        } else {
+          var out = {
+            status: 'ok',
+            messages: data
+          }
+
+          resolve(out);
         }
       });
     });
@@ -53,4 +55,4 @@ var searchModule = function(socket) {
   });
 }
 
-module.exports = searchModule;
+module.exports = SearchModule;

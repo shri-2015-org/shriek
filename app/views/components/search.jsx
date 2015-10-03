@@ -8,15 +8,12 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
       return {};
     },
 
-    componentDidMount: function () {
-      var _this = this;
-    },
-
     handleSearch: function () {
       var _this = this;
       var allowedChannels = ChannelsStore.state.channels.map(function (channel) {
         return channel.slug;
       });
+
       socket.emit('search text', {
         channels: allowedChannels,
         text: $('#search').val()

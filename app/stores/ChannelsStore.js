@@ -19,9 +19,9 @@ var ChannelsActions = require('./../actions/ChannelsActions');
       setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
       addChannel: ChannelsActions.ADD_CHANNEL,
       setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
-      setStateShowModal:ChannelsActions.SET_STATE_SHOW_MODAL,
       addUserToNewChannel:ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
       deleteUserFromNewChannel:ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
+      updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL
     });
   }
 
@@ -56,7 +56,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.recalcActiveChannel();
   };
 
-  ChannelsStore.prototype.setStateShowModal = function (stateShowModal) {
+  ChannelsStore.prototype.updateShowModal = function (stateShowModal) {
     this.show_modal = stateShowModal;
   };
 

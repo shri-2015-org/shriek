@@ -10,11 +10,9 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     },
 
     componentDidMount: function () {
-      var showModalButton = React.findDOMNode(this.refs.showModalButton);
       ChannelsStore.listen(this.onChange); // подписываемся на изменения store
       ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
       ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
-      ChannelsActions.modalHadlers(showModalButton);
       socket.on('user list', function(data) {
         if (data.status === 'ok') {
           Users = data.users;
@@ -133,9 +131,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   });
 
   var ButtonAddChannel = React.createClass({
+    handleShowModal: function() {
+        ChannelsActions.updateShowModal(true);
+    },
     render: function () {
       return (
-        <span className="heading__plus" onClick={this.props.handleClick}>
+        <span className="heading__plus" onClick={this.handleShowModal}>
           <i className="fa fa-plus-square-o fa-lg"></i>
         </span>
       );
@@ -181,6 +182,9 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   });
 
   var AddChannelModal = React.createClass({
+    handleCloseModal: function() {
+      ChannelsActions.updateShowModal(false);
+    },
     render: function () {
       return (
         <div className="modal">
@@ -195,7 +199,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
             </div>
             <button className="btn" type="submit">Добавить</button>
             <span> </span>
-            <button className="btn" onClick={this.props.handleClose} type="button">Close</button>
+            <button className="btn" onClick={this.handleCloseModal} type="button">Close</button>
           </form>
         </div>
       );

@@ -43,15 +43,10 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       });
     },
 
-    hideModal: function (e) {
-      e.preventDefault();
-      this.setState({show_modal: false});
-    },
-
     addChannel: function (e) {
       e.preventDefault();
 
-      var name = $(e.target).find('#channel').val().trim();
+      var name = $(e.target).find('#channelName').val().trim();
       if (name) {
         socket.emit('channel create', {name: name, userslist: this.state.newChannel.userList});
       }
@@ -86,7 +81,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
           </ul>
           <MoreChannels len = {len_channels}/>
           {this.state.show_modal == true && (
-            <AddChannelModal handleSubmit={this.addChannel} handleClose={this.hideModal}/>
+            <AddChannelModal handleSubmit={this.addChannel} />
           )}
         </div>
       );
@@ -145,24 +140,24 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
   var UserList = React.createClass({
     render: function() {
-      var List = [];
-      List = Users.map(function (user) {
+      var UsersList = [];
+      UsersList = Users.map(function (user) {
         return ( <User key = {user._id} user = {user} />);
       });
 
       return (
-        <ul className="userlist" id="userlistadd">
-          <li className="userlist__item">Выберите пользователя</li>
-          {List}
-        </ ul>
+          <div className="userlist__wrap">
+            <h3 className="userlist__heading">Выберите пользователей</h3>
+            <ul className="userlist__list" id="userlistadd">
+              {UsersList}
+            </ ul>
+          </div>
       );
     }
   });
 
   var User = React.createClass({
     clickCheckboxHandler: function(e) {
-
-
       if (e.target.checked) {
         ChannelsActions.addUserToNewChannel(this.props.user.username);
       } else {
@@ -189,17 +184,24 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       return (
         <div className="modal">
           <form className="form modal__body" onSubmit={this.props.handleSubmit}>
-            <h2 className="modal__heading">Назовите канал</h2>
+            <h2 className="modal__heading heading">Добавьте канал</h2>
             <div className="form__row">
-              <label className="form__label" htmlFor="channel"><i className="fa fa-users"></i></label>
-              <input className="form__text" type="text" id="channel" ref="inputNameChannel" placeholder="Канал" />
+              <label className="form__label" htmlFor="channelName"><i className="fa fa-users"></i></label>
+              <input className="form__text" type="text" id="channelName" ref="inputNameChannel" placeholder="Назовите" />
             </div>
             <div className="form__row">
+              <label className="form__label" htmlFor="channelDesc"><i className="fa fa-edit"></i></label>
+              <textarea className="form__textarea" type="text" id="channelDesc" ref="descChannel" placeholder="Кратко опишите"></textarea>
+            </div>
+
+            <div className="form__row userlist">
+              <input type="checkbox" className="userlist__checkbox" id="privateChannel" />
+              <label htmlFor="privateChannel">Приватный канал</label>
               <UserList />
             </div>
             <button className="btn" type="submit">Добавить</button>
             <span> </span>
-            <button className="btn" onClick={this.handleCloseModal} type="button">Close</button>
+            <button className="btn" onClick={this.handleCloseModal} type="button">Закрыть</button>
           </form>
         </div>
       );

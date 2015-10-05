@@ -423,5 +423,6 @@ Configuration file `config.json` example
 You can create NPM package (ex. [shriek-markdown](https://github.com/sigorilla/shriek-markdown)).
 
 1. You should name package with prefix `shriek-`.
-2. Add in code `module.exports.forEvent`.
+2. Add you package via `require` in file `app/modules/modules.js`.
+3. Add in code `module.exports.forEvent`.
  - Different events have different data for your package.

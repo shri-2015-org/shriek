@@ -11,5 +11,6 @@
 
 module.exports = shriekModules = [
   require('shriek-markdown'),
-  require('shriek-emoji')
+  require('shriek-emoji'),
+  require('shriek-opengraph')
 ];

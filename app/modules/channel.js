@@ -146,9 +146,24 @@ var ChannelModule = function (socket) {
         } else {
           shriekModules.reduce(function (prev, module) {
             return prev.then(function (data) {
-              return module(data);
+              return new Promise(function (resolveModule, rejectModule) {
+                module(data, function (err, result) {
+                  if (err) {
+                    return rejectModule(err);
+                  }
+                  resolveModule(result);
+                });
+              })
+                .then(function (result) {
+                  return result;
+                })
+                .catch(function (err) {
+                  reject(err);
+                });
             });
           }, Promise.resolve(data)).then(function (result) {
+            var out = {};
+
             out.status = 'ok';
             out.messages = (result.length > 0 ? result.reverse() : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
             out.slug = indata.channel;

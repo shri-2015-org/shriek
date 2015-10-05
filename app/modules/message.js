@@ -25,15 +25,30 @@ var MessageModule = function(socket) {
 
     var setMessage = new Promise(function (resolve, reject) {
       newMessage.save({runValidators: true}, function (err, data) {
-        var out = {};
         if (!err) {
           shriekModules.reduce(function (prev, module) {
             return prev.then(function (data) {
-              return module(data);
+              return new Promise(function (resolveModule, rejectModule) {
+                module(data, function (err, result) {
+                  if (err) {
+                    return rejectModule(err);
+                  }
+                  resolveModule(result);
+                });
+              })
+                .then(function (result) {
+                  return result;
+                })
+                .catch(function (err) {
+                  reject(err);
+                });
             });
           }, Promise.resolve([data])).then(function (result) {
-            out.status = 'ok';
-            out.message = result[0]; // здесь будет запись из БД со всеми полями (см схему)
+            var out = {
+              status: 'ok',
+              message: result[0] // здесь будет запись из БД со всеми полями (см схему)
+            };
+
             resolve(out);
           });
 

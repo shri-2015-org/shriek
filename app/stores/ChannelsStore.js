@@ -9,7 +9,8 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
     // для создания нового канала
     this.newChannel={};
-    this.newChannel.name;
+    this.newChannel.name = '';
+    this.newChannel.desc = '';
     this.newChannel.userList = [];
     // для создания нового канала
 
@@ -17,10 +18,11 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
       updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
       setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
-      addChannel: ChannelsActions.ADD_CHANNEL,
       setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
       addUserToNewChannel:ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
       deleteUserFromNewChannel:ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
+      createdNewChannel: ChannelsActions.CREATED_NEW_CHANNEL,
+      addNewChannel:ChannelsActions.ADD_NEW_CHANNEL,
       updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL
     });
   }
@@ -60,7 +62,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.show_modal = stateShowModal;
   };
 
-  ChannelsStore.prototype.addChannel = function (fetched_data) {
+  ChannelsStore.prototype.createdNewChannel = function (fetched_data) {
     var oldstate  = this.show_modal;
 
     if (fetched_data.creator === socket.username) {
@@ -102,6 +104,18 @@ var ChannelsActions = require('./../actions/ChannelsActions');
       }
     });
     console.log(this.newChannel);
+  };
+
+  ChannelsStore.prototype.addNewChannel = function (data) {
+     if (data.desc) this.newChannel.desc = data.desc;
+     if (data.name) {
+       this.newChannel.name = data.name;
+       socket.emit('channel create', {
+         name: this.newChannel.name,
+         desc: this.newChannel.desc,
+         userslist: this.newChannel.userList
+       });
+     }
   };
 
   return alt_obj.createStore(ChannelsStore);

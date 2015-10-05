@@ -43,15 +43,6 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       });
     },
 
-    addChannel: function (e) {
-      e.preventDefault();
-
-      var name = $(e.target).find('#channelName').val().trim();
-      if (name) {
-        socket.emit('channel create', {name: name, userslist: this.state.newChannel.userList});
-      }
-    },
-
     render: function () {
       var Channels = (<div>Loading channels...</div>);
       var _this = this;
@@ -81,7 +72,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
           </ul>
           <MoreChannels len = {len_channels}/>
           {this.state.show_modal == true && (
-            <AddChannelModal handleSubmit={this.addChannel} />
+            <AddChannelModal/>
           )}
         </div>
       );
@@ -129,6 +120,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     handleShowModal: function() {
         ChannelsActions.updateShowModal(true);
     },
+
     render: function () {
       return (
         <span className="heading__plus" onClick={this.handleShowModal}>
@@ -146,12 +138,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       });
 
       return (
-          <div className="userlist__wrap">
-            <h3 className="userlist__heading">Выберите пользователей</h3>
-            <ul className="userlist__list" id="userlistadd">
-              {UsersList}
-            </ ul>
-          </div>
+        <div className="userlist__wrap">
+          <h3 className = "userlist__heading"> Выберите пользователей </h3>
+          <ul className = "userlist__list">
+            {UsersList}
+          </ul>
+        </div>
       );
     }
   });
@@ -164,6 +156,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         ChannelsActions.deleteUserFromNewChannel(this.props.user.username);
       }
     },
+
     render: function() {
       return (
         <li className="userlist__item">
@@ -177,13 +170,21 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   });
 
   var AddChannelModal = React.createClass({
+    handleSubmit: function (e) {
+      e.preventDefault();
+      var name = $(e.target).find('#channelName').val().trim();
+      var desc = $(e.target).find('#channelDesc').val().trim();
+      ChannelsActions.addNewChannel({name: name, desc: desc});
+    },
+
     handleCloseModal: function() {
       ChannelsActions.updateShowModal(false);
     },
+
     render: function () {
       return (
         <div className="modal">
-          <form className="form modal__body" onSubmit={this.props.handleSubmit}>
+          <form className="form modal__body" onSubmit={this.handleSubmit}>
             <h2 className="modal__heading heading">Добавьте канал</h2>
             <div className="form__row">
               <label className="form__label" htmlFor="channelName"><i className="fa fa-users"></i></label>
@@ -193,11 +194,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
               <label className="form__label" htmlFor="channelDesc"><i className="fa fa-edit"></i></label>
               <textarea className="form__textarea" type="text" id="channelDesc" ref="descChannel" placeholder="Кратко опишите"></textarea>
             </div>
-
             <div className="form__row userlist">
-              <input type="checkbox" className="userlist__checkbox" id="privateChannel" />
-              <label htmlFor="privateChannel">Приватный канал</label>
-              <UserList />
+              {Users.length > 0 &&(<div>
+                <input type="checkbox" className="userlist__checkbox" id="privateChannel" />
+                <label htmlFor="privateChannel">Приватный канал</label>
+                <UserList/>
+              </div>)}
             </div>
             <button className="btn" type="submit">Добавить</button>
             <span> </span>

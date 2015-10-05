@@ -105,8 +105,15 @@ var ChatComponent = function (socket) {
           return string;
         }
       });
+
+      var classes = ['msg__item'];
+
+      if (this.props.message.searched) {
+        classes.push('msg__searched');
+      }
+
       return (
-        <div className="msg__item">
+        <div className={classes.join(' ')}>
           <span className="msg__author">{this.props.message.username}: </span>
           <div
             className="msg__text"

@@ -228,6 +228,7 @@ io.on('connection', function (socket) {
   require('../modules/user')(socket, io);
   require('../modules/message')(socket);
   require('../modules/channel')(socket);
+  require('../modules/search')(socket);
 
   // when the user disconnects.. perform this
   socket.on('disconnect', function () {

@@ -30,7 +30,6 @@ var UserModule = function (socket, io) {
    * @param  data.password пароль пользователя
    */
   socket.on('user enter', function (data) {
-    console.log(data);
     var passportLogin = false;
 
     if (socket.username !== undefined) {
@@ -108,6 +107,8 @@ var UserModule = function (socket, io) {
     });
 
     function callbackUserEnter(out) {
+      delete out.user.salt;
+
       if (out.status === 'ok') {
         // echo globally (all clients) that a person has connected
         socket.broadcast.emit('user connected', out);
@@ -172,7 +173,9 @@ var UserModule = function (socket, io) {
 
     var username = data.username || socket.username;
 
-    UserModel.findOne({username: username}, function (err, doc) {
+    UserModel.findOne({
+      username: username
+    }, {salt: 0, hashedPassword: 0}, function (err, doc) {
       if (!err && doc) {
         out = {
           status: 'ok',
@@ -202,7 +205,7 @@ var UserModule = function (socket, io) {
 
     UserModel.find({
       username: {$ne: socket.username}
-    }, function (err, docs) {
+    }, {salt: 0, hashedPassword: 0}, function (err, docs) {
       var out = {};
 
       if (!err && docs) {
@@ -254,8 +257,9 @@ var UserModule = function (socket, io) {
 
     UserModel.findOneAndUpdate(
       {username: socket.username},
-      {setting: data.setting},
-      function (err, user) {
+      {setting: data.setting})
+      .select('-salt -hashedPassword')
+      .exec(function (err, user) {
         if (!err && user) {
           out.status = 'ok';
           out.user = user;

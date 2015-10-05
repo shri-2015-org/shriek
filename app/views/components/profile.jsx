@@ -3,6 +3,7 @@ var ProfileComponent = function (socket) {
 var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
 var AuthActions = require('./../../actions/AuthActions'); // подключаем экшены
 
+var SearchComponent = require('./search.jsx')(socket);
 
   var ProfileBlock = React.createClass({
 
@@ -47,6 +48,7 @@ var AuthActions = require('./../../actions/AuthActions'); // подключае�
     render: function () {
       return (
         <div className='profile'>
+          <SearchComponent/>
           <div className="profile__out" onClick={this.logout}><i className="fa fa-power-off fa-lg"></i></div>
           <div className="profile__tools" onClick={this.handleSettingOpen}><i className="fa fa-cog fa-lg"></i></div>
           <div className="profile__img">

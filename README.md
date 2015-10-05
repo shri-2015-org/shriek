@@ -352,6 +352,27 @@ socket.emit('<name-of-event>', data);
 `error_message`:
   * `Ошибка создания сообщения`
 
+##### `search text`
+
+Отправить сообщение
+
+*Input* (`emit`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| channels | Array | Slugs of channel where find |
+| text | String | Query string |
+
+*Output* (`on`)
+
+| Field | Type | Description |
+|-------|------ | -------|
+| status | String | Status of error |
+| messages | Array | Array of `message` object from DB (see schema) |
+
+`error_message`:
+  * `Ошибка поиска`
+
 ### Schema
 
 ##### User

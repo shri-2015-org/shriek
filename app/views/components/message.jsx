@@ -111,9 +111,9 @@ var ChatComponent = function (socket) {
       if (this.props.message.searched) {
         classes.push('msg__searched');
       }
-
       return (
         <div className={classes.join(' ')}>
+          <MessageDate date={this.props.message.date}/>
           <span className="msg__author">{this.props.message.username}: </span>
           <div
             className="msg__text"
@@ -170,6 +170,14 @@ var ChatComponent = function (socket) {
           </form>
         </div>
       );
+    }
+  });
+
+  var MessageDate = React.createClass({
+    render: function () {
+      return (
+        <span className='message-date'>{this.props.date}</span>
+      )
     }
   });
 

@@ -21,13 +21,13 @@ var channelModule = function (socket) {
         channelUserList.unshift(socket.username);
       }
 
-      console.log(channelUserList);
+      //console.log("channelUserList",channelUserList);
 
       var newChannel = ChannelModel({
         name: data.name,
         desc: data.desc,
         slug: slug,
-        is_private: false,
+        is_private: data.privateUsers,
         users: channelUserList
       });
 
@@ -94,7 +94,7 @@ var channelModule = function (socket) {
   */
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {
-      ChannelModel.find(function (err, data) {
+      ChannelModel.find({$or: [{is_private: false}, {is_private: true, users: socket.username}]}, function (err, data) {
         var out = {};
 
         if (!err) {

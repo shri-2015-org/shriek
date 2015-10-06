@@ -7,6 +7,9 @@ var Channel = new Schema({
     type: String,
     required: true
   },
+  desc: {
+    type: String
+  },
   slug: {
     type: String,
     required: true,

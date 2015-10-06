@@ -15,6 +15,9 @@ var ChannelsActions = alt_obj.createActions({
   setUnreadChannel: function (channelSlug) {
     this.dispatch(channelSlug);
   },
+  updateUserList: function (users) {
+    this.dispatch(users);
+  },
 
   initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
@@ -30,6 +33,12 @@ var ChannelsActions = alt_obj.createActions({
     socket.on('message send', function (data) {
       if (data.message.channel != socket.activeChannel) { // только если сообщение пришло в не активный канал
         _this.actions.setUnreadChannel(data.message.channel);
+      }
+    });
+
+    socket.on('user list', function(data) {
+      if (data.status === 'ok') {
+        _this.actions.updateUserList(data.users);
       }
     });
 
@@ -70,6 +79,10 @@ var ChannelsActions = alt_obj.createActions({
   //срабатывает на клике формы добавление канала
   addNewChannel: function(newChannel) {
     this.dispatch(newChannel);
+  },
+
+  setPrivateMoreUsersChannel: function(setPrivate) {
+    this.dispatch(setPrivate);
   }
 });
 

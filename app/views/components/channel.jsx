@@ -1,6 +1,4 @@
 var ChannelComponent = function (socket) {
-  var Users = [];
-
 var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
 var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
 
@@ -13,11 +11,6 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       ChannelsStore.listen(this.onChange); // подписываемся на изменения store
       ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
       ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
-      socket.on('user list', function(data) {
-        if (data.status === 'ok') {
-          Users = data.users;
-        }
-      });
     },
 
     componentWillUnmount: function () {
@@ -72,7 +65,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
           </ul>
           <MoreChannels len = {len_channels}/>
           {this.state.show_modal == true && (
-            <AddChannelModal/>
+            <AddChannelModal userlist = {this.state.userList}/>
           )}
         </div>
       );
@@ -133,7 +126,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   var UserList = React.createClass({
     render: function() {
       var UsersList = [];
-      UsersList = Users.map(function (user) {
+      UsersList = this.props.userlist.map(function (user) {
         return ( <User key = {user._id} user = {user} />);
       });
 
@@ -172,13 +165,19 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   var AddChannelModal = React.createClass({
     handleSubmit: function (e) {
       e.preventDefault();
-      var name = $(e.target).find('#channelName').val().trim();
-      var desc = $(e.target).find('#channelDesc').val().trim();
+      var name = React.findDOMNode(this.refs.сhannelName).value.trim();
+      var desc = React.findDOMNode(this.refs.channelDesc).value.trim();
       ChannelsActions.addNewChannel({name: name, desc: desc});
     },
 
     handleCloseModal: function() {
       ChannelsActions.updateShowModal(false);
+    },
+
+    handleSetPrivate: function(e) {
+      var statePrivate = false;
+      if (e.target.checked) statePrivate = true;
+      ChannelsActions.setPrivateMoreUsersChannel(statePrivate);
     },
 
     render: function () {
@@ -188,17 +187,17 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
             <h2 className="modal__heading heading">Добавьте канал</h2>
             <div className="form__row">
               <label className="form__label" htmlFor="channelName"><i className="fa fa-users"></i></label>
-              <input className="form__text" type="text" id="channelName" ref="inputNameChannel" placeholder="Назовите" />
+              <input className="form__text" type="text" id="channelName" ref="сhannelName" placeholder="Назовите" />
             </div>
             <div className="form__row">
               <label className="form__label" htmlFor="channelDesc"><i className="fa fa-edit"></i></label>
-              <textarea className="form__textarea" type="text" id="channelDesc" ref="descChannel" placeholder="Кратко опишите"></textarea>
+              <textarea className="form__textarea" type="text" id="channelDesc" ref="channelDesc" placeholder="Кратко опишите"></textarea>
             </div>
             <div className="form__row userlist">
-              {Users.length > 0 &&(<div>
-                <input type="checkbox" className="userlist__checkbox" id="privateChannel" />
+              {this.props.userlist.length > 0 &&(<div>
+                <input type="checkbox" className="userlist__checkbox" id="privateChannel" onClick={this.handleSetPrivate}/>
                 <label htmlFor="privateChannel">Приватный канал</label>
-                <UserList/>
+                <UserList userlist={this.props.userlist}/>
               </div>)}
             </div>
             <button className="btn" type="submit">Добавить</button>

@@ -9,9 +9,6 @@ var MessagesActions = alt_obj.createActions({
   pushMessage: function (message) {
     this.dispatch(message);
   },
-  updateChannelUsers: function (message) {
-    this.dispatch(message);
-  },
 
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
@@ -25,9 +22,6 @@ var MessagesActions = alt_obj.createActions({
       socket.on('channel get', function (data) {
         _this.actions.updateMessages({ messages: data.messages });
         $(".msg__list").scrollTop(10000); // унести отсюда
-      });
-      socket.on('channel info', function (data) {
-        _this.actions.updateChannelUsers({ channel: data.channel });
       });
 
   },

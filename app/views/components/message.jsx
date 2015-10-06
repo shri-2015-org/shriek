@@ -1,11 +1,12 @@
-var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
-var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
-
-var markDownConverter = new showdown.Converter();
-
-var Emoji = require('../../views/components/emoji.jsx');
-
 var ChatComponent = function (socket) {
+  var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
+  var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
+
+  var markDownConverter = new showdown.Converter();
+
+  var Emoji = require('../../views/components/emoji.jsx');
+  var ChannelUsers = require('../../views/components/channelUsers.jsx')(socket);
+
   var ChatBox = React.createClass({
     getInitialState: function () {
       return MessagesStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
@@ -47,7 +48,7 @@ var ChatComponent = function (socket) {
       return (
         <div className="msg">
           <div className="msg__wrap">
-            <ChannelUsers users={this.state.users}/>
+            <ChannelUsers />
             <div className="msg__body">
             <MessagesList messages={this.state.messages}/>
             </div>
@@ -97,35 +98,6 @@ var ChatComponent = function (socket) {
             dangerouslySetInnerHTML={{
               __html: markDownConverter.makeHtml(this.props.message.text)
             }} />
-        </div>
-      );
-    }
-  });
-
-  var ChannelUsers = React.createClass({
-    render: function () {
-
-      var Users = (<div>Loading users...</div>);
-
-      if (this.props.users) {
-        Users = this.props.users.map(function (user) {
-          return (<ChannelUser user={user} key={user}/>);
-        });
-      }
-
-      return (
-        <div className="msg__users">
-          {Users}
-        </div>
-      );
-    }
-  });
-
-  var ChannelUser = React.createClass({
-    render: function () {
-      return (
-        <div className="user__item">
-          <span className="user__title">{this.props.user}</span>
         </div>
       );
     }

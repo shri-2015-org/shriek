@@ -154,7 +154,7 @@ var ChannelModule = function (socket) {
             value.type = message.type;
             value.username = message.username;
             if (message.created_at < today) {
-              var day = message.created_at.getDay();
+              var day = message.created_at.getDate();
               var month = message.created_at.getMonth();
               value.date = (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + message.created_at.getFullYear();
             } else {

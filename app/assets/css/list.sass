@@ -30,7 +30,7 @@ $list-item-height: 35px
   cursor: pointer
 
   &:hover
-    background: rgba(255,255,255,0.07)
+    background: rgba(255, 255, 255, 0.07)
 
   a, span
     display: block
@@ -39,26 +39,29 @@ $list-item-height: 35px
     position: relative
     line-height: $list-item-height
 
-    &:before
-      content: ""
-      display: none
-      width: 8px
-      height: 8px
-      margin: -4px 10px 0 0
-      border-radius: 50%
-      background: rgba(255, 255, 255, .5)
-      position: absolute
-      left: 30px
-      top: 50%
-
   &.active
-    background: rgba(68, 68, 68, 1)
+    background: rgb(68, 68, 68)
 
     a
       color: rgb(250, 220, 88)
 
-  &.unread
+  &.online
+    position: relative
 
+    a
+      &::before
+        content: ''
+        display: block
+        position: absolute
+        height: 10px
+        width: 10px
+        margin-top: -5px
+        border-radius: 100%
+        background: #0a0
+        left: 30px
+        top: 50%
+
+  &.unread
     a:before
       display: block
 
@@ -67,5 +70,3 @@ $list-item-height: 35px
     display: block
     span
       padding: 0 10px
-
-

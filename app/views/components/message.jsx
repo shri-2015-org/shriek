@@ -50,7 +50,7 @@ var ChatComponent = function (socket) {
           <div className="msg__wrap">
             <ChannelUsers />
             <div className="msg__body">
-            <MessagesList messages={this.state.messages}/>
+            <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll}/>
             </div>
           </div>
           <MessageForm submitMessage={this.submitMessage}/>
@@ -60,21 +60,38 @@ var ChatComponent = function (socket) {
   });
 
   var MessagesList = React.createClass({
+    getInitialState: function () {
+      return ( { scrollValue: 0, scrollHeight: 0 } );
+    },
     componentDidMount: function () {
       var msglist = $(React.findDOMNode(this.refs.msg_list));
     },
-
+    handleScroll: function () {
+      if (!this.props.stopScroll) {
+        var node = this.getDOMNode();
+        if (node.scrollTop === 0) {
+          if (this.state.scrollValue == 0) {
+            this.state.startScrollHeight = node.scrollHeight;
+          }
+          this.state.scrollValue++;
+          MessagesActions.getMessages(socket, this.state.scrollValue);
+          this.state.scrollHeight = this.state.startScrollHeight;
+          this.forceUpdate();
+        }
+      }
+    },
+    componentDidUpdate: function () {
+      this.getDOMNode().scrollTop = this.state.scrollHeight;
+    },
     render: function () {
       var Messages = (<div>Loading messages...</div>);
-
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
           return (<Message message={message} key={message._id}/>);
         });
       }
-
       return (
-        <div className="msg__list" ref="msglist">
+        <div className="msg__list" ref="msglist" onScroll={this.handleScroll}>
           {Messages}
         </div>
       );
@@ -90,8 +107,16 @@ var ChatComponent = function (socket) {
           return string;
         }
       });
+
+      var classes = ['msg__item'];
+
+      if (this.props.message.searched) {
+        classes.push('msg__searched');
+      }
+
       return (
-        <div className="msg__item">
+        <div className={classes.join(' ')}>
+          <MessageDate date={this.props.message.date}/>
           <span className="msg__author">{this.props.message.username}: </span>
           <div
             className="msg__text"
@@ -148,6 +173,14 @@ var ChatComponent = function (socket) {
           </form>
         </div>
       );
+    }
+  });
+
+  var MessageDate = React.createClass({
+    render: function () {
+      return (
+        <span className='message-date'>{this.props.date}</span>
+      )
     }
   });
 

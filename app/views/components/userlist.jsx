@@ -23,13 +23,7 @@ var UserComponent = function (socket) {
 
       if (this.state.users) {
         Users = this.state.users.map(function(user) {
-          var currentUser = '';
-
-          if (socket.username === user.username) {
-            currentUser = 'active';
-          }
-
-          return (<User key={user._id} user={user} current={currentUser} />);
+          return (<User key={user._id} user={user} />);
         });
       }
 
@@ -51,11 +45,51 @@ var UserComponent = function (socket) {
   });
 
   var User = React.createClass({
+      componentWillMount: function () {
+        this.setState(this.props.user);
+      },
+
+      componentDidMount: function () {
+        var _this = this;
+
+        socket.on('user connected', function(data) {
+          console.log('user connected');
+
+          if (data.status === 'ok') {
+            socket.emit('user connected');
+
+            data.user.online = true;
+
+            _this.updateUser(data.user);
+          }
+        });
+
+        socket.on('user disconnected', function(data) {
+          console.log('user disconnected');
+
+          if (data.status === 'ok') {
+            data.user.online = false;
+
+            _this.updateUser(data.user);
+          }
+        });
+      },
+
+      updateUser: function (user) {
+        if (user.username === this.state.username) {
+          this.setState(user);
+        }
+      },
+
       render: function() {
-        var className = 'list__item ' + this.props.current;
+        var classes = ['list__item'];
+
+        if (this.state.online) {
+          classes.push('online');
+        }
 
         return (
-          <li className={className}>
+          <li className={classes.join(' ')}>
             <a className="name">{this.props.user.username}</a>
           </li>
         );

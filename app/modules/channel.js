@@ -94,18 +94,19 @@ var channelModule = function (socket) {
   */
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {
-      ChannelModel.find({$or: [{is_private: false}, {is_private: true, users: socket.username}]}, function (err, data) {
-        var out = {};
+      ChannelModel.find({$or: [{is_private: false}, {is_private: true, users: socket.username}]},
+        function (err, data) {
+          var out = {};
 
-        if (!err) {
-          out.status = 'ok';
-          out.channels = data;
-          resolve(out);
-        } else {
-          var error = new Error('Ошибка получения чатов');
-          reject(error);
-        }
-      });
+          if (!err) {
+            out.status = 'ok';
+            out.channels = data;
+            resolve(out);
+          } else {
+            var error = new Error('Ошибка получения чатов');
+            reject(error);
+          }
+        });
     });
 
     getChannelList
@@ -182,14 +183,15 @@ var channelModule = function (socket) {
 
       ChannelModel.findOne({ slug: data.channel }, function (err, db_data) {
         if (typeof(db_data.users) == 'object' && db_data.users.indexOf(socket.username) === -1) {
-          ChannelModel.findOneAndUpdate({ slug: data.channel }, { $addToSet: { users: socket.username } }, function (err, data) {
-            if (!err) {
-              out.status = 'ok';
-            } else {
-              var error = new Error('Ошибка добавления пользователя');
-              reject(error);
-            }
-          });
+          ChannelModel.findOneAndUpdate({ slug: data.channel }, { $addToSet: { users: socket.username } },
+            function (err, data) {
+              if (!err) {
+                out.status = 'ok';
+              } else {
+                var error = new Error('Ошибка добавления пользователя');
+                reject(error);
+              }
+            });
         } else {
           out.status = 'ok';
           resolve(out);

@@ -132,8 +132,8 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
       return (
         <div className="userlist__wrap">
-          <h3 className = "userlist__heading"> Выберите пользователей </h3>
-          <ul className = "userlist__list">
+          <h3 className="userlist__heading"> Выберите пользователей </h3>
+          <ul className="userlist__list">
             {UsersList}
           </ul>
         </div>
@@ -142,7 +142,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   });
 
   var User = React.createClass({
-    clickCheckboxHandler: function(e) {
+    clickCheckboxHandler: function (e) {
       if (e.target.checked) {
         ChannelsActions.addUserToNewChannel(this.props.user.username);
       } else {
@@ -170,11 +170,11 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       ChannelsActions.addNewChannel({name: name, desc: desc});
     },
 
-    handleCloseModal: function() {
+    handleCloseModal: function () {
       ChannelsActions.updateShowModal(false);
     },
 
-    handleSetPrivate: function(e) {
+    handleSetPrivate: function (e) {
       var statePrivate = false;
       if (e.target.checked) statePrivate = true;
       ChannelsActions.setPrivateMoreUsersChannel(statePrivate);

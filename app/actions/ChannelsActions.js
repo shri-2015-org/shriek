@@ -36,7 +36,7 @@ var ChannelsActions = alt_obj.createActions({
       }
     });
 
-    socket.on('user list', function(data) {
+    socket.on('user list', function (data) {
       if (data.status === 'ok') {
         _this.actions.updateUserList(data.users);
       }
@@ -58,7 +58,7 @@ var ChannelsActions = alt_obj.createActions({
   },
 
   //обновляем стейт показа/убирания окна добавления канала
-  updateShowModal: function(state) {
+  updateShowModal: function (state) {
     this.dispatch(state);
   },
 
@@ -67,21 +67,21 @@ var ChannelsActions = alt_obj.createActions({
   },
 
   //срабатывает при клике на чекбокс, добавляет юзера в новый канал
-  addUserToNewChannel: function(username) {
+  addUserToNewChannel: function (username) {
     this.dispatch(username);
   },
 
   //срабатывает при клике на чекбокс, отменяет добавление юзера в новый канал
-  deleteUserFromNewChannel: function(username) {
+  deleteUserFromNewChannel: function (username) {
     this.dispatch(username);
   },
 
   //срабатывает на клике формы добавление канала
-  addNewChannel: function(newChannel) {
+  addNewChannel: function (newChannel) {
     this.dispatch(newChannel);
   },
 
-  setPrivateMoreUsersChannel: function(setPrivate) {
+  setPrivateMoreUsersChannel: function (setPrivate) {
     this.dispatch(setPrivate);
   }
 });

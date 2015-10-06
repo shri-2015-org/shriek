@@ -3,7 +3,7 @@ var alt_obj = require('./../controllers/alt_obj');
 var ChannelsUsersActions = alt_obj.createActions({
   displayName: 'ChannelsUsersActions',
 
-  getInfoChannelUsers: function (data){
+  getInfoChannelUsers: function (data) {
     this.dispatch(data);
   },
 
@@ -11,7 +11,7 @@ var ChannelsUsersActions = alt_obj.createActions({
     var _this = this;
 
     socket.on('channel info', function (data) {
-      if (data.status == 'ok') {
+      if (data.status === 'ok') {
         _this.actions.getInfoChannelUsers(data.channel);
       }
     });

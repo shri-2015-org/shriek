@@ -28,7 +28,6 @@ var MessagesActions = alt_obj.createActions({
 
   getMessages: function (socket) {
     socket.emit('channel get', { channel: socket.activeChannel, date: new Date() });
-    socket.emit('channel info', { channel: socket.activeChannel });
   }
 
 });

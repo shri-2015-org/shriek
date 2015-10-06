@@ -109,15 +109,16 @@ var UserModule = function (socket, io) {
     function callbackUserEnter(out) {
       delete out.user.salt;
 
+      socket.emit('user enter', out);
+
       if (out.status === 'ok') {
         // echo globally (all clients) that a person has connected
+        delete out.user.hashedPassword;
         socket.broadcast.emit('user connected', out);
 
         // we store the username in the socket session for this client
         socket.username = username;
       }
-
-      socket.emit('user enter', out);
     }
   });
 

@@ -162,16 +162,42 @@ var ChannelModule = function (socket) {
                 });
             });
           }, Promise.resolve(data)).then(function (result) {
-            var out = {};
 
-            out.status = 'ok';
-            out.messages = (result.length > 0 ? result.reverse() : []); // возвращаем пустой массив или сообщения (чтобы не возвращать null)
-            out.slug = indata.channel;
-            out.type = 'channel get';
+            var now = new Date();
+            var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            result = result.map(function (message) {
+              var value = {};
+              value._id = message._id;
+              value.channel = message.channel;
+              value.created_at = message.created_at;
+              value.text = message.text;
+              value.type = message.type;
+              value.username = message.username;
+              if (message.created_at < today) {
+                var day = message.created_at.getDate();
+                var month = message.created_at.getMonth();
+                value.date = (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + message.created_at.getFullYear();
+              } else {
+                var hour = message.created_at.getHours();
+                var minutes = message.created_at.getMinutes();
+                value.date = (hour < 10 ? '0' + hour : hour) + ':' + (minutes < 10 ? '0' + minutes : minutes);
+              }
+              return value;
+            });
+
+            var out = {
+              status: 'ok',
+              // возвращаем сообщения или пустой массив, чтобы не возвращать null
+              messages: (result.length > 0 ? result.reverse() : []),
+              slug: indata.channel,
+              type: 'channel get'
+            };
+
             if (indata.skip) {
               out.type = 'scroll';
             }
-            if (data.length < limit) {
+
+            if (result.length < limit) {
               out.stopScroll = true;
             }
 

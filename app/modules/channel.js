@@ -2,8 +2,6 @@ var slugify = require('transliteration').slugify;
 var ChannelModel = require('../models/channel');
 var MessageModel = require('../models/message');
 
-var shriekModules = require('./modules');
-
 var ChannelModule = function (socket) {
 
   /**
@@ -144,65 +142,46 @@ var ChannelModule = function (socket) {
 
           reject(error);
         } else {
-          shriekModules.reduce(function (prev, module) {
-            return prev.then(function (data) {
-              return new Promise(function (resolveModule, rejectModule) {
-                module(data, function (err, result) {
-                  if (err) {
-                    return rejectModule(err);
-                  }
-                  resolveModule(result);
-                });
-              })
-                .then(function (result) {
-                  return result;
-                })
-                .catch(function (err) {
-                  reject(err);
-                });
-            });
-          }, Promise.resolve(data)).then(function (result) {
 
-            var now = new Date();
-            var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            result = result.map(function (message) {
-              var value = {};
-              value._id = message._id;
-              value.channel = message.channel;
-              value.created_at = message.created_at;
-              value.text = message.text;
-              value.type = message.type;
-              value.username = message.username;
-              if (message.created_at < today) {
-                var day = message.created_at.getDate();
-                var month = message.created_at.getMonth();
-                value.date = (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + message.created_at.getFullYear();
-              } else {
-                var hour = message.created_at.getHours();
-                var minutes = message.created_at.getMinutes();
-                value.date = (hour < 10 ? '0' + hour : hour) + ':' + (minutes < 10 ? '0' + minutes : minutes);
-              }
-              return value;
-            });
-
-            var out = {
-              status: 'ok',
-              // возвращаем сообщения или пустой массив, чтобы не возвращать null
-              messages: (result.length > 0 ? result.reverse() : []),
-              slug: indata.channel,
-              type: 'channel get'
-            };
-
-            if (indata.skip) {
-              out.type = 'scroll';
+          var now = new Date();
+          var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          data = data.map(function (message) {
+            var value = {};
+            value._id = message._id;
+            value.channel = message.channel;
+            value.created_at = message.created_at;
+            value.text = message.text;
+            value.type = message.type;
+            value.username = message.username;
+            if (message.created_at < today) {
+              var day = message.created_at.getDate();
+              var month = message.created_at.getMonth();
+              value.date = (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + message.created_at.getFullYear();
+            } else {
+              var hour = message.created_at.getHours();
+              var minutes = message.created_at.getMinutes();
+              value.date = (hour < 10 ? '0' + hour : hour) + ':' + (minutes < 10 ? '0' + minutes : minutes);
             }
-
-            if (result.length < limit) {
-              out.stopScroll = true;
-            }
-
-            resolve(out);
+            return value;
           });
+
+          var out = {
+            status: 'ok',
+            // возвращаем сообщения или пустой массив, чтобы не возвращать null
+            messages: (data.length > 0 ? data.reverse() : []),
+            slug: indata.channel,
+            type: 'channel get'
+          };
+
+          if (indata.skip) {
+            out.type = 'scroll';
+          }
+
+          if (data.length < limit) {
+            out.stopScroll = true;
+          }
+
+          resolve(out);
         }
       });
     });

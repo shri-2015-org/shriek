@@ -23,54 +23,58 @@ var MessageModule = function(socket) {
       type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст
     });
 
-    var setMessage = new Promise(function (resolve, reject) {
-      newMessage.save({runValidators: true}, function (err, data) {
-        if (!err) {
-          shriekModules.reduce(function (prev, module) {
-            return prev.then(function (data) {
-              return new Promise(function (resolveModule, rejectModule) {
-                module(data, function (err, result) {
-                  if (err) {
-                    return rejectModule(err);
-                  }
-                  resolveModule(result);
-                });
-              })
-                .then(function (result) {
-                  return result;
-                })
-                .catch(function (err) {
-                  reject(err);
-                });
+    shriekModules.reduce(function (prev, module) {
+      return prev.then(function (data) {
+        return new Promise(function (resolveModule, rejectModule) {
+          if (module.forEvent === 'channelGet') {
+            module(data, function (err, result) {
+              if (err) {
+                return rejectModule(err);
+              }
+              resolveModule(result);
             });
-          }, Promise.resolve([data])).then(function (result) {
+          } else {
+            resolveModule(data);
+          }
+        })
+          .then(function (result) {
+            return result;
+          })
+          .catch(function (err) {
+            reject(err);
+          });
+      });
+    }, Promise.resolve([newMessage])).then(function (result) {
+      newMessage.text = result[0].text;
+
+      var setMessage = new Promise(function (resolve, reject) {
+        newMessage.save({runValidators: true}, function (err, data) {
+          if (!err) {
             var out = {
               status: 'ok',
-              message: result[0] // здесь будет запись из БД со всеми полями (см схему)
+              message: data // здесь будет запись из БД со всеми полями (см схему)
             };
 
             resolve(out);
-          });
-
-        } else {
-          reject('Ошибка создания сообщения');
-        }
-      });
-    });
-
-    setMessage
-      .then(function (data) {
-        socket.broadcast.emit('message send', data);
-        return socket.emit('message send', data);
-      })
-      .catch(function (error) {
-        console.log('message send error', error);
-        return socket.emit('message send', {
-          status: 'error',
-          error_message: error
+          } else {
+            reject('Ошибка создания сообщения');
+          }
         });
       });
 
+      setMessage
+        .then(function (data) {
+          socket.broadcast.emit('message send', data);
+          return socket.emit('message send', data);
+        })
+        .catch(function (error) {
+          console.log('message send error', error);
+          return socket.emit('message send', {
+            status: 'error',
+            error_message: error
+          });
+        });
+    });
   });
 }
 

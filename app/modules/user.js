@@ -174,23 +174,25 @@ var UserModule = function (socket, io) {
 
     var username = data.username || socket.username;
 
-    UserModel.findOne({
-      username: username
-    }, {salt: 0, hashedPassword: 0}, function (err, doc) {
-      if (!err && doc) {
-        out = {
-          status: 'ok',
-          user: doc
-        };
-      } else {
-        out = {
-          status: 'error',
-          error_message: 'Пользователь не найден'
-        };
+    UserModel.findOne(
+      {username: username}, 
+      {salt: 0, hashedPassword: 0}, 
+      function (err, doc) {
+        if (!err && doc) {
+          out = {
+            status: 'ok',
+            user: doc
+          };
+        } else {
+          out = {
+            status: 'error',
+            error_message: 'Пользователь не найден'
+          };
+        }
+  
+        socket.emit('user info', out);
       }
-
-      socket.emit('user info', out);
-    });
+    );
   });
 
   /**
@@ -258,7 +260,8 @@ var UserModule = function (socket, io) {
 
     UserModel.findOneAndUpdate(
       {username: socket.username},
-      {setting: data.setting})
+      {setting: data.setting}
+    )
       .select('-salt -hashedPassword')
       .exec(function (err, user) {
         if (!err && user) {

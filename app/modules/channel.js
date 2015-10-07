@@ -20,8 +20,6 @@ var ChannelModule = function (socket) {
         channelUserList.unshift(socket.username);
       }
 
-      //console.log("channelUserList",channelUserList);
-
       var newChannel = ChannelModel({
         name: data.name,
         desc: data.desc,

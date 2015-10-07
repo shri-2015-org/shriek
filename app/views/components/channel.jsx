@@ -32,7 +32,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         channel: event.target.dataset.slug
       });
       socket.emit('channel info', {
-        channel: event.target.dataset.slug
+        slug: socket.activeChannel
       });
     },
 

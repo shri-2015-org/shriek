@@ -53,7 +53,7 @@ var ChannelUsersComponent = function (socket) {
   var ChannelUser = React.createClass({
     render: function () {
       return(
-        <div className = "list__item" >
+        <div className="list__item" >
           <span>
           {this.props.user}
           </span>
@@ -65,8 +65,8 @@ var ChannelUsersComponent = function (socket) {
   var AddUsers = React.createClass({
       render: function () {
         return(
-          <div className = "user__item" >
-            <span className = "user__title">
+          <div className="user__item" >
+            <span className="user__title">
             </span>
           </div>
         );

@@ -9,11 +9,14 @@ var ChannelsActions = alt_obj.createActions({
   setActiveChannel: function (channelSlug) {
     this.dispatch(channelSlug);
   },
-  addChannel: function (channel) {
+  createdNewChannel: function (channel) {
     this.dispatch(channel);
   },
   setUnreadChannel: function (channelSlug) {
     this.dispatch(channelSlug);
+  },
+  updateUserList: function (users) {
+    this.dispatch(users);
   },
 
   initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
@@ -33,9 +36,15 @@ var ChannelsActions = alt_obj.createActions({
       }
     });
 
+    socket.on('user list', function (data) {
+      if (data.status === 'ok') {
+        _this.actions.updateUserList(data.users);
+      }
+    });
+
     socket.on('channel create', function (data) {
       if (data.status === 'ok') {
-        _this.actions.addChannel(data);
+        _this.actions.createdNewChannel(data);
 
         if (data.creator === socket.username) {
           _this.actions.setActiveChannel(data.channel.slug);
@@ -48,14 +57,33 @@ var ChannelsActions = alt_obj.createActions({
     });
   },
 
-  updateShowModal: function(state) {
+  //обновляем стейт показа/убирания окна добавления канала
+  updateShowModal: function (state) {
     this.dispatch(state);
   },
 
   getChannels: function (socket) {
     socket.emit('channel list'); // дергаем бекенд, чтобы получить список каналов
-  }
+  },
 
+  //срабатывает при клике на чекбокс, добавляет юзера в новый канал
+  addUserToNewChannel: function (username) {
+    this.dispatch(username);
+  },
+
+  //срабатывает при клике на чекбокс, отменяет добавление юзера в новый канал
+  deleteUserFromNewChannel: function (username) {
+    this.dispatch(username);
+  },
+
+  //срабатывает на клике формы добавление канала
+  addNewChannel: function (newChannel) {
+    this.dispatch(newChannel);
+  },
+
+  setPrivateMoreUsersChannel: function (setPrivate) {
+    this.dispatch(setPrivate);
+  }
 });
 
 module.exports = alt_obj.createActions('ChannelsActions', ChannelsActions); // первый параметр имя экшена — обязательный в ES5

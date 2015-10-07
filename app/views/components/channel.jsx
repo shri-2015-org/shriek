@@ -1,5 +1,4 @@
 var ChannelComponent = function (socket) {
-
 var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
 var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
 
@@ -29,19 +28,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         channel: event.target.dataset.slug,
         date: new Date()
       });
-    },
-
-    hideModal: function (e) {
-      e.preventDefault();
-      this.setState({show_modal: false});
-    },
-
-    addChannel: function (e) {
-      e.preventDefault();
-      var name = $(e.target).find('#channel').val().trim();
-      if (name) {
-        socket.emit('channel create', {name: name});
-      }
+      socket.emit('channel join', {
+        channel: event.target.dataset.slug
+      });
+      socket.emit('channel info', {
+        slug: socket.activeChannel
+      });
     },
 
     render: function () {
@@ -73,7 +65,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
           </ul>
           <MoreChannels len = {len_channels}/>
           {this.state.show_modal == true && (
-            <AddChannelModal handleSubmit={this.addChannel} handleClose={this.hideModal}/>
+            <AddChannelModal userlist = {this.state.userList}/>
           )}
         </div>
       );
@@ -121,6 +113,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     handleShowModal: function() {
         ChannelsActions.updateShowModal(true);
     },
+
     render: function () {
       return (
         <span className="heading__plus" onClick={this.handleShowModal}>
@@ -130,22 +123,86 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     }
   });
 
+  var UserList = React.createClass({
+    render: function () {
+      var UsersList = [];
+      UsersList = this.props.userlist.map(function (user) {
+        return (<User key={user._id} user={user} />);
+      });
+
+      return (
+        <div className="userlist__wrap">
+          <h3 className="userlist__heading">Выберите пользователей</h3>
+          <ul className="userlist__list">
+            {UsersList}
+          </ul>
+        </div>
+      );
+    }
+  });
+
+  var User = React.createClass({
+    clickCheckboxHandler: function (e) {
+      if (e.target.checked) {
+        ChannelsActions.addUserToNewChannel(this.props.user.username);
+      } else {
+        ChannelsActions.deleteUserFromNewChannel(this.props.user.username);
+      }
+    },
+
+    render: function () {
+      return (
+        <li className="userlist__item">
+          <label>
+            <input type="checkbox" onClick={this.clickCheckboxHandler} />
+            <span>{this.props.user.username}</span>
+          </label>
+        </li>
+      );
+    }
+  });
+
   var AddChannelModal = React.createClass({
-    handleCloseModal: function() {
+    handleSubmit: function (e) {
+      e.preventDefault();
+      var name = React.findDOMNode(this.refs.сhannelName).value.trim();
+      var description = React.findDOMNode(this.refs.channelDesc).value.trim();
+      ChannelsActions.addNewChannel({name: name, description: description});
+    },
+
+    handleCloseModal: function () {
       ChannelsActions.updateShowModal(false);
     },
+
+    handleSetPrivate: function (e) {
+      var statePrivate = false;
+      if (e.target.checked) statePrivate = true;
+      ChannelsActions.setPrivateMoreUsersChannel(statePrivate);
+    },
+
     render: function () {
       return (
         <div className="modal">
-          <form className="form modal__body" onSubmit={this.props.handleSubmit}>
-            <h2 className="modal__heading">Назовите канал</h2>
+          <form className="form modal__body" onSubmit={this.handleSubmit}>
+            <h2 className="modal__heading heading">Добавьте канал</h2>
             <div className="form__row">
-              <label className="form__label" htmlFor="channel"><i className="fa fa-users"></i></label>
-              <input className="form__text" type="text" id="channel" ref="inputNameChannel" placeholder="Канал" />
+              <label className="form__label" htmlFor="channelName"><i className="fa fa-users"></i></label>
+              <input className="form__text" type="text" id="channelName" ref="сhannelName" placeholder="Назовите" />
+            </div>
+            <div className="form__row">
+              <label className="form__label" htmlFor="channelDesc"><i className="fa fa-edit"></i></label>
+              <textarea className="form__textarea" type="text" id="channelDesc" ref="channelDesc" placeholder="Кратко опишите"></textarea>
+            </div>
+            <div className="form__row userlist">
+              {this.props.userlist.length > 0 &&(<div>
+                <input type="checkbox" className="userlist__checkbox" id="privateChannel" onClick={this.handleSetPrivate}/>
+                <label htmlFor="privateChannel">Приватный канал</label>
+                <UserList userlist={this.props.userlist}/>
+              </div>)}
             </div>
             <button className="btn" type="submit">Добавить</button>
             <span> </span>
-            <button className="btn" onClick={this.handleCloseModal} type="button">Close</button>
+            <button className="btn" onClick={this.handleCloseModal} type="button">Закрыть</button>
           </form>
         </div>
       );

@@ -97,6 +97,10 @@ var AuthActions = require('./../../actions/AuthActions');
           socket.emit('user list');
           socket.emit('channel list');
 
+          socket.emit('channel join', {
+            channel: 'general'
+          });
+
           // Load info about current user
           socket.emit('user info', {username: socket.username});
           localStorage.setItem('userName', data.user.username);

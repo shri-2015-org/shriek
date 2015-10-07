@@ -6,13 +6,26 @@ var ChannelsActions = require('./../actions/ChannelsActions');
   function ChannelsStore() {
     this.channels = []; // это бывший initState у компонента
     this.show_modal = false;
+    this.userList = [];
+
+    // для создания нового канала
+    this.newChannel = {};
+    this.newChannel.privateUsers = false;
+    this.newChannel.userList = [];
+    // для создания нового канала
+
     this.displayName = 'ChannelsStore'; // обязательное поле для ES5
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
       updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
       setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
-      addChannel: ChannelsActions.ADD_CHANNEL,
       setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
-      updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL
+      updateUserList: ChannelsActions.UPDATE_USER_LIST,
+      addUserToNewChannel:ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
+      deleteUserFromNewChannel:ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
+      createdNewChannel: ChannelsActions.CREATED_NEW_CHANNEL,
+      addNewChannel:ChannelsActions.ADD_NEW_CHANNEL,
+      updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL,
+      setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL
     });
   }
 
@@ -51,15 +64,28 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.show_modal = stateShowModal;
   };
 
-  ChannelsStore.prototype.addChannel = function (fetched_data) {
-    var oldstate  = this.show_modal;
+  ChannelsStore.prototype.updateUserList = function (data) {
+    this.userList = data;
+  };
 
-    if (fetched_data.creator === socket.username) {
+  ChannelsStore.prototype.createdNewChannel = function (data) {
+    var oldstate  = this.show_modal;
+    var users = data.channel.users;
+    var len_users = users.length;
+
+    if (data.creator === socket.username) {
       oldstate = false;
     }
 
+    if (len_users > 0) {
+      for (var i=0; i<len_users; i++) {
+        if(socket.username == users[i]) {
+          this.channels.push(data.channel);
+        }
+      }
+    }
+
     this.show_modal = oldstate;
-    this.channels.push(fetched_data.channel);
   };
 
   ChannelsStore.prototype.setUnreadChannel = function (channel_slug) {
@@ -74,6 +100,49 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
     this.channels = listOfChannels;
 
+  };
+
+  ChannelsStore.prototype.addUserToNewChannel = function (username) {
+    this.newChannel.userList.push(username);
+  };
+
+  ChannelsStore.prototype.deleteUserFromNewChannel = function (username) {
+    var _this = this;
+    var nowUserList = this.newChannel.userList;
+    this.newChannel.userList = [];
+    nowUserList.map(function(name) {
+      if (name != username) {
+        _this.newChannel.userList.push(name);
+      }
+    });
+  };
+
+  ChannelsStore.prototype.setPrivateMoreUsersChannel = function (setPrivate) {
+    this.newChannel.privateUsers = setPrivate;
+  };
+
+  ChannelsStore.prototype.addNewChannel = function (data) {
+    var users = [];
+    if (!this.newChannel.privateUsers) {
+      users = this.userList.map(function (user) {
+        return user.username;
+      });
+    } else {
+      users = this.newChannel.userList;
+    }
+
+    if (data.name) {
+      socket.emit('channel create', {
+        name: data.name,
+        description: data.description,
+        userslist: users,
+        privateUsers: this.newChannel.privateUsers
+      });
+
+      // после отправки переводим данные в начальное состояние
+      this.newChannel.privateUsers = false;
+      this.newChannel.userList = [];
+    }
   };
 
   return alt_obj.createStore(ChannelsStore);

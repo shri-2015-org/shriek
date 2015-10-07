@@ -1,11 +1,12 @@
-var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
-var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
-
-var markDownConverter = new showdown.Converter();
-
-var Emoji = require('../../views/components/emoji.jsx');
-
 var ChatComponent = function (socket) {
+  var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
+  var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
+
+  var markDownConverter = new showdown.Converter();
+
+  var Emoji = require('../../views/components/emoji.jsx');
+  var ChannelUsers = require('../../views/components/channelUsers.jsx')(socket);
+
   var ChatBox = React.createClass({
     getInitialState: function () {
       return MessagesStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
@@ -47,6 +48,7 @@ var ChatComponent = function (socket) {
       return (
         <div className="msg">
           <div className="msg__wrap">
+            <ChannelUsers />
             <div className="msg__body">
             <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll}/>
             </div>

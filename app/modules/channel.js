@@ -13,9 +13,19 @@ var ChannelModule = function (socket) {
     var createChannel = new Promise(function (resolve, reject) {
       var slug = slugify(data.name, {lowercase: true, separator: '_'}); // трансилитирируем name
 
+      var channelUserList = [socket.username];
+
+      if (data.userslist.length > 0) {
+        channelUserList = data.userslist;
+        channelUserList.unshift(socket.username);
+      }
+
       var newChannel = ChannelModel({
         name: data.name,
-        slug: slug
+        description: data.description,
+        slug: slug,
+        is_private: data.privateUsers,
+        users: channelUserList
       });
 
       newChannel.save({runValidators: true}, function (err, data) {
@@ -48,7 +58,7 @@ var ChannelModule = function (socket) {
   /**
   * Получение информации о чате
   * @param data
-  * @param data.slug слаг чата
+  * @param data.channel слаг чата
   */
   socket.on('channel info', function (data) {
     var getChannelInfo = new Promise(function (resolve, reject) {
@@ -82,20 +92,22 @@ var ChannelModule = function (socket) {
   */
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {
-      ChannelModel.find(function (err, data) {
-        if (err) {
-          var error = new Error('Ошибка получения чатов');
+      ChannelModel.find({$or: [{is_private: false}, {is_private: true, users: socket.username}]},
+        function (err, data) {
+          if (err) {
+            var error = new Error('Ошибка получения чатов');
 
-          reject(error);
-        } else {
-          var out = {
-            status: 'ok',
-            channels: data
-          };
+            reject(error);
+          } else {
+            var out = {
+              status: 'ok',
+              channels: data
+            };
 
-          resolve(out);
+            resolve(out);
+          }
         }
-      });
+      );
     });
 
     getChannelList

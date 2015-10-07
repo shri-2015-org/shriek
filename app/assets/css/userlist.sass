@@ -1,0 +1,32 @@
+.userlist
+  text-align: left
+  display: block
+  input[type="checkbox"]
+    margin: 0 5px 0 0
+
+.userlist__checkbox
+  &:checked
+    ~ .userlist__wrap
+        display: block
+
+.userlist__heading
+  font-family: 'Open Sans', sans-serif
+  margin: 20px 0 5px
+  font-size: 1.3em
+  color: #0a0823
+
+.userlist__wrap
+  display: none
+
+.userlist__list
+  margin: 0
+  padding: 0
+  max-height: 250px
+  overflow-y: auto
+
+.userlist__item
+  list-style: none
+  margin: 5px 0
+  float: left
+  width: 49.5%
+

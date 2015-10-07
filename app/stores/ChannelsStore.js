@@ -64,7 +64,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.show_modal = stateShowModal;
   };
 
-  ChannelsStore.prototype.updateUserList = function(data) {
+  ChannelsStore.prototype.updateUserList = function (data) {
     this.userList = data;
   };
 
@@ -102,11 +102,11 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
   };
 
-  ChannelsStore.prototype.addUserToNewChannel = function(username) {
+  ChannelsStore.prototype.addUserToNewChannel = function (username) {
     this.newChannel.userList.push(username);
   };
 
-  ChannelsStore.prototype.deleteUserFromNewChannel = function(username) {
+  ChannelsStore.prototype.deleteUserFromNewChannel = function (username) {
     var _this = this;
     var nowUserList = this.newChannel.userList;
     this.newChannel.userList = [];
@@ -117,15 +117,14 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     });
   };
 
-  ChannelsStore.prototype.setPrivateMoreUsersChannel = function(setPrivate) {
+  ChannelsStore.prototype.setPrivateMoreUsersChannel = function (setPrivate) {
     this.newChannel.privateUsers = setPrivate;
-    console.log('this.newChannel.privateUsers',this.newChannel.privateUsers);
   };
 
   ChannelsStore.prototype.addNewChannel = function (data) {
     var users = [];
     if (!this.newChannel.privateUsers) {
-      users = this.userList.map(function(user) {
+      users = this.userList.map(function (user) {
         return user.username;
       });
     } else {

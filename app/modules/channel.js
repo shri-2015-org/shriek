@@ -22,7 +22,7 @@ var ChannelModule = function (socket) {
 
       var newChannel = ChannelModel({
         name: data.name,
-        desc: data.desc,
+        description: data.desc,
         slug: slug,
         is_private: data.privateUsers,
         users: channelUserList
@@ -92,20 +92,22 @@ var ChannelModule = function (socket) {
   */
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {
-      ChannelModel.find(function (err, data) {
-        if (err) {
-          var error = new Error('Ошибка получения чатов');
+      ChannelModel.find({$or: [{is_private: false}, {is_private: true, users: socket.username}]},
+        function (err, data) {
+          if (err) {
+            var error = new Error('Ошибка получения чатов');
 
-          reject(error);
-        } else {
-          var out = {
-            status: 'ok',
-            channels: data
-          };
+            reject(error);
+          } else {
+            var out = {
+              status: 'ok',
+              channels: data
+            };
 
-          resolve(out);
+            resolve(out);
+          }
         }
-      });
+      );
     });
 
     getChannelList

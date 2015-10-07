@@ -10,7 +10,7 @@ function ChannelUsersStore() {
   });
 }
 
-ChannelUsersStore.prototype.getInfoChannelUsers = function (data){
+ChannelUsersStore.prototype.getInfoChannelUsers = function (data) {
   this.channel = data;
 };
 

@@ -124,10 +124,10 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
   });
 
   var UserList = React.createClass({
-    render: function() {
+    render: function () {
       var UsersList = [];
       UsersList = this.props.userlist.map(function (user) {
-        return ( <User key = {user._id} user = {user} />);
+        return (<User key = {user._id} user = {user} />);
       });
 
       return (
@@ -150,7 +150,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       }
     },
 
-    render: function() {
+    render: function () {
       return (
         <li className="userlist__item">
           <label>

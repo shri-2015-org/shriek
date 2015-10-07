@@ -3,13 +3,15 @@ var MessagesActions = require('./../actions/MessagesActions');
 
 function MessagesStore() {
   this.messages = []; // это бывший initState у компонента
+  this.plugins = [];
   this.stopScroll = false;
   this.displayName = 'MessagesStore'; // обязательное поле для ES5
   this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
     updateMessages: MessagesActions.UPDATE_MESSAGES,  // ключ хеша — функция стора, значение — функция экшена
     pushMessage: MessagesActions.PUSH_MESSAGE,
     prepandMessages: MessagesActions.PREPAND_MESSAGES,
-    setSearchedMessage: MessagesActions.SET_SEARCHED_MESSAGE
+    setSearchedMessage: MessagesActions.SET_SEARCHED_MESSAGE,
+    loadPlugins: MessagesActions.LOAD_PLUGINS
   });
 }
 
@@ -41,5 +43,10 @@ MessagesStore.prototype.setSearchedMessage = function (_ids) {
   });
 
   this.messages = listOfMessages;
-}
+};
+
+MessagesStore.prototype.loadPlugins = function (plugins) {
+  this.plugins = plugins;
+};
+
 module.exports = alt_obj.createStore(MessagesStore);

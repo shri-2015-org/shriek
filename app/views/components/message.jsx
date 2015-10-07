@@ -47,7 +47,7 @@ var ChatComponent = function (socket) {
             <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll}/>
             </div>
           </div>
-          <MessageForm submitMessage={this.submitMessage}/>
+          <MessageForm submitMessage={this.submitMessage} plugins={this.state.plugins}/>
         </div>
       );
     }
@@ -150,11 +150,14 @@ var ChatComponent = function (socket) {
     },
 
     render: function () {
+      var messagePlugins = this.props.plugins || [];
       return (
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
-            <Emoji/>
+            {messagePlugins.map(function (PluginComponent) {
+              return <PluginComponent/>;
+            })}
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>

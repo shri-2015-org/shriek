@@ -15,6 +15,9 @@ var MessagesActions = alt_obj.createActions({
   setSearchedMessage: function (_ids) {
     this.dispatch(_ids);
   },
+  loadPlugins: function (plugins) {
+    this.dispatch(plugins);
+  },
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
 
@@ -40,6 +43,8 @@ var MessagesActions = alt_obj.createActions({
           _this.actions.setSearchedMessage(_ids);
         }
       });
+
+    _this.actions.loadPlugins(window.shriekMessagePlugins);
   },
 
   getMessages: function (socket, skip) {

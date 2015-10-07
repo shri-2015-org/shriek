@@ -22,7 +22,7 @@ var ChannelModule = function (socket) {
 
       var newChannel = ChannelModel({
         name: data.name,
-        description: data.desc,
+        description: data.description,
         slug: slug,
         is_private: data.privateUsers,
         users: channelUserList

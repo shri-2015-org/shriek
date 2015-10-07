@@ -23,23 +23,20 @@ var ChannelUsersComponent = function (socket) {
     },
 
     render: function () {
-      var Users = ( <div> Loadingusers... </div>);
+      var Users = (<div>Загрузка пользователей…</div>);
       var channel = this.state.channel;
-      var userschannel = channel.users;
-      if (userschannel) {
-        Users = userschannel.map(function (user) {
-          return ( <ChannelUser
-            user = {user}
-            key = {user} />
-          );
+      var channelUsers = channel.users;
+      if (channelUsers) {
+        Users = channelUsers.map(function (user) {
+          return (<ChannelUser user={user} key={user} />);
         });
       }
       return (
         <div className = "msg__users" >
           <div className="channel-info">
             <h3 className="channel-info__heading">{channel.name}</h3>
-            {channel.desc && (channel.desc != "") && (
-              <h5 className="channel-info__decs">{channel.desc}</h5>
+            {channel.description && channel.description != "" && (
+              <h5 className="channel-info__decs">{channel.description}</h5>
             )}
             <div className="list list_channelUsers">
               {Users}
@@ -52,11 +49,9 @@ var ChannelUsersComponent = function (socket) {
 
   var ChannelUser = React.createClass({
     render: function () {
-      return(
-        <div className="list__item" >
-          <span>
-          {this.props.user}
-          </span>
+      return (
+        <div className="list__item">
+          <span>{this.props.user}</span>
         </div>
       );
     }
@@ -64,16 +59,15 @@ var ChannelUsersComponent = function (socket) {
 
   var AddUsers = React.createClass({
       render: function () {
-        return(
-          <div className="user__item" >
-            <span className="user__title">
-            </span>
+        return (
+          <div className="user__item">
+            <span className="user__title"></span>
           </div>
         );
       }
   });
 
-  return ChannelUsers
+  return ChannelUsers;
 }
 
 module.exports = ChannelUsersComponent;

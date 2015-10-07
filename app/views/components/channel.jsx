@@ -127,12 +127,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     render: function () {
       var UsersList = [];
       UsersList = this.props.userlist.map(function (user) {
-        return (<User key = {user._id} user = {user} />);
+        return (<User key={user._id} user={user} />);
       });
 
       return (
         <div className="userlist__wrap">
-          <h3 className="userlist__heading"> Выберите пользователей </h3>
+          <h3 className="userlist__heading">Выберите пользователей</h3>
           <ul className="userlist__list">
             {UsersList}
           </ul>
@@ -166,8 +166,8 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
     handleSubmit: function (e) {
       e.preventDefault();
       var name = React.findDOMNode(this.refs.сhannelName).value.trim();
-      var desc = React.findDOMNode(this.refs.channelDesc).value.trim();
-      ChannelsActions.addNewChannel({name: name, desc: desc});
+      var description = React.findDOMNode(this.refs.channelDesc).value.trim();
+      ChannelsActions.addNewChannel({name: name, description: description});
     },
 
     handleCloseModal: function () {

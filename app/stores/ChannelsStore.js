@@ -134,7 +134,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     if (data.name) {
       socket.emit('channel create', {
         name: data.name,
-        desc: data.desc,
+        description: data.description,
         userslist: users,
         privateUsers: this.newChannel.privateUsers
       });

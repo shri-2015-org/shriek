@@ -1,6 +1,6 @@
 var MessageModel = require('../models/message');
 
-var shriekModules = require('./modules');
+var shriekPlugins = require('./plugins');
 
 var MessageModule = function(socket) {
 
@@ -23,11 +23,11 @@ var MessageModule = function(socket) {
       type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст
     });
 
-    shriekModules.reduce(function (prev, module) {
+    shriekPlugins.reduce(function (prev, plugin) {
       return prev.then(function (data) {
         return new Promise(function (resolveModule, rejectModule) {
-          if (module.forEvent === 'channelGet') {
-            module(data, function (err, result) {
+          if (plugin.forEvent === 'channelGet') {
+            plugin(data, function (err, result) {
               if (err) {
                 return rejectModule(err);
               }

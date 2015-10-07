@@ -9,7 +9,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.userList = [];
 
     // для создания нового канала
-    this.newChannel={};
+    this.newChannel = {};
     this.newChannel.privateUsers = false;
     this.newChannel.userList = [];
     // для создания нового канала

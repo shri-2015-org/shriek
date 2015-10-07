@@ -10,5 +10,6 @@ public/assets/js/.module-cache
 public/assets
 public/index.html
 .idea/
+.DS_Store
 
 config.json

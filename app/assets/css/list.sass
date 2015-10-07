@@ -39,6 +39,18 @@ $list-item-height: 35px
     position: relative
     line-height: $list-item-height
 
+    &::before
+      content: ''
+      display: none
+      position: absolute
+      height: 10px
+      width: 10px
+      margin-top: -5px
+      border-radius: 100%
+      background: #595959
+      left: 30px
+      top: 50%
+
   &.active
     background: rgb(68, 68, 68)
 
@@ -50,20 +62,13 @@ $list-item-height: 35px
 
     a
       &::before
-        content: ''
         display: block
-        position: absolute
-        height: 10px
-        width: 10px
-        margin-top: -5px
-        border-radius: 100%
         background: #0a0
-        left: 30px
-        top: 50%
 
   &.unread
-    a:before
-      display: block
+    a
+      &::before
+        display: block
 
 .list_channelUsers
 

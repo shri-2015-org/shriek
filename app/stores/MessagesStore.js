@@ -11,10 +11,9 @@ function MessagesStore() {
     pushMessage: MessagesActions.PUSH_MESSAGE,
     prepandMessages: MessagesActions.PREPAND_MESSAGES,
     setSearchedMessage: MessagesActions.SET_SEARCHED_MESSAGE,
-    loadPlugins: MessagesActions.LOAD_PLUGINS
+    registerPlugin: MessagesActions.REGISTER_PLUGIN
   });
 }
-
 
 // тут описываем все функции стора (в основном это присваение стейта нового значения)
 MessagesStore.prototype.pushMessage = function (fetched_data) {
@@ -22,15 +21,18 @@ MessagesStore.prototype.pushMessage = function (fetched_data) {
     messagesAll.push(fetched_data.message);
     this.messages = messagesAll;
 };
+
 MessagesStore.prototype.updateMessages = function (fetched_data) {
     this.messages = fetched_data.messages;
 };
+
 MessagesStore.prototype.prepandMessages = function (fetched_data) {
   if (fetched_data.stopScroll) {
     this.stopScroll = true;
   }
   this.messages = fetched_data.messages.concat(this.messages);
 };
+
 MessagesStore.prototype.setSearchedMessage = function (_ids) {
   var listOfMessages = [];
 
@@ -45,8 +47,8 @@ MessagesStore.prototype.setSearchedMessage = function (_ids) {
   this.messages = listOfMessages;
 };
 
-MessagesStore.prototype.loadPlugins = function (plugins) {
-  this.plugins = plugins;
+MessagesStore.prototype.registerPlugin = function (plugin) {
+  this.plugins.push(plugin);
 };
 
 module.exports = alt_obj.createStore(MessagesStore);

@@ -26,7 +26,7 @@ var SearchComponent = require('./search.jsx')(socket);
         console.log('user leave, dispatchEvent');
         if (data.status === 'ok') {
           console.log('user leave', data);
-          if ('username' in data.user) {
+          if (data.user.hasOwnProperty('username')) {
             if (socket.username === data.user.username) {
               AuthActions.makeLogOut();
             }

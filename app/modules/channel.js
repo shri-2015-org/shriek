@@ -135,7 +135,7 @@ var ChannelModule = function (socket) {
       var limit = 20;
       var query = {channel: data.channel}; // канал нужно учитывать всегда
 
-      if ('date' in data) {
+      if (data.hasOwnProperty('date')) {
         query.created_at = {$lt: data.date}; // дата — если пришла
       }
 
@@ -144,7 +144,7 @@ var ChannelModule = function (socket) {
       q.sort({created_at: -1});
       q.limit(limit);
 
-      if ('skip' in data) {
+      if (data.hasOwnProperty('skip')) {
         q.skip(data.skip * limit); // offset
       }
 

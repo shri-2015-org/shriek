@@ -439,14 +439,14 @@ Configuration file `config.json` example
 
 `mongo shriek --eval "db.dropDatabase();"`
 
-### Create your own module for chat
+### Create your own plugin for chat
 
 #### For backend
 
 You can create NPM package (ex. [shriek-markdown](https://github.com/sigorilla/shriek-markdown)).
 
 1. You should name package with prefix `shriek-`.
-2. Add you package via `require` in file `app/modules/modules.js`.
+2. Add you package via `require` in file `app/modules/plugins.js`.
 3. Add in code `module.exports.forEvent`.
  - Different events have different data for your package.
 
@@ -454,6 +454,7 @@ You can create NPM package (ex. [shriek-markdown](https://github.com/sigorilla/s
 
 As plugins for backend you can create React component as Bower package (ex. [shriek-emoji](https://github.com/sigorilla/shriek-emoji/)).
 
-1. You should add you root component to global array. For example, array for message component names `shriekMessagePlugins`.
-2. ...
-3. Profit! Now your plugin is in our chat.
+1. You should name package with prefix `shriek-`.
+2. You should exec registration function with your root component. For example, registration for message component names `registerMessagePlugin`.
+3. ...
+4. Profit! Now your plugin is in our chat.

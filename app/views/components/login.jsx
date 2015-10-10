@@ -10,7 +10,7 @@ var LoginDefault = require('../../views/components/login-default.jsx')(socket);
 var LoginPassport = require('../../views/components/login-passport.jsx')(socket);
 
 // ALT-JS STORE INIT
-if (!AuthStore) var AuthStore = require('./../../stores/AuthStore')(socket);
+var AuthStore = require('./../../stores/AuthStore')(socket);
 var AuthActions = require('./../../actions/AuthActions');
 
 
@@ -123,6 +123,7 @@ var AuthActions = require('./../../actions/AuthActions');
     handleNameChange: function(e) {
       this.setState({name: e.target.value});
       this.setState({userInit: false});
+
       if (!e.target.value.length || e.target.value.length < 6) {
         this.setState({userInvalid: true});
       } else {
@@ -133,6 +134,7 @@ var AuthActions = require('./../../actions/AuthActions');
     handlePasswordChange: function(e) {
       this.setState({password: e.target.value});
       this.setState({passInit: false});
+
       if (!e.target.value.length) {
         this.setState({passInvalid: true});
       } else {
@@ -145,13 +147,15 @@ var AuthActions = require('./../../actions/AuthActions');
       if (this.state != null ) {
         // passport login
         if (this.state.passportInit) {
-          socket.emit('user enter', {username: this.state.passportUser, password: this.state.password, passposrtInit: true})
+          socket.emit('user enter', {username: this.state.passportUser,
+            password: this.state.password, passposrtInit: true})
         }
 
         // local login
         if (!this.state.userInit && !this.state.passInit) {
           if (!this.state.passInvalid && !this.state.userInvalid) {
-            socket.emit('user enter', {username: this.state.name, password: this.state.password});
+            socket.emit('user enter', {username: this.state.name,
+             password: this.state.password});
           }
         } else if(this.state.userInit && this.state.passInit) {
           this.setState({userInvalid: true});
@@ -174,6 +178,7 @@ var AuthActions = require('./../../actions/AuthActions');
         'form__text': true,
         'invalid': this.state.passInvalid
       });
+
       return (
         <div>
           {this.state.logged == false && (

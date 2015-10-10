@@ -30,7 +30,13 @@ var ChannelModule = function (socket) {
 
       newChannel.save({runValidators: true}, function (err, data) {
         if (err) {
-          var error = new Error('Ошибка создания чата');
+          var error;
+
+          if (err.code === 11000) {
+            error = new Error('Такой канал уже существует');
+          } else {
+            error = new Error('Ошибка создания чата');
+          }
 
           reject(error);
         } else {
@@ -51,7 +57,7 @@ var ChannelModule = function (socket) {
         socket.emit('channel create', data);
       })
       .catch(function (error) {
-        console.log(error);
+        socket.emit('channel create error', error.toString());
       });
   });
 

@@ -1,6 +1,6 @@
 var ProfileComponent = function (socket) {
 
-var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
+if (!AuthStore) var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
 var AuthActions = require('./../../actions/AuthActions'); // подключаем экшены
 
 var SearchComponent = require('./search.jsx')(socket);

@@ -1,7 +1,8 @@
+var ChannelStoreObj = null;
 var ChannelsStoreFunction = function (socket) {
 
-var alt_obj = require('./../controllers/alt_obj');
-var ChannelsActions = require('./../actions/ChannelsActions');
+  var alt_obj = require('./../controllers/alt_obj');
+  var ChannelsActions = require('./../actions/ChannelsActions');
 
   function ChannelsStore() {
     this.channels = []; // это бывший initState у компонента
@@ -12,7 +13,9 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     this.newChannel = {};
     this.newChannel.privateUsers = false;
     this.newChannel.userList = [];
-    // для создания нового канала
+
+    // errors
+    this.hasError = false;
 
     this.displayName = 'ChannelsStore'; // обязательное поле для ES5
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
@@ -25,18 +28,18 @@ var ChannelsActions = require('./../actions/ChannelsActions');
       createdNewChannel: ChannelsActions.CREATED_NEW_CHANNEL,
       addNewChannel:ChannelsActions.ADD_NEW_CHANNEL,
       updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL,
-      setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL
+      setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL,
+      showError:ChannelsActions.SHOW_ERROR
     });
   }
 
-
   // тут описываем все функции стора (в основном это присваение стейта нового значения)
 
-  ChannelsStore.prototype.recalcActiveChannel = function (fetched_data) {
+  ChannelsStore.prototype.recalcActiveChannel = function () {
 
     var listOfChannels = [];
     this.channels.map(function (channel) {
-      if (socket.activeChannel == channel.slug) {
+      if (socket.activeChannel === channel.slug) {
         channel.isActive = true;
         channel.isUnread = false;
         listOfChannels.unshift(channel);
@@ -78,8 +81,8 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     }
 
     if (len_users > 0) {
-      for (var i=0; i<len_users; i++) {
-        if(socket.username == users[i]) {
+      for (var i = 0; i < len_users; i++) {
+        if (socket.username === users[i]) {
           this.channels.push(data.channel);
         }
       }
@@ -92,7 +95,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
     var listOfChannels = [];
     this.channels.map(function (channel) {
-      if (channel_slug == channel.slug) {
+      if (channel_slug === channel.slug) {
         channel.isUnread = true;
       }
       listOfChannels.push(channel);
@@ -110,8 +113,8 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     var _this = this;
     var nowUserList = this.newChannel.userList;
     this.newChannel.userList = [];
-    nowUserList.map(function(name) {
-      if (name != username) {
+    nowUserList.map(function (name) {
+      if (name !== username) {
         _this.newChannel.userList.push(name);
       }
     });
@@ -119,6 +122,10 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
   ChannelsStore.prototype.setPrivateMoreUsersChannel = function (setPrivate) {
     this.newChannel.privateUsers = setPrivate;
+  };
+
+  ChannelsStore.prototype.showError = function (data) {
+    this.hasError = data;
   };
 
   ChannelsStore.prototype.addNewChannel = function (data) {
@@ -145,7 +152,11 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     }
   };
 
-  return alt_obj.createStore(ChannelsStore);
+  if (ChannelStoreObj === null) {
+    ChannelStoreObj = alt_obj.createStore(ChannelsStore);
+  }
+  return ChannelStoreObj;
+
 };
 
 module.exports = ChannelsStoreFunction;

@@ -26,20 +26,28 @@ var ChannelUsersComponent = function (socket) {
       var Users = (<div>Загрузка пользователей…</div>);
       var channel = this.state.channel;
       var channelUsers = channel.users;
+      var len = 0;
+
       if (channelUsers) {
         Users = channelUsers.map(function (user) {
           return (<ChannelUser user={user} key={user} />);
         });
+        len = channelUsers.length;
       }
+
       return (
-        <div className = "msg__users" >
-          <div className="channel-info">
-            <h3 className="channel-info__heading">{channel.name}</h3>
-            {channel.description && channel.description != "" && (
-              <h5 className="channel-info__decs">{channel.description}</h5>
-            )}
-            <div className="list list_channelUsers">
-              {Users}
+        <div className="msg__users" >
+          <div className="msg__users-wrap">
+            <div className="channel-info">
+              <h3 className="channel-info__heading">{channel.name}</h3>
+              {channel.description && channel.description != "" && (
+                <h5 className="channel-info__decs">{channel.description}</h5>
+              )}
+              <input type="checkbox" id="showUsersChannels" className="show_all_checkbox" />
+              <ul className="list list_channelUsers">
+                {Users}
+              </ul>
+              <MoreChannels len={len} />
             </div>
           </div>
         </div>
@@ -50,9 +58,22 @@ var ChannelUsersComponent = function (socket) {
   var ChannelUser = React.createClass({
     render: function () {
       return (
-        <div className="list__item">
+        <li className="list__item">
           <span>{this.props.user}</span>
-        </div>
+        </li>
+      );
+    }
+  });
+
+  var MoreChannels = React.createClass({
+    render: function () {
+      var countDisplaying = 6;
+      var hiddenUsersChannelCount = this.props.len - countDisplaying;
+
+      return hiddenUsersChannelCount > 0 && (
+        <label className="more more_userschannel show_all_label" htmlFor="showUsersChannels">
+          <span>Показать +{hiddenUsersChannelCount}</span>
+        </label>
       );
     }
   });

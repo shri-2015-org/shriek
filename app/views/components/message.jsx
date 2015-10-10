@@ -48,12 +48,12 @@ var ChatComponent = function (socket) {
       return (
         <div className="msg">
           <div className="msg__wrap">
-            <ChannelUsers />
             <div className="msg__body">
-            <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll}/>
+              <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll} />
             </div>
+            <ChannelUsers />
           </div>
-          <MessageForm submitMessage={this.submitMessage}/>
+          <MessageForm submitMessage={this.submitMessage} />
         </div>
       );
     }

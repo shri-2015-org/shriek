@@ -149,6 +149,12 @@ var ChatComponent = function (socket) {
 
     },
 
+    resize: function() {
+      var textarea = this.refs.text.getDOMNode();
+      textarea.style.height = 'auto';
+      textarea.style.height = (textarea.scrollHeight > 105 ? 105 : textarea.scrollHeight)+'px';
+    },
+
     handleKeyDown: function (e) {
       var pressSubmit = !(e.metaKey || e.ctrlKey) && e.keyCode === 13;
       var pressNewLine = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
@@ -165,13 +171,14 @@ var ChatComponent = function (socket) {
           area.setSelectionRange(start + 1, start + 1);
         }
       }
+      this.resize();
     },
 
     render: function () {
       return (
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
-            <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
+            <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
             <Emoji/>
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>

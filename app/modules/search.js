@@ -50,7 +50,6 @@ var SearchModule = function(socket) {
         socket.emit('search text', data);
       })
       .catch(function (error) {
-        console.log(error);
       });
   });
 }

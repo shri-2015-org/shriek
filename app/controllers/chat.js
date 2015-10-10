@@ -31,8 +31,6 @@ switch (process.env.NODE_ENV) {
 }
 
 server.listen(port, function () {
-  console.log('Server listening at port %d', port);
-
   mongoose.connect(config.get('mongoose:uri'));
   var db = mongoose.connection;
 
@@ -92,7 +90,6 @@ passport.use(new TwitterStrategy({
       return done(err);
     }
     if (!user) {
-      console.log('user not found');
       firstTime = true;
       user = new UserModel({
         username: profile.username,
@@ -103,12 +100,10 @@ passport.use(new TwitterStrategy({
       });
       user.save(function (err) {
         if (err) {
-          console.log(err);
         }
         return done(err, user);
       });
     } else {
-      console.log('user found');
       return done(err, user);
     }
   });
@@ -138,7 +133,6 @@ passport.use(new GoogleStrategy({
       firstTime = true;
       user.save(function (err) {
         if (err) {
-          console.log(err);
         }
         return done(err, user);
       });
@@ -172,7 +166,6 @@ passport.use(new GitHubStrategy({
       firstTime = true;
       user.save(function (err) {
         if (err) {
-          console.log(err);
         }
         return done(err, user);
       });

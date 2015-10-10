@@ -95,6 +95,7 @@ var ChatComponent = function (socket) {
   var Message = React.createClass({
     render: function () {
       var classes = ['msg__item'];
+      var message = this.props.message.raw || this.props.message.text;
 
       if (this.props.message.searched) {
         classes.push('msg__searched');
@@ -106,9 +107,7 @@ var ChatComponent = function (socket) {
           <span className="msg__author">{this.props.message.username}: </span>
           <div
             className="msg__text"
-            dangerouslySetInnerHTML={{
-              __html: this.props.message.raw
-            }} />
+            dangerouslySetInnerHTML={{__html: message}} />
         </div>
       );
     }

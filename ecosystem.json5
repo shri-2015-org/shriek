@@ -17,7 +17,7 @@
       ref: "origin/master",
       repo: "git@github.com:shri-2015-org/shriek.git",
       path: "/home/shriek/projects/production",
-      "post-deploy": "npm install && gulp bower sass build && pm2 startOrRestart ecosystem-prod.json5 --env production"
+      "post-deploy": "npm install --production && gulp bower sass build && pm2 startOrRestart ecosystem-prod.json5 --env production"
     },
     dev: {
       user: "shriek",
@@ -25,7 +25,7 @@
       ref: "origin/develop",
       repo: "git@github.com:shri-2015-org/shriek.git",
       path: "/home/shriek/projects/dev",
-      "post-deploy": "npm install && gulp bower sass build && pm2 startOrRestart ecosystem-dev.json5 --env dev",
+      "post-deploy": "npm install --production && gulp bower sass build && pm2 startOrRestart ecosystem-dev.json5 --env dev",
       env: {
         NODE_ENV: "dev"
       }

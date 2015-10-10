@@ -183,21 +183,15 @@ var ChatComponent = function (socket) {
   var MessageDate = React.createClass({
     render: function () {
       var localDate = new Date(this.props.date);
-      var now = new Date();
-      now.setHours(0, 0, 0, 0);
-      var date;
-      if (localDate < now) {
-        var day = localDate.getDate();
-        var month = localDate.getMonth();
-        date = ('0' + day).slice(-2) + '/' +
-          ('0' + month).slice(-2) + '/' + localDate.getFullYear();
-      } else {
-        var hour = localDate.getHours();
-        var minutes = localDate.getMinutes();
-        date = ('0' + hour).slice(-2) + ':' + ('0' + minutes).slice(-2);
-      }
+      var hour = localDate.getHours();
+      var minutes = localDate.getMinutes();
+      var date = ('0' + hour).slice(-2) + ':' + ('0' + minutes).slice(-2);
+      var day = localDate.getDate();
+      var month = localDate.getMonth();
+      var fullDate = date + ' ' + ('0' + day).slice(-2) + '/' +
+        ('0' + month).slice(-2) + '/' + localDate.getFullYear();
       return (
-        <span className='message-date'>{date}</span>
+        <span className='message-date' title={fullDate}>{date}</span>
       )
     }
   });

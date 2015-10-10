@@ -32,7 +32,7 @@ var ChannelUsersComponent = function (socket) {
         Users = channelUsers.map(function (user) {
           return (<ChannelUser user={user} key={user} />);
         });
-        len =  channelUsers.length;
+        len = channelUsers.length;
       }
 
       return (
@@ -47,7 +47,7 @@ var ChannelUsersComponent = function (socket) {
               <ul className="list list_channelUsers">
                 {Users}
               </ul>
-              <MoreChannels len={len}/>
+              <MoreChannels len={len} />
             </div>
           </div>
         </div>

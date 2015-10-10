@@ -7,6 +7,10 @@ var ChannelsUsersActions = alt_obj.createActions({
     this.dispatch(data);
   },
 
+  getUsersChannel: function (data) {
+    this.dispatch(data);
+  },
+
   initChannels: function (socket) {
     var _this = this;
 
@@ -21,6 +25,17 @@ var ChannelsUsersActions = alt_obj.createActions({
         if (data.creator === socket.username) {
           _this.actions.getInfoChannelUsers(data.channel);
         }
+      }
+    });
+
+    socket.on('user list', function (data) {
+      if (data.status === 'ok') {
+        var usersList = [];
+        usersList = data.users.map(function (user) {
+          return user.username;
+        });
+        usersList.unshift(socket.username);
+        _this.actions.getUsersChannel(usersList);
       }
     });
   }

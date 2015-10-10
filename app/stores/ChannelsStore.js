@@ -123,11 +123,8 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
   ChannelsStore.prototype.addNewChannel = function (data) {
     var users = [];
-    if (!this.newChannel.privateUsers) {
-      users = this.userList.map(function (user) {
-        return user.username;
-      });
-    } else {
+
+    if (this.newChannel.privateUsers) {
       users = this.newChannel.userList;
     }
 

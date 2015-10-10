@@ -5,13 +5,19 @@ function ChannelUsersStore() {
   this.displayName = 'ChannelUsersStore'; // обязательное поле для ES5
 
   this.channel = {};
+  this.users = [];
   this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
-    getInfoChannelUsers: ChannelsUsersActions.GET_INFO_CHANNEL_USERS  // ключ хеша — функция стора, значение — функция экшена
+    getInfoChannelUsers: ChannelsUsersActions.GET_INFO_CHANNEL_USERS,  // ключ хеша — функция стора, значение — функция экшена
+    getUsersChannel: ChannelsUsersActions.GET_USERS_CHANNEL
   });
 }
 
 ChannelUsersStore.prototype.getInfoChannelUsers = function (data) {
   this.channel = data;
+};
+
+ChannelUsersStore.prototype.getUsersChannel = function (data) {
+  this.users = data;
 };
 
 module.exports = alt_obj.createStore(ChannelUsersStore);

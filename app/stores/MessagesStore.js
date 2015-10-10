@@ -5,6 +5,7 @@ var MessagesStoreFunction = function () {
 
   function MessagesStore() {
     this.messages = []; // это бывший initState у компонента
+    this.plugins = [];
     this.stopScroll = false;
     this.displayName = 'MessagesStore'; // обязательное поле для ES5
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()

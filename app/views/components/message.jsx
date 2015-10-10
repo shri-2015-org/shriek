@@ -25,7 +25,6 @@ var ChatComponent = function (socket) {
     },
 
     submitMessage: function (text, callback) {
-
       if (!text) {
         callback('Enter message, please!');
       } else {
@@ -35,6 +34,7 @@ var ChatComponent = function (socket) {
           text: text,
           type: 'text'
         };
+
         socket.emit('message send', message);
         callback();
       }
@@ -58,18 +58,22 @@ var ChatComponent = function (socket) {
 
   var MessagesList = React.createClass({
     getInitialState: function () {
-      return ( { scrollValue: 0, scrollHeight: 0 } );
+      return ({scrollValue: 0, scrollHeight: 0});
     },
+
     componentDidMount: function () {
       var msglist = $(React.findDOMNode(this.refs.msg_list));
     },
+
     handleScroll: function () {
       if (!this.props.stopScroll) {
         var node = this.getDOMNode();
+
         if (node.scrollTop === 0) {
           if (this.state.scrollValue == 0) {
             this.state.startScrollHeight = node.scrollHeight;
           }
+
           this.state.scrollValue++;
           MessagesActions.getMessages(socket, this.state.scrollValue);
           this.state.scrollHeight = this.state.startScrollHeight;
@@ -77,6 +81,7 @@ var ChatComponent = function (socket) {
         }
       }
     },
+
     componentDidUpdate: function () {
       if (this.state.scrollHeight) {
         $(this.getDOMNode()).animate({
@@ -84,13 +89,16 @@ var ChatComponent = function (socket) {
         }, 300);
       }
     },
+
     render: function () {
       var Messages = (<div>Loading messages...</div>);
+
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
           return (<Message message={message} key={message._id}/>);
         });
       }
+
       return (
         <div className="msg__list" ref="msglist" onScroll={this.handleScroll}>
           {Messages}
@@ -146,9 +154,11 @@ var ChatComponent = function (socket) {
     handleKeyDown: function (e) {
       var pressSubmit = !(e.metaKey || e.ctrlKey) && e.keyCode === 13;
       var pressNewLine = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
+
       if (pressSubmit) {
         this.handleSubmit(e);
       }
+
       if (pressNewLine) {
         var area = document.getElementsByName('text').item(0);
         if ( (area.selectionStart) || (area.selectionStart == '0') ) {
@@ -159,6 +169,7 @@ var ChatComponent = function (socket) {
           area.setSelectionRange(start + 1, start + 1);
         }
       }
+
       this.resize();
     },
 

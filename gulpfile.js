@@ -46,7 +46,25 @@ gulp.task('watch', function () {
 
 gulp.task('bower', ['bowerInstall'], function () {
   gulp.src(path.HTML)
-    .pipe(wiredep())
+    .pipe(wiredep({
+      exclude: [ /components\/shriek-*/ ]
+    }))
+    .pipe(wiredep({
+      exclude: [ /components\/(?!shriek\-).*/ ],
+      fileTypes: {
+        html: {
+          block: /(([ \t]*)<!--\s*shriek:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endshriek\s*-->)/gi,
+          detect: {
+            js: /<script.*src=['"](.+)['"]>/gi,
+            css: /<link.*href=['"](.+)['"]/gi
+          },
+          replace: {
+            js: '<script src="{{filePath}}"></script>',
+            css: '<link rel="stylesheet" href="{{filePath}}" />'
+          }
+        }
+      }
+    }))
     .pipe(gulp.dest('./public'));
 });
 

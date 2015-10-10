@@ -2,9 +2,6 @@ var ChatComponent = function (socket) {
   var MessagesStore = require('./../../stores/MessagesStore')(socket); // подключаем стор
   var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
-  var markDownConverter = new showdown.Converter();
-
-  var Emoji = require('../../views/components/emoji.jsx');
   var ChannelUsers = require('../../views/components/channelUsers.jsx')(socket);
 
   var ChatBox = React.createClass({
@@ -53,7 +50,7 @@ var ChatComponent = function (socket) {
             </div>
             <ChannelUsers />
           </div>
-          <MessageForm submitMessage={this.submitMessage} />
+          <MessageForm submitMessage={this.submitMessage} plugins={this.state.plugins}/>
         </div>
       );
     }
@@ -112,16 +109,8 @@ var ChatComponent = function (socket) {
 
   var Message = React.createClass({
     render: function () {
-      this.props.message.text = this.props.message.text.replace(/:(\w{3,10}):/gmi,
-        function(string, firstVal) {
-        if (Emoji.emojiValues.indexOf(firstVal) >= 0) {
-          return '<span class="emoji emoji-'+firstVal+'"></span>';
-        } else {
-          return string;
-        }
-      });
-
       var classes = ['msg__item'];
+      var message = this.props.message.raw || this.props.message.text;
 
       if (this.props.message.searched) {
         classes.push('msg__searched');
@@ -133,9 +122,7 @@ var ChatComponent = function (socket) {
           <span className="msg__author">{this.props.message.username}: </span>
           <div
             className="msg__text"
-            dangerouslySetInnerHTML={{
-              __html: markDownConverter.makeHtml(this.props.message.text)
-            }} />
+            dangerouslySetInnerHTML={{__html: message}} />
         </div>
       );
     }
@@ -187,11 +174,14 @@ var ChatComponent = function (socket) {
     },
 
     render: function () {
+      var messagePlugins = this.props.plugins || [];
       return (
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
-            <Emoji/>
+            {messagePlugins.map(function (PluginComponent) {
+              return <PluginComponent/>;
+            })}
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>

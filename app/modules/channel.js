@@ -89,7 +89,6 @@ var ChannelModule = function (socket) {
         socket.emit('channel info', data);
       })
       .catch(function (error) {
-        console.log(error);
       });
   });
 
@@ -121,7 +120,6 @@ var ChannelModule = function (socket) {
         socket.emit('channel list', data);
       })
       .catch(function (error) {
-        console.log(error);
       });
   });
 
@@ -186,7 +184,6 @@ var ChannelModule = function (socket) {
         socket.emit(data.type, data);
       })
       .catch(function (error) {
-        console.log('channel get error', error);
       });
   });
 };

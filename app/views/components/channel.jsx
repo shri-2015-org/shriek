@@ -4,7 +4,6 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
   var ChannelsList = React.createClass({
     getInitialState: function () {
-      console.log(ChannelsStore.getState());
       return ChannelsStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
     },
 

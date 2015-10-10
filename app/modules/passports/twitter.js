@@ -21,7 +21,6 @@ module.exports = function (app, domain) {
         return done(err);
       }
       if (!user) {
-        console.log('user not found');
         firstTime = true;
         user = new UserModel({
           username: profile.username,
@@ -32,12 +31,10 @@ module.exports = function (app, domain) {
         });
         user.save(function (err) {
           if (err) {
-            console.log(err);
           }
           return done(err, user);
         });
       } else {
-        console.log('user found');
         return done(err, user);
       }
     });

@@ -1,6 +1,6 @@
 var ProfileComponent = function (socket) {
 
-var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
+if (!AuthStore) var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
 var AuthActions = require('./../../actions/AuthActions'); // подключаем экшены
 
 var SearchComponent = require('./search.jsx')(socket);
@@ -23,10 +23,8 @@ var SearchComponent = require('./search.jsx')(socket);
       });
 
       socket.on('user leave', function (data) {
-        console.log('user leave, dispatchEvent');
         if (data.status === 'ok') {
-          console.log('user leave', data);
-          if ('username' in data.user) {
+          if (data.user.hasOwnProperty('username')) {
             if (socket.username === data.user.username) {
               AuthActions.makeLogOut();
             }

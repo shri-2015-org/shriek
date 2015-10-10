@@ -1,7 +1,9 @@
-var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
-var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
-
 var ChatComponent = function (socket) {
+  var MessagesStore = require('./../../stores/MessagesStore')(socket); // подключаем стор
+  var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
+
+  var ChannelUsers = require('../../views/components/channelUsers.jsx')(socket);
+
   var ChatBox = React.createClass({
     getInitialState: function () {
       return MessagesStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
@@ -44,8 +46,9 @@ var ChatComponent = function (socket) {
         <div className="msg">
           <div className="msg__wrap">
             <div className="msg__body">
-            <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll}/>
+              <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll} />
             </div>
+            <ChannelUsers />
           </div>
           <MessageForm submitMessage={this.submitMessage} plugins={this.state.plugins}/>
         </div>
@@ -75,7 +78,11 @@ var ChatComponent = function (socket) {
       }
     },
     componentDidUpdate: function () {
-      this.getDOMNode().scrollTop = this.state.scrollHeight;
+      if (this.state.scrollHeight) {
+        $(this.getDOMNode()).animate({
+          scrollTop: this.state.scrollHeight
+        }, 300);
+      }
     },
     render: function () {
       var Messages = (<div>Loading messages...</div>);
@@ -103,7 +110,7 @@ var ChatComponent = function (socket) {
 
       return (
         <div className={classes.join(' ')}>
-          <MessageDate date={this.props.message.date}/>
+          <MessageDate date={this.props.message.created_at}/>
           <span className="msg__author">{this.props.message.username}: </span>
           <div
             className="msg__text"
@@ -130,6 +137,12 @@ var ChatComponent = function (socket) {
 
     },
 
+    resize: function() {
+      var textarea = this.refs.text.getDOMNode();
+      textarea.style.height = 'auto';
+      textarea.style.height = (textarea.scrollHeight > 105 ? 105 : textarea.scrollHeight)+'px';
+    },
+
     handleKeyDown: function (e) {
       var pressSubmit = !(e.metaKey || e.ctrlKey) && e.keyCode === 13;
       var pressNewLine = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
@@ -146,6 +159,7 @@ var ChatComponent = function (socket) {
           area.setSelectionRange(start + 1, start + 1);
         }
       }
+      this.resize();
     },
 
     render: function () {
@@ -153,7 +167,7 @@ var ChatComponent = function (socket) {
       return (
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
-            <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
+            <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
             {messagePlugins.map(function (PluginComponent) {
               return <PluginComponent/>;
             })}
@@ -166,8 +180,16 @@ var ChatComponent = function (socket) {
 
   var MessageDate = React.createClass({
     render: function () {
+      var localDate = new Date(this.props.date);
+      var hour = localDate.getHours();
+      var minutes = localDate.getMinutes();
+      var date = ('0' + hour).slice(-2) + ':' + ('0' + minutes).slice(-2);
+      var day = localDate.getDate();
+      var month = localDate.getMonth();
+      var fullDate = date + ' ' + ('0' + day).slice(-2) + '/' +
+        ('0' + month).slice(-2) + '/' + localDate.getFullYear();
       return (
-        <span className='message-date'>{this.props.date}</span>
+        <span className='message-date' title={fullDate}>{date}</span>
       )
     }
   });

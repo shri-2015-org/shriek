@@ -20,7 +20,7 @@ $list-item-height: 35px
         font-size: 14px
 
 .list
-  max-height: $list-item-height * 3 // умножаем на количество отображаемых элементов
+  max-height: $list-item-height * 5 // умножаем на количество отображаемых элементов
   overflow: hidden
 
 .list__item
@@ -32,12 +32,24 @@ $list-item-height: 35px
   &:hover
     background: rgba(255, 255, 255, 0.07)
 
-  a
+  a, span
     display: block
     padding: 0 30px 0 45px
     width: 100%
     position: relative
     line-height: $list-item-height
+
+    &::before
+      content: ''
+      display: none
+      position: absolute
+      height: 10px
+      width: 10px
+      margin-top: -5px
+      border-radius: 100%
+      background: #595959
+      left: 30px
+      top: 50%
 
   &.active
     background: rgb(68, 68, 68)
@@ -50,17 +62,19 @@ $list-item-height: 35px
 
     a
       &::before
-        content: ''
         display: block
-        position: absolute
-        height: 10px
-        width: 10px
-        margin-top: -5px
-        border-radius: 100%
         background: #0a0
-        left: 30px
-        top: 50%
 
   &.unread
-    a:before
-      display: block
+    a
+      &::before
+        display: block
+
+.list_channelUsers
+  max-height: $list-item-height * 6 // умножаем на количество отображаемых элементов
+
+  .list__item
+    display: block
+
+    span
+      padding: 0 10px

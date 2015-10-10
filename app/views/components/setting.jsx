@@ -71,7 +71,6 @@ var SettingComponent = function (socket) {
       e.preventDefault();
 
       if (this.state != null) {
-        console.log(this.state);
         socket.emit('user update', {
           username: socket.username,
           setting: {

@@ -53,8 +53,6 @@ var UserComponent = function (socket) {
         var _this = this;
 
         socket.on('user connected', function(data) {
-          console.log('user connected');
-
           if (data.status === 'ok') {
             socket.emit('user connected');
 
@@ -65,8 +63,6 @@ var UserComponent = function (socket) {
         });
 
         socket.on('user disconnected', function(data) {
-          console.log('user disconnected');
-
           if (data.status === 'ok') {
             data.user.online = false;
 

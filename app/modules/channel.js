@@ -13,14 +13,30 @@ var ChannelModule = function (socket) {
     var createChannel = new Promise(function (resolve, reject) {
       var slug = slugify(data.name, {lowercase: true, separator: '_'}); // трансилитирируем name
 
+      var channelUserList = [socket.username];
+
+      if (data.userslist.length > 0) {
+        channelUserList = data.userslist;
+        channelUserList.unshift(socket.username);
+      }
+
       var newChannel = ChannelModel({
         name: data.name,
-        slug: slug
+        description: data.description,
+        slug: slug,
+        is_private: data.privateUsers,
+        users: channelUserList
       });
 
       newChannel.save({runValidators: true}, function (err, data) {
         if (err) {
-          var error = new Error('Ошибка создания чата');
+          var error;
+
+          if (err.code === 11000) {
+            error = new Error('Такой канал уже существует');
+          } else {
+            error = new Error('Ошибка создания чата');
+          }
 
           reject(error);
         } else {
@@ -41,14 +57,14 @@ var ChannelModule = function (socket) {
         socket.emit('channel create', data);
       })
       .catch(function (error) {
-        console.log(error);
+        socket.emit('channel create error', error.toString());
       });
   });
 
   /**
   * Получение информации о чате
   * @param data
-  * @param data.slug слаг чата
+  * @param data.channel слаг чата
   */
   socket.on('channel info', function (data) {
     var getChannelInfo = new Promise(function (resolve, reject) {
@@ -73,7 +89,6 @@ var ChannelModule = function (socket) {
         socket.emit('channel info', data);
       })
       .catch(function (error) {
-        console.log(error);
       });
   });
 
@@ -82,20 +97,22 @@ var ChannelModule = function (socket) {
   */
   socket.on('channel list', function () {
     var getChannelList = new Promise(function (resolve, reject) {
-      ChannelModel.find(function (err, data) {
-        if (err) {
-          var error = new Error('Ошибка получения чатов');
+      ChannelModel.find({$or: [{is_private: false}, {is_private: true, users: socket.username}]},
+        function (err, data) {
+          if (err) {
+            var error = new Error('Ошибка получения чатов');
 
-          reject(error);
-        } else {
-          var out = {
-            status: 'ok',
-            channels: data
-          };
+            reject(error);
+          } else {
+            var out = {
+              status: 'ok',
+              channels: data
+            };
 
-          resolve(out);
+            resolve(out);
+          }
         }
-      });
+      );
     });
 
     getChannelList
@@ -103,7 +120,6 @@ var ChannelModule = function (socket) {
         socket.emit('channel list', data);
       })
       .catch(function (error) {
-        console.log(error);
       });
   });
 
@@ -123,7 +139,7 @@ var ChannelModule = function (socket) {
       var limit = 20;
       var query = {channel: data.channel}; // канал нужно учитывать всегда
 
-      if ('date' in data) {
+      if (data.hasOwnProperty('date')) {
         query.created_at = {$lt: data.date}; // дата — если пришла
       }
 
@@ -132,7 +148,7 @@ var ChannelModule = function (socket) {
       q.sort({created_at: -1});
       q.limit(limit);
 
-      if ('skip' in data) {
+      if (data.hasOwnProperty('skip')) {
         q.skip(data.skip * limit); // offset
       }
 
@@ -142,29 +158,6 @@ var ChannelModule = function (socket) {
 
           reject(error);
         } else {
-
-          var now = new Date();
-          var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-          data = data.map(function (message) {
-            var value = {};
-            value._id = message._id;
-            value.channel = message.channel;
-            value.created_at = message.created_at;
-            value.text = message.text;
-            value.type = message.type;
-            value.username = message.username;
-            if (message.created_at < today) {
-              var day = message.created_at.getDate();
-              var month = message.created_at.getMonth();
-              value.date = (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + message.created_at.getFullYear();
-            } else {
-              var hour = message.created_at.getHours();
-              var minutes = message.created_at.getMinutes();
-              value.date = (hour < 10 ? '0' + hour : hour) + ':' + (minutes < 10 ? '0' + minutes : minutes);
-            }
-            return value;
-          });
-
           var out = {
             status: 'ok',
             // возвращаем сообщения или пустой массив, чтобы не возвращать null
@@ -188,10 +181,9 @@ var ChannelModule = function (socket) {
 
     getMessages
       .then(function (data) {
-        return socket.emit(data.type, data);
+        socket.emit(data.type, data);
       })
       .catch(function (error) {
-        console.log('channel get error', error);
       });
   });
 };

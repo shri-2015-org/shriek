@@ -30,7 +30,6 @@ var UserModule = function (socket, io) {
    * @param  data.password пароль пользователя
    */
   socket.on('user enter', function (data) {
-    console.log(data);
     var passportLogin = false;
 
     if (socket.username !== undefined) {
@@ -60,14 +59,8 @@ var UserModule = function (socket, io) {
           }
         }
 
-        // TODO: Это эпик. Необходим рефакторинг.
-        if (passportLogin === true) {
-          out.status = 'ok';
-          out.user = doc;
-        } else if (doc.checkPassword(password)) {
-          out.status = 'ok';
-          out.user = doc;
-        } else if (doc.checkHashedPassword(password)) {
+        if (passportLogin === true || doc.checkPassword(password) ||
+          doc.checkHashedPassword(password)) {
           out.status = 'ok';
           out.user = doc;
         } else {
@@ -127,14 +120,11 @@ var UserModule = function (socket, io) {
     var out = {};
 
     if (socket.username === undefined) {
-      console.log('user not logged yet');
-
       out = {
         status: 'error',
         error_message: 'Пользователь еще не вошел'
       };
     } else {
-      console.log('loggin out');
       var username = socket.username;
 
       socket.username = undefined;

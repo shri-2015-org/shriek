@@ -60,6 +60,7 @@ var MessagesActions = alt_obj.createActions({
   getMessages: function (socket, skip) {
     skip = skip || 0;
     socket.emit('channel get', {channel: socket.activeChannel, date: new Date(), skip: skip});
+    socket.emit('channel info', {slug: socket.activeChannel});
   }
 
 });

@@ -1,21 +1,15 @@
-"use strict";
+'use strict';
 
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var nano = require('gulp-cssnano');
-var uglify = require('gulp-uglify');
 var bower = require('gulp-bower');
 var wiredep = require('wiredep').stream;
 var prefix = require('gulp-autoprefixer');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var reactify = require('reactify');
-var streamify = require('gulp-streamify');
-
-var onError = function(err) {
-  console.error(err);
-}
 
 var path = {
   HTML: 'app/views/layouts/index.html',
@@ -32,7 +26,6 @@ var path = {
   BOWER_DIR: 'app/components',
   IMGS: 'app/assets/img/**/*'
 };
-
 
 gulp.task('default', ['bower', 'sass', 'build', 'watch']);
 
@@ -76,7 +69,7 @@ gulp.task('bower', ['bowerInstall'], function () {
 });
 
 gulp.task('bowerInstall', function () {
-  return bower({ cmd: 'update'});
+  return bower({cmd: 'update'});
 });
 
 // react components
@@ -116,7 +109,7 @@ gulp.task('sass', ['fontawesome', 'images'], function () {
   return gulp.src('app/assets/css/**/*.sass')
     .pipe(sass().on('error', sass.logError))
     .pipe(concat('bundle.min.css'))
-    .pipe(prefix({ browsers: ['last 2 version'] }))
+    .pipe(prefix({browsers: ['last 2 version']}))
     .pipe(nano())
     .pipe(gulp.dest('./public/assets/css'));
 });

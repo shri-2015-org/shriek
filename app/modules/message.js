@@ -15,7 +15,7 @@ var MessageModule = function(socket) {
   socket.on('message send', function (data) {
 
     // здесь еще нужно проверять на существование чата, если его нет — создавать
-
+    var res = {};
     var newMessage = MessageModel({
       username: socket.username,
       channel: ( data.channel !== undefined ? data.channel : 'general' ), // если канал не пришёл, пишем в general
@@ -49,6 +49,11 @@ var MessageModule = function(socket) {
       newMessage.raw = result[0].text;
 
       var setMessage = new Promise(function (resolve, reject) {
+        res.status = 'ok';
+        res.message = newMessage;
+        res.message.created_at = Date.now();
+        socket.emit('message send', res);
+
         newMessage.save({runValidators: true}, function (err, data) {
           if (!err) {
             var out = {
@@ -65,11 +70,9 @@ var MessageModule = function(socket) {
 
       setMessage
         .then(function (data) {
-          socket.broadcast.emit('message send', data);
-          return socket.emit('message send', data);
+          return socket.broadcast.emit('message send', data);
         })
         .catch(function (error) {
-          console.log('message send error', error);
           return socket.emit('message send', {
             status: 'error',
             error_message: error

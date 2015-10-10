@@ -37,6 +37,6 @@ deploy:
 
   - provider: script
     # script: scripts/deploy-dev.sh
-    script: "cwd"
+    script: "pwd"
     on:
       branch: develop

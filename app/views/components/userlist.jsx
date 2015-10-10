@@ -94,7 +94,7 @@ var UserComponent = function (socket) {
 
   var MoreUsers = React.createClass({
     render: function() {
-      var usersDisplaying = 3;
+      var usersDisplaying = 5;
       var hiddenUsersCount = Users.length - usersDisplaying;
 
       // Отображаем «Показать» только в случае избыточного количества пользователей

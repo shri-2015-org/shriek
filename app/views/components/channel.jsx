@@ -34,6 +34,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       socket.emit('channel info', {
         slug: socket.activeChannel
       });
+      this.refs.show_all_checkbox.getDOMNode().checked = false;
     },
 
     render: function () {
@@ -59,7 +60,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
             <h3 className="heading__header">Каналы</h3>
             <ButtonAddChannel ref="showModalButton"/>
           </div>
-          <input type="checkbox" id="showAllChannels" className="show_all_checkbox" />
+          <input type="checkbox" id="showAllChannels" ref='show_all_checkbox' className="show_all_checkbox" />
           <ul className="list list_channels">
             {Channels}
           </ul>
@@ -97,7 +98,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
   var MoreChannels = React.createClass({
     render: function () {
-      var channelsDisplaying = 3;
+      var channelsDisplaying = 5;
       var hiddenChannelsCount = this.props.len - channelsDisplaying;
 
       // Отображаем «Показать» только в случае избыточного количества каналов

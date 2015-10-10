@@ -35,11 +35,17 @@ var ChannelsActions = require('./../actions/ChannelsActions');
   ChannelsStore.prototype.recalcActiveChannel = function (fetched_data) {
 
     var listOfChannels = [];
+    var i = 0;
     this.channels.map(function (channel) {
+      i++;
       if (socket.activeChannel == channel.slug) {
         channel.isActive = true;
         channel.isUnread = false;
-        listOfChannels.unshift(channel);
+        if (i <= 5) {
+          listOfChannels.push(channel);
+        } else {
+          listOfChannels.unshift(channel);
+        }
       } else {
         channel.isActive = false;
         listOfChannels.push(channel);

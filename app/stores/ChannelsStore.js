@@ -13,7 +13,9 @@ var ChannelsStoreFunction = function (socket) {
     this.newChannel = {};
     this.newChannel.privateUsers = false;
     this.newChannel.userList = [];
-    // для создания нового канала
+
+    // errors
+    this.hasError = false;
 
     this.displayName = 'ChannelsStore'; // обязательное поле для ES5
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
@@ -26,7 +28,8 @@ var ChannelsStoreFunction = function (socket) {
       createdNewChannel: ChannelsActions.CREATED_NEW_CHANNEL,
       addNewChannel:ChannelsActions.ADD_NEW_CHANNEL,
       updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL,
-      setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL
+      setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL,
+      showError:ChannelsActions.SHOW_ERROR
     });
   }
 
@@ -119,6 +122,11 @@ var ChannelsStoreFunction = function (socket) {
 
   ChannelsStore.prototype.setPrivateMoreUsersChannel = function (setPrivate) {
     this.newChannel.privateUsers = setPrivate;
+  };
+
+  ChannelsStore.prototype.showError = function (data) {
+    console.log(data);
+    this.hasError = data;
   };
 
   ChannelsStore.prototype.addNewChannel = function (data) {

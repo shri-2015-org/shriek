@@ -1,4 +1,3 @@
-
 var EmojiBtn = React.createClass({
   getInitialState: function () {
     return { showEmojiMenu : false };
@@ -65,11 +64,13 @@ var EmojiMenu = React.createClass({
   render: function () {
     var self = this;
     var classes = this.props.show ? 'emoji-menu active' : 'emoji-menu';
+    var outerKey = 0;
     return (
       <div className={classes}>
         { this.props.items.map(function(value){
           var classes = 'emoji emoji-' + value;
-          return <span className={classes} onClick={self.addEmoji.bind(self, value)}></span>;
+          outerKey++;
+          return <span className={classes} onClick={self.addEmoji.bind(self, value)} key={outerKey}></span>;
         }) }
       </div>
     )

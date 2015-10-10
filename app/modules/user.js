@@ -60,14 +60,8 @@ var UserModule = function (socket, io) {
           }
         }
 
-        // TODO: Это эпик. Необходим рефакторинг.
-        if (passportLogin === true) {
-          out.status = 'ok';
-          out.user = doc;
-        } else if (doc.checkPassword(password)) {
-          out.status = 'ok';
-          out.user = doc;
-        } else if (doc.checkHashedPassword(password)) {
+        if (passportLogin === true || doc.checkPassword(password) ||
+          doc.checkHashedPassword(password)) {
           out.status = 'ok';
           out.user = doc;
         } else {

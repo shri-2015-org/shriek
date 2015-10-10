@@ -14,9 +14,9 @@ var passport = require('passport');
 var domain = '';
 switch (process.env.NODE_ENV) {
   case 'dev':
-    domain = 'localhost:3000';
+    domain = 'shriek-chat.tk:81';
     break;
-  case 'prod':
+  case 'production':
     domain = 'shriek-chat.tk';
     break;
   default:
@@ -57,6 +57,8 @@ app.use(passport.session());
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
+
+var UserModel = require('../models/user');
 
 passport.deserializeUser(function (id, done) {
   UserModel.findById(id, function (err, user) {

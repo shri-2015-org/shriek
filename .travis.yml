@@ -31,7 +31,7 @@ after_success:
 
 deploy:
   - provider: script
-    script: scripts/deploy-production.sh
+    script: "sh scripts/deploy-production.sh"
     on:
       branch: master
 

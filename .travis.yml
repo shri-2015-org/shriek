@@ -11,6 +11,13 @@ branches:
 services:
   - mongodb
 
+addons:
+  ssh_known_hosts: 128.199.39.245
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_48afa7b4060f_key -iv $encrypted_48afa7b4060f_iv
+    -in deploy_key.enc -out deploy_key -d
+
 install:
   - npm install
   - npm install -g pm2
@@ -19,19 +26,17 @@ install:
 script:
   # test running
 
-deploy:
-  on:
-    branch: master
-
 after_success:
   - chmod 600 deploy_key
   - mv deploy_key ~/.ssh/id_rsa
-  - pm2 deploy dev
 
-before_install:
-  - openssl aes-256-cbc -K $encrypted_48afa7b4060f_key -iv $encrypted_48afa7b4060f_iv
-    -in deploy_key.enc -out deploy_key -d
+deploy:
+  - provider: script
+    script: pm2 deploy production
+    on:
+      branch: master
 
-addons:
-  ssh_known_hosts: 128.199.39.245
-
+  - provider: script
+    script: pm2 deploy dev
+    on:
+      branch: develop

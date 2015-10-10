@@ -3,10 +3,8 @@ Yet another chat
 
 # Build workflow (short)
 ```
-npm install -g jshint
-npm install -g jscs
 npm install
-gulp
+npm run init
 ```
 
 # Development workflow
@@ -20,10 +18,8 @@ gulp
 `node .`
 
 ## Тестирование сервера
-
-1. Установите глобально Mocha: `npm install -g mocha`
-2. Стартоните приложение: `node .`
-3. В другом окне консоли запустите тесты: `mocha`
+1. Стартоните приложение: `node .`
+2. В другом окне консоли запустите тесты: `mocha`
 
 # Files structure
 * app — основное приложение

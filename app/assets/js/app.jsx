@@ -1,6 +1,13 @@
 var app = app || {};
 // Если убираем test.js, то надо раскомментить
 var socket = io();
+
+socket.on('disconnect', function() {
+  if (confirm('Внимание, соединение потеряно, попробуйте перезагрузить страницу.')) {
+    setInterval(function() { location.replace('/') }, 1000);
+  }
+});
+
 socket.activeChannel = 'general';
 
 // CHAT MODULE

@@ -6,13 +6,16 @@
   "bugs": {
     "url": "https://github.com/shri-2015-org/shriek/issues"
   },
+  "scripts": {
+    "init": "sh ./scripts/init-dev.sh"
+  },
   "license": "MIT",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/shri-2015-org/shriek.git"
   },
-  "devDependencies": {
+  "dependencies": {
     "alt": "^0.17.3",
     "bower": "^1.5.2",
     "browserify": "^11.1.0",
@@ -25,7 +28,6 @@
     "gulp-bower": "0.0.10",
     "gulp-concat": "^2.5.2",
     "gulp-cssnano": "^2.0.0",
-    "gulp-ruby-sass": "^1.0.1",
     "gulp-sass": "^2.0.4",
     "jshint": "^2.8.0",
     "mocha": "*",
@@ -42,7 +44,9 @@
     "transliteration": "^0.1.1",
     "vinyl-fs": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "wiredep": "^3.0.0-beta",
+    "wiredep": "^3.0.0-beta"
+  },
+  "devDependencies": {
     "ghooks": "^0.3.2"
   },
   "config": {

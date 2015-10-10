@@ -1,6 +1,6 @@
 var ChannelUsersComponent = function (socket) {
 
-  var ChannelUsersStore = require('./../../stores/ChannelUsersStore');
+  var ChannelUsersStore = require('./../../stores/ChannelUsersStore')(socket);
   var ChannelUsersActions = require('./../../actions/ChannelUsersActions');
 
   var ChannelUsers = React.createClass({

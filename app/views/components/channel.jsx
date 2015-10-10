@@ -4,6 +4,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
   var ChannelsList = React.createClass({
     getInitialState: function () {
+      console.log(ChannelsStore.getState());
       return ChannelsStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
     },
 
@@ -65,7 +66,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
             {Channels}
           </ul>
           <MoreChannels len = {len_channels}/>
-          {this.state.show_modal == true && (
+          {this.state.show_modal === true && (
             <AddChannelModal userlist = {this.state.userList}/>
           )}
         </div>
@@ -186,6 +187,11 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         <div className="modal">
           <form className="form modal__body" onSubmit={this.handleSubmit}>
             <h2 className="modal__heading heading">Добавьте канал</h2>
+            <div className="form__row">
+                  {ChannelsStore.getState().hasError &&(
+                    <div>{ChannelsStore.getState().hasError}</div>
+                  )}
+                </div>
             <div className="form__row">
               <label className="form__label" htmlFor="channelName"><i className="fa fa-users"></i></label>
               <input className="form__text" type="text" id="channelName" ref="сhannelName" placeholder="Назовите" />

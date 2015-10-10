@@ -19,9 +19,8 @@ before_install:
     -in deploy_key.enc -out deploy_key -d
 
 install:
-  - npm install
-  - npm install -g pm2
-  - bower install
+  - npm install --production
+  - npm run init
 
 script:
   # test running
@@ -32,11 +31,11 @@ after_success:
 
 deploy:
   - provider: script
-    script: pm2 deploy production
+    script: scripts/deploy-production.sh
     on:
       branch: master
 
   - provider: script
-    script: pm2 deploy dev
+    script: scripts/deploy-dev.sh
     on:
       branch: develop

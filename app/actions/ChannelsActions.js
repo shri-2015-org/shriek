@@ -6,17 +6,25 @@ var ChannelsActions = alt_obj.createActions({
   updateChannels: function (channels) {  // на эту функцию мы будем подписываться в сторе
     this.dispatch(channels); // это блин ТРИГГЕР, на который реагирует стор
   },
+
   setActiveChannel: function (channelSlug) {
     this.dispatch(channelSlug);
   },
+
   createdNewChannel: function (channel) {
     this.dispatch(channel);
   },
+
   setUnreadChannel: function (channelSlug) {
     this.dispatch(channelSlug);
   },
+
   updateUserList: function (users) {
     this.dispatch(users);
+  },
+
+  showError: function (error) {
+    this.dispatch(error);
   },
 
   initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
@@ -31,7 +39,7 @@ var ChannelsActions = alt_obj.createActions({
     });
 
     socket.on('message send', function (data) {
-      if (data.message.channel != socket.activeChannel) { // только если сообщение пришло в не активный канал
+      if (data.message.channel !== socket.activeChannel) { // только если сообщение пришло в не активный канал
         _this.actions.setUnreadChannel(data.message.channel);
       }
     });
@@ -53,7 +61,13 @@ var ChannelsActions = alt_obj.createActions({
             date: new Date()
           });
         }
+      } else {
+        console.log(data);
       }
+    });
+
+    socket.on('channel create error', function (data) {
+      _this.actions.showError(data);
     });
   },
 

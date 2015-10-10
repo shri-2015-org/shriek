@@ -1,5 +1,5 @@
 var ChatComponent = function (socket) {
-  var MessagesStore = require('./../../stores/MessagesStore'); // подключаем стор
+  var MessagesStore = require('./../../stores/MessagesStore')(socket); // подключаем стор
   var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
   var markDownConverter = new showdown.Converter();

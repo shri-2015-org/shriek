@@ -81,7 +81,11 @@ var ChatComponent = function (socket) {
       }
     },
     componentDidUpdate: function () {
-      this.getDOMNode().scrollTop = this.state.scrollHeight;
+      if (this.state.scrollHeight) {
+        $(this.getDOMNode()).animate({
+          scrollTop: this.state.scrollHeight
+        }, 300);
+      }
     },
     render: function () {
       var Messages = (<div>Loading messages...</div>);

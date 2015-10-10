@@ -1,44 +1,42 @@
 var ChannelsStoreFunction = function (socket) {
-
 var alt_obj = require('./../controllers/alt_obj');
 var ChannelsActions = require('./../actions/ChannelsActions');
+function ChannelsStore() {
+  this.channels = []; // это бывший initState у компонента
+  this.show_modal = false;
+  this.userList = [];
 
-  function ChannelsStore() {
-    this.channels = []; // это бывший initState у компонента
-    this.show_modal = false;
-    this.userList = [];
+  // для создания нового канала
+  this.newChannel = {};
+  this.newChannel.privateUsers = false;
+  this.newChannel.userList = [];
+  // для создания нового канала
 
-    // для создания нового канала
-    this.newChannel = {};
-    this.newChannel.privateUsers = false;
-    this.newChannel.userList = [];
-    // для создания нового канала
-
-    this.displayName = 'ChannelsStore'; // обязательное поле для ES5
-    this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
-      updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
-      setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
-      setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
-      updateUserList: ChannelsActions.UPDATE_USER_LIST,
-      addUserToNewChannel:ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
-      deleteUserFromNewChannel:ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
-      createdNewChannel: ChannelsActions.CREATED_NEW_CHANNEL,
-      addNewChannel:ChannelsActions.ADD_NEW_CHANNEL,
-      updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL,
-      setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL
-    });
-  }
+  this.displayName = 'ChannelsStore'; // обязательное поле для ES5
+  this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
+    updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
+    setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
+    setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
+    updateUserList: ChannelsActions.UPDATE_USER_LIST,
+    addUserToNewChannel:ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
+    deleteUserFromNewChannel:ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
+    createdNewChannel: ChannelsActions.CREATED_NEW_CHANNEL,
+    addNewChannel:ChannelsActions.ADD_NEW_CHANNEL,
+    updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL,
+    setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL
+  });
+}
 
 
   // тут описываем все функции стора (в основном это присваение стейта нового значения)
 
-  ChannelsStore.prototype.recalcActiveChannel = function (fetched_data) {
+  ChannelsStore.prototype.recalcActiveChannel = function () {
 
     var listOfChannels = [];
     var i = 0;
     this.channels.map(function (channel) {
       i++;
-      if (socket.activeChannel == channel.slug) {
+      if (socket.activeChannel === channel.slug) {
         channel.isActive = true;
         channel.isUnread = false;
         if (i <= 5) {
@@ -85,7 +83,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
     if (len_users > 0) {
       for (var i=0; i<len_users; i++) {
-        if(socket.username == users[i]) {
+        if(socket.username === users[i]) {
           this.channels.push(data.channel);
         }
       }
@@ -98,7 +96,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
     var listOfChannels = [];
     this.channels.map(function (channel) {
-      if (channel_slug == channel.slug) {
+      if (channel_slug === channel.slug) {
         channel.isUnread = true;
       }
       listOfChannels.push(channel);
@@ -117,7 +115,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     var nowUserList = this.newChannel.userList;
     this.newChannel.userList = [];
     nowUserList.map(function(name) {
-      if (name != username) {
+      if (name !== username) {
         _this.newChannel.userList.push(name);
       }
     });

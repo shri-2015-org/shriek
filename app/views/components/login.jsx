@@ -10,7 +10,7 @@ var LoginDefault = require('../../views/components/login-default.jsx')(socket);
 var LoginPassport = require('../../views/components/login-passport.jsx')(socket);
 
 // ALT-JS STORE INIT
-var AuthStore = require('./../../stores/AuthStore')(socket);
+if (!AuthStore) var AuthStore = require('./../../stores/AuthStore')(socket);
 var AuthActions = require('./../../actions/AuthActions');
 
 

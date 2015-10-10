@@ -1,9 +1,10 @@
-var AuthStoreFunction = function (socket) {
+var AuthStoreObj = false;
+var AuthStoreFunction = function () {
 
-var alt_obj = require('./../controllers/alt_obj');
-var AuthActions = require('./../actions/AuthActions');
+  var alt_obj = require('./../controllers/alt_obj');
+  var AuthActions = require('./../actions/AuthActions');
 
-function AuthStore() {
+  function AuthStore() {
   this.messages = [];
   this.displayName = 'AuthStore';
   this.bindListeners({
@@ -11,16 +12,19 @@ function AuthStore() {
   });
 }
 
-AuthStore.prototype.logOut = function (newState) {
+  AuthStore.prototype.logOut = function (newState) {
   var _this = this;
-  for (key in newState) {
+  for (var key in newState) {
     _this[key] = newState[key];
   }
   localStorage.removeItem('userName');
   localStorage.removeItem('userPass');
 };
 
-  return alt_obj.createStore(AuthStore);
+  if (!AuthStoreObj) {
+    AuthStoreObj = alt_obj.createStore(AuthStore);
+  }
+  return AuthStoreObj;
 };
 
 module.exports = AuthStoreFunction;

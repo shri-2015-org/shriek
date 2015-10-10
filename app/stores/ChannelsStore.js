@@ -1,7 +1,8 @@
+var ChannelStoreObj = false;
 var ChannelsStoreFunction = function (socket) {
 
-var alt_obj = require('./../controllers/alt_obj');
-var ChannelsActions = require('./../actions/ChannelsActions');
+  var alt_obj = require('./../controllers/alt_obj');
+  var ChannelsActions = require('./../actions/ChannelsActions');
 
   function ChannelsStore() {
     this.channels = []; // это бывший initState у компонента
@@ -29,14 +30,13 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     });
   }
 
-
   // тут описываем все функции стора (в основном это присваение стейта нового значения)
 
-  ChannelsStore.prototype.recalcActiveChannel = function (fetched_data) {
+  ChannelsStore.prototype.recalcActiveChannel = function () {
 
     var listOfChannels = [];
     this.channels.map(function (channel) {
-      if (socket.activeChannel == channel.slug) {
+      if (socket.activeChannel === channel.slug) {
         channel.isActive = true;
         channel.isUnread = false;
         listOfChannels.unshift(channel);
@@ -78,8 +78,8 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     }
 
     if (len_users > 0) {
-      for (var i=0; i<len_users; i++) {
-        if(socket.username == users[i]) {
+      for (var i = 0; i < len_users; i++) {
+        if (socket.username === users[i]) {
           this.channels.push(data.channel);
         }
       }
@@ -92,7 +92,7 @@ var ChannelsActions = require('./../actions/ChannelsActions');
 
     var listOfChannels = [];
     this.channels.map(function (channel) {
-      if (channel_slug == channel.slug) {
+      if (channel_slug === channel.slug) {
         channel.isUnread = true;
       }
       listOfChannels.push(channel);
@@ -110,8 +110,8 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     var _this = this;
     var nowUserList = this.newChannel.userList;
     this.newChannel.userList = [];
-    nowUserList.map(function(name) {
-      if (name != username) {
+    nowUserList.map(function (name) {
+      if (name !== username) {
         _this.newChannel.userList.push(name);
       }
     });
@@ -145,7 +145,11 @@ var ChannelsActions = require('./../actions/ChannelsActions');
     }
   };
 
-  return alt_obj.createStore(ChannelsStore);
+  if (!ChannelStoreObj) {
+    ChannelStoreObj = alt_obj.createStore(ChannelsStore);
+  }
+  return ChannelStoreObj;
+
 };
 
 module.exports = ChannelsStoreFunction;

@@ -8,16 +8,13 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
       return {};
     },
 
-    handleSearch: function () {
-      var _this = this;
-      var allowedChannels = ChannelsStore.state.channels.map(function (channel) {
-        return channel.slug;
-      });
-
-      socket.emit('search text', {
-        channels: allowedChannels,
-        text: $('#search').val()
-      });
+    handleSearch: function (e) {
+      if ($('#search').val().trim()) {
+        socket.emit('search text', {
+          channels: [socket.activeChannel],
+          text: $('#search').val().trim()
+        });
+      }
     },
 
     render: function () {
@@ -27,7 +24,7 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
             <label className='form__label' htmlFor='search' onClick={this.handleSearch}>
               <i className='fa fa-search'></i>
             </label>
-            <input className='form__text' type='text' id='search' ref='search' onChange={this.handleSearch}/>
+            <input className='form__text' type='text' id='search' ref='search'/>
           </div>
         </div>
       );

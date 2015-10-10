@@ -8,8 +8,8 @@ function MessagesStore() {
   this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
     updateMessages: MessagesActions.UPDATE_MESSAGES,  // ключ хеша — функция стора, значение — функция экшена
     pushMessage: MessagesActions.PUSH_MESSAGE,
-    prepandMessages: MessagesActions.PREPAND_MESSAGES,
-    setSearchedMessage: MessagesActions.SET_SEARCHED_MESSAGE
+    prepandMessages: MessagesActions.PREPAND_MESSAGES
+    // setSearchedMessage: MessagesActions.SET_SEARCHED_MESSAGE
   });
 }
 
@@ -29,17 +29,17 @@ MessagesStore.prototype.prepandMessages = function (fetched_data) {
   }
   this.messages = fetched_data.messages.concat(this.messages);
 };
-MessagesStore.prototype.setSearchedMessage = function (_ids) {
-  var listOfMessages = [];
+// MessagesStore.prototype.setSearchedMessage = function (_ids) {
+//   var listOfMessages = [];
 
-  this.messages.map(function (message) {
-    var isSearched = _ids.indexOf(message._id) > -1;
+//   this.messages.map(function (message) {
+//     var isSearched = _ids.indexOf(message._id) > -1;
 
-    message.searched = isSearched;
+//     message.searched = isSearched;
 
-    listOfMessages.push(message);
-  });
+//     listOfMessages.push(message);
+//   });
 
-  this.messages = listOfMessages;
-}
+//   this.messages = listOfMessages;
+// }
 module.exports = alt_obj.createStore(MessagesStore);

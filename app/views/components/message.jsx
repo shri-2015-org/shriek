@@ -29,9 +29,7 @@ var ChatComponent = function (socket) {
 
     submitMessage: function (text, callback) {
 
-      if (!text) {
-        callback('Enter message, please!');
-      } else {
+      if (text) {
         var message = {
           username: socket.username,
           channel: socket.activeChannel,
@@ -40,6 +38,8 @@ var ChatComponent = function (socket) {
         };
         socket.emit('message send', message);
         callback();
+      } else {
+        callback('Enter message, please!');
       }
 
     },
@@ -91,7 +91,7 @@ var ChatComponent = function (socket) {
       var Messages = (<div>Loading messages...</div>);
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
-          return (<Message message={message} key={message._id}/>);
+          return (<Message message={message} key={message._id} />);
         });
       }
       return (
@@ -119,7 +119,7 @@ var ChatComponent = function (socket) {
       }
 
       return (
-        <div className={classes.join(' ')}>
+        <div className={classes.join(' ')} id={this.props.message._id}>
           <MessageDate date={this.props.message.date}/>
           <span className="msg__author">{this.props.message.username}: </span>
           <div
@@ -172,7 +172,7 @@ var ChatComponent = function (socket) {
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required />
-            <Emoji/>
+            <Emoji />
             <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>

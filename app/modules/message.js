@@ -20,6 +20,7 @@ var MessageModule = function(socket) {
       username: socket.username,
       channel: ( data.channel !== undefined ? data.channel : 'general' ), // если канал не пришёл, пишем в general
       text: data.text,
+      raw: data.text,
       type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст
     });
 
@@ -45,7 +46,7 @@ var MessageModule = function(socket) {
           });
       });
     }, Promise.resolve([newMessage])).then(function (result) {
-      newMessage.text = result[0].text;
+      newMessage.raw = result[0].text;
 
       var setMessage = new Promise(function (resolve, reject) {
         newMessage.save({runValidators: true}, function (err, data) {

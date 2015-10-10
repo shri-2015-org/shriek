@@ -107,7 +107,7 @@ var ChatComponent = function (socket) {
           <div
             className="msg__text"
             dangerouslySetInnerHTML={{
-              __html: this.props.message.text
+              __html: this.props.message.raw
             }} />
         </div>
       );

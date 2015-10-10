@@ -15,6 +15,9 @@ var Message = new Schema({
     type: String,
     required: true
   },
+  raw: {
+    type: String
+  },
   type: {
     type: String,
     required: true

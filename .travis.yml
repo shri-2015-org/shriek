@@ -36,7 +36,6 @@ deploy:
       branch: master
 
   - provider: script
-    # script: scripts/deploy-dev.sh
-    script: "ls -la scripts"
+    script: "sh scripts/deploy-dev.sh"
     on:
       branch: develop

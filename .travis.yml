@@ -36,6 +36,7 @@ deploy:
       branch: master
 
   - provider: script
-    script: scripts/deploy-dev.sh
+    # script: scripts/deploy-dev.sh
+    script: "pm2 deploy dev"
     on:
       branch: develop

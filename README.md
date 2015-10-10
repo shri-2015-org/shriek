@@ -1,4 +1,5 @@
-# Shriek Chat
+# Shriek Chat [![Build Status](https://travis-ci.org/shri-2015-org/shriek.svg?branch=master)](https://travis-ci.org/shri-2015-org/shriek)
+
 Yet another chat
 
 # Build workflow (short)

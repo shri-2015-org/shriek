@@ -1,4 +1,4 @@
-var AuthStoreObj = false;
+var AuthStoreObj = null;
 var AuthStoreFunction = function () {
 
   var alt_obj = require('./../controllers/alt_obj');
@@ -15,13 +15,16 @@ var AuthStoreFunction = function () {
   AuthStore.prototype.logOut = function (newState) {
   var _this = this;
   for (var key in newState) {
-    _this[key] = newState[key];
+    if (newState.hasOwnProperty(key)) {
+      _this[key] = newState[key];
+    }
   }
+
   localStorage.removeItem('userName');
   localStorage.removeItem('userPass');
 };
 
-  if (!AuthStoreObj) {
+  if (AuthStoreObj === null) {
     AuthStoreObj = alt_obj.createStore(AuthStore);
   }
   return AuthStoreObj;

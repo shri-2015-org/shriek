@@ -1,4 +1,4 @@
-var ChannelUsersStoreObj = false;
+var ChannelUsersStoreObj = null;
 
 var ChannelUsersStoreFunction = function () {
 
@@ -20,7 +20,7 @@ var ChannelUsersStoreFunction = function () {
     this.channel = data;
   };
 
-  if (!ChannelUsersStoreObj) {
+  if (ChannelUsersStoreObj === null) {
     ChannelUsersStoreObj = alt_obj.createStore(ChannelUsersStore);
   }
   return ChannelUsersStoreObj;

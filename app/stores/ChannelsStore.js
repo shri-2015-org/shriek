@@ -1,4 +1,4 @@
-var ChannelStoreObj = false;
+var ChannelStoreObj = null;
 var ChannelsStoreFunction = function (socket) {
 
   var alt_obj = require('./../controllers/alt_obj');
@@ -145,7 +145,7 @@ var ChannelsStoreFunction = function (socket) {
     }
   };
 
-  if (!ChannelStoreObj) {
+  if (ChannelStoreObj === null) {
     ChannelStoreObj = alt_obj.createStore(ChannelsStore);
   }
   return ChannelStoreObj;

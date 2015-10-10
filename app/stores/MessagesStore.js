@@ -1,4 +1,4 @@
-var MessagesStoreObj = false;
+var MessagesStoreObj = null;
 var MessagesStoreFunction = function () {
   var alt_obj = require('./../controllers/alt_obj');
   var MessagesActions = require('./../actions/MessagesActions');
@@ -44,7 +44,7 @@ var MessagesStoreFunction = function () {
     this.messages = listOfMessages;
   };
 
-  if (!MessagesStoreObj) {
+  if (MessagesStoreObj === null) {
     MessagesStoreObj = alt_obj.createStore(MessagesStore);
   }
   return MessagesStoreObj;

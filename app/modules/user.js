@@ -101,15 +101,18 @@ var UserModule = function (socket, io) {
     });
 
     function callbackUserEnter(out) {
+      delete out.user.salt;
+
+      socket.emit('user enter', out);
+
       if (out.status === 'ok') {
         // echo globally (all clients) that a person has connected
+        delete out.user.hashedPassword;
         socket.broadcast.emit('user connected', out);
 
         // we store the username in the socket session for this client
         socket.username = username;
       }
-
-      socket.emit('user enter', out);
     }
   });
 
@@ -162,21 +165,25 @@ var UserModule = function (socket, io) {
 
     var username = data.username || socket.username;
 
-    UserModel.findOne({username: username}, function (err, doc) {
-      if (!err && doc) {
-        out = {
-          status: 'ok',
-          user: doc
-        };
-      } else {
-        out = {
-          status: 'error',
-          error_message: 'Пользователь не найден'
-        };
+    UserModel.findOne(
+      {username: username}, 
+      {salt: 0, hashedPassword: 0}, 
+      function (err, doc) {
+        if (!err && doc) {
+          out = {
+            status: 'ok',
+            user: doc
+          };
+        } else {
+          out = {
+            status: 'error',
+            error_message: 'Пользователь не найден'
+          };
+        }
+  
+        socket.emit('user info', out);
       }
-
-      socket.emit('user info', out);
-    });
+    );
   });
 
   /**
@@ -192,7 +199,7 @@ var UserModule = function (socket, io) {
 
     UserModel.find({
       username: {$ne: socket.username}
-    }, function (err, docs) {
+    }, {salt: 0, hashedPassword: 0}, function (err, docs) {
       var out = {};
 
       if (!err && docs) {
@@ -244,8 +251,10 @@ var UserModule = function (socket, io) {
 
     UserModel.findOneAndUpdate(
       {username: socket.username},
-      {setting: data.setting},
-      function (err, user) {
+      {setting: data.setting}
+    )
+      .select('-salt -hashedPassword')
+      .exec(function (err, user) {
         if (!err && user) {
           out.status = 'ok';
           out.user = user;

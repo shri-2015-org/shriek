@@ -120,7 +120,7 @@ var ChatComponent = function (socket) {
 
       return (
         <div className={classes.join(' ')}>
-          <MessageDate date={this.props.message.date}/>
+          <MessageDate date={this.props.message.created_at}/>
           <span className="msg__author">{this.props.message.username}: </span>
           <div
             className="msg__text"
@@ -189,8 +189,16 @@ var ChatComponent = function (socket) {
 
   var MessageDate = React.createClass({
     render: function () {
+      var localDate = new Date(this.props.date);
+      var hour = localDate.getHours();
+      var minutes = localDate.getMinutes();
+      var date = ('0' + hour).slice(-2) + ':' + ('0' + minutes).slice(-2);
+      var day = localDate.getDate();
+      var month = localDate.getMonth();
+      var fullDate = date + ' ' + ('0' + day).slice(-2) + '/' +
+        ('0' + month).slice(-2) + '/' + localDate.getFullYear();
       return (
-        <span className='message-date'>{this.props.date}</span>
+        <span className='message-date' title={fullDate}>{date}</span>
       )
     }
   });

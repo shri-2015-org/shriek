@@ -25,15 +25,22 @@ var ChannelUsersComponent = function (socket) {
     render: function () {
       var Users = (<div>Загрузка пользователей…</div>);
       var channel = this.state.channel;
-      var channelUsers = channel.users;
+
+      var channelUsers = [];
       var len = 0;
 
-      if (channelUsers) {
-        Users = channelUsers.map(function (user) {
-          return (<ChannelUser user={user} key={user} />);
-        });
-        len = channelUsers.length;
+      if (channel.is_private !== undefined) {
+        if (!channel.is_private) {
+          channelUsers = this.state.users;
+        } else {
+          channelUsers = channel.users;
+        }
       }
+
+      len = channelUsers.length;
+      Users = channelUsers.map(function (user) {
+        return (<ChannelUser user={user} key={user} />);
+      });
 
       return (
         <div className="msg__users" >

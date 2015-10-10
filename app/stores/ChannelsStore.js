@@ -105,8 +105,19 @@ function ChannelsStore() {
 
   ChannelsStore.prototype.createdNewChannel = function (data) {
     var oldstate  = this.show_modal;
-    var users = data.channel.users;
-    var len_users = users.length;
+    var users = [];
+    var len_users = 0;
+
+    if (data.channel.is_private) {
+      users = data.channel.users;
+    } else {
+      users = this.userList.map(function (user) {
+        return user.username;
+      });
+      users.unshift(socket.username);
+    }
+
+    len_users = users.length;
 
     if (data.creator === socket.username) {
       oldstate = false;
@@ -162,11 +173,8 @@ function ChannelsStore() {
 
   ChannelsStore.prototype.addNewChannel = function (data) {
     var users = [];
-    if (!this.newChannel.privateUsers) {
-      users = this.userList.map(function (user) {
-        return user.username;
-      });
-    } else {
+
+    if (this.newChannel.privateUsers) {
       users = this.newChannel.userList;
     }
 

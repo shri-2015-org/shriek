@@ -28,6 +28,9 @@ var ProfileComponent = require('../../views/components/profile.jsx')(socket);
 // SETTING MODULE
 var SettingComponent = require('../../views/components/setting.jsx')(socket);
 
+// SEARCH RESULTS
+var SearchResultComponent = require('../../views/components/search-result.jsx')(socket);
+
 (function () {
   'use strict';
 
@@ -75,6 +78,7 @@ var SettingComponent = require('../../views/components/setting.jsx')(socket);
         <div className="layout">
           <SettingComponent />
           <LoginComponent />
+          <SearchResultComponent />
           <ChatApp />
         </ div >
       );

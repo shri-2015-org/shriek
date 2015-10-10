@@ -96,7 +96,7 @@ var ChatComponent = function (socket) {
 
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
-          return (<Message message={message} key={message._id}/>);
+          return (<Message message={message} key={message._id} />);
         });
       }
 

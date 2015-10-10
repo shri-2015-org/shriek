@@ -177,7 +177,7 @@ var ChannelModule = function (socket) {
 
     getMessages
       .then(function (data) {
-        return socket.emit(data.type, data);
+        socket.emit(data.type, data);
       })
       .catch(function (error) {
         console.log('channel get error', error);

@@ -25,8 +25,6 @@ switch (process.env.NODE_ENV) {
 }
 
 server.listen(port, function () {
-  console.log('Server listening at port %d', port);
-
   mongoose.connect(config.get('mongoose:uri'));
   var db = mongoose.connection;
 

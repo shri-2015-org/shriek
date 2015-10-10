@@ -31,7 +31,6 @@ module.exports = function (app, domain) {
         firstTime = true;
         user.save(function (err) {
           if (err) {
-            console.log(err);
           }
           return done(err, user);
         });

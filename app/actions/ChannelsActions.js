@@ -61,8 +61,6 @@ var ChannelsActions = alt_obj.createActions({
             date: new Date()
           });
         }
-      } else {
-        console.log(data);
       }
     });
 

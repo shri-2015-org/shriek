@@ -200,7 +200,7 @@ var ChatComponent = function (socket) {
       var fullDate = date + ' ' + ('0' + day).slice(-2) + '/' +
         ('0' + month).slice(-2) + '/' + localDate.getFullYear();
       return (
-        <span className='message-date' title={fullDate}>{date}</span>
+        <span className='msg__date' title={fullDate}>{date}</span>
       )
     }
   });

@@ -31,11 +31,11 @@ after_success:
 
 deploy:
   - provider: script
-    script: scripts/deploy-production.sh
+    script: ./scripts/deploy-production.sh
     on:
       branch: master
 
   - provider: script
-    script: scripts/deploy-dev.sh
+    script: ./scripts/deploy-dev.sh
     on:
       branch: develop

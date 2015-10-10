@@ -125,7 +125,6 @@ var ChannelsStoreFunction = function (socket) {
   };
 
   ChannelsStore.prototype.showError = function (data) {
-    console.log(data);
     this.hasError = data;
   };
 

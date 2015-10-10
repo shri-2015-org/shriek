@@ -57,7 +57,6 @@ var ChannelModule = function (socket) {
         socket.emit('channel create', data);
       })
       .catch(function (error) {
-        console.log(error);
         socket.emit('channel create error', error.toString());
       });
   });

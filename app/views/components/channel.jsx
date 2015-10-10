@@ -65,7 +65,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
             {Channels}
           </ul>
           <MoreChannels len = {len_channels}/>
-          {this.state.show_modal == true && (
+          {this.state.show_modal === true && (
             <AddChannelModal userlist = {this.state.userList}/>
           )}
         </div>

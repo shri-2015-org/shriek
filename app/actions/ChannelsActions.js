@@ -67,7 +67,6 @@ var ChannelsActions = alt_obj.createActions({
     });
 
     socket.on('channel create error', function (data) {
-      console.log('error test', data);
       _this.actions.showError(data);
     });
   },

@@ -1,0 +1,11 @@
+{
+  apps : [
+
+    {
+      name      : "Shriek-dev",
+      script    : "index.js",
+      cwd: "/home/shriek/projects/dev/source"
+    }
+
+  ]
+}

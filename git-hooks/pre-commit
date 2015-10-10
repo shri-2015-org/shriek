@@ -26,9 +26,8 @@ for i in "${filenames[@]}"
 do
   if [[ $i =~ \.js$ ]];
   then
-    # Auto fixing js-file codestyle
-    jscs $i --config=./.jscsrc --fix
-    git add $i
+    # Checking codestyle
+    jscs $i
 
     echo jshint $i
     jshint $i

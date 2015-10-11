@@ -95,7 +95,7 @@ var ChannelsStoreFunction = function (socket) {
       oldstate = false;
     }
 
-    if (len_users > 0) {
+    if (len_users > 0 && !data.channel.is_direct) {
       for (var i = 0; i < len_users; i++) {
         if (socket.username === users[i]) {
           this.channels.push(data.channel);

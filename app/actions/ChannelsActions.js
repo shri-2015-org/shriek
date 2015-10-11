@@ -55,7 +55,10 @@ var ChannelsActions = alt_obj.createActions({
         _this.actions.createdNewChannel(data);
 
         if (data.creator === socket.username) {
-          _this.actions.setActiveChannel(data.channel.slug);
+          if (!data.channel.is_direct) {
+            _this.actions.setActiveChannel(data.channel.slug);
+          }
+
           socket.emit('channel get', {
             channel: data.channel.slug,
             date: new Date()

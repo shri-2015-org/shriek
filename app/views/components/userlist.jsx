@@ -1,25 +1,27 @@
 var UserComponent = function (socket) {
-  var Users;
+  var UserListStore = require('./../../stores/UserListStore')(socket); // подключаем стор
+  var UserListActions = require('./../../actions/UserListActions'); // подключаем экшены
 
   var UsersList = React.createClass({
     getInitialState: function() {
-      return {
-        users: []
-      };
+    return UserListStore.getState();
     },
 
     componentDidMount: function () {
-      var _this = this;
+      UserListStore.listen(this.onChange); // подписываемся на изменения store
+      UserListActions.initUserList(socket);
+    },
 
-      socket.on('user list', function(data) {
-        if (data.status === 'ok') {
-          _this.setState({users: data.users});
-        }
-      });
+    componentWillUnmount: function () {
+      UserListStore.unlisten(this.onChange); // отписываемся от изменений store
+    },
+
+    onChange: function (state) {
+      this.setState(state);
     },
 
     render: function () {
-      Users = (<div>Loading users...</div>);
+      var Users = (<div>Loading users...</div>);
 
       if (this.state.users) {
         Users = this.state.users.map(function(user) {
@@ -37,8 +39,9 @@ var UserComponent = function (socket) {
           <ul className="list list_users">
             {Users}
           </ul>
-
-          <MoreUsers/>
+          {this.state.users && (
+            <MoreUsers users={this.state.users}/>
+          )}
         </div>
       );
     }
@@ -77,6 +80,11 @@ var UserComponent = function (socket) {
         }
       },
 
+      addUserChannel: function (e) {
+        var elem = e.target;
+        UserListActions.addUserChannel(elem);
+      },
+
       render: function() {
         var classes = ['list__item'];
 
@@ -86,7 +94,7 @@ var UserComponent = function (socket) {
 
         return (
           <li className={classes.join(' ')}>
-            <a className="name">{this.props.user.username}</a>
+            <a className="name" onClick={this.addUserChannel}>{this.props.user.username}</a>
           </li>
         );
       }
@@ -95,7 +103,7 @@ var UserComponent = function (socket) {
   var MoreUsers = React.createClass({
     render: function() {
       var usersDisplaying = 5;
-      var hiddenUsersCount = Users.length - usersDisplaying;
+      var hiddenUsersCount = this.props.users.length - usersDisplaying;
 
       // Отображаем «Показать» только в случае избыточного количества пользователей
       return hiddenUsersCount > 0 && (

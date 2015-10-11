@@ -85,18 +85,6 @@ gulp.task('build', function () {
     .pipe(gulp.dest(path.DEST_BUILD));
 });
 
-// fontawesome
-
-gulp.task('icons', function () {
-  return gulp.src(path.BOWER_DIR + '/fontawesome/fonts/**.*')
-    .pipe(gulp.dest('./public/assets/fonts'));
-});
-
-gulp.task('fontawesome', ['icons'], function () {
-  return gulp.src(path.BOWER_DIR + '/fontawesome/css/*.min.css')
-    .pipe(gulp.dest('./public/assets/css'));
-});
-
 // images
 gulp.task('images', function () {
   return gulp.src(path.IMGS)
@@ -105,7 +93,7 @@ gulp.task('images', function () {
 
 // sass
 
-gulp.task('sass', ['fontawesome', 'images'], function () {
+gulp.task('sass', ['images'], function () {
   return gulp.src('app/assets/css/**/*.sass')
     .pipe(sass().on('error', sass.logError))
     .pipe(concat('bundle.min.css'))

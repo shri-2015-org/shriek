@@ -20,6 +20,11 @@ var Channel = new Schema({
     required: true,
     default: false
   },
+  is_direct: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   created_at: {
     type: Date,
     default: Date.now

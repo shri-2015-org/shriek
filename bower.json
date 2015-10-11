@@ -5,6 +5,7 @@
     "react": "~0.13.3",
     "fontawesome": "~4.4.0",
     "normalize.css": "~3.0.0",
-    "shriek-emoji": "0.2.10"
+    "shriek-emoji": "0.2.10",
+    "components-font-awesome": "~4.4.0"
   }
 }

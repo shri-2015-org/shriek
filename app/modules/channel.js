@@ -14,6 +14,7 @@ var ChannelModule = function (socket) {
       var slug = slugify(data.name, {lowercase: true, separator: '_'}); // трансилитирируем name
 
       var channelUserList = [socket.username];
+      var isDirect = (data.isDirect === undefined) ? false : data.isDirect;
 
       if (data.userslist.length > 0) {
         channelUserList = data.userslist;
@@ -24,7 +25,8 @@ var ChannelModule = function (socket) {
         name: data.name,
         description: data.description,
         slug: slug,
-        is_private: data.privateUsers,
+        is_private: data.isPrivate,
+        is_direct: isDirect,
         users: channelUserList
       });
 
@@ -89,6 +91,7 @@ var ChannelModule = function (socket) {
         socket.emit('channel info', data);
       })
       .catch(function (error) {
+        console.log(error);
       });
   });
 
@@ -120,6 +123,7 @@ var ChannelModule = function (socket) {
         socket.emit('channel list', data);
       })
       .catch(function (error) {
+        console.log(error);
       });
   });
 
@@ -184,6 +188,7 @@ var ChannelModule = function (socket) {
         socket.emit(data.type, data);
       })
       .catch(function (error) {
+        console.log(error);
       });
   });
 };

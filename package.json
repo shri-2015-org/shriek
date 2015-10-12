@@ -44,6 +44,7 @@
     "shriek-markdown": "0.2.2",
     "shriek-emoji": "0.2.10",
     "shriek-opengraph": "0.1.4",
+    "shriek-webrtc": "0.1.2",
     "transliteration": "^0.1.1",
     "vinyl-fs": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",

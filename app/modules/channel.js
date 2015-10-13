@@ -132,9 +132,7 @@ var ChannelModule = function (socket) {
    * @param data.date date дата от которой брать ( < date )
    */
   socket.on('channel get', function (data) {
-    setTimeout(function() {
-      var indata = data;
-
+    var indata = data;
     var getMessages = new Promise(function (resolve, reject) {
       // строим запрос в БД
       var limit = 20;
@@ -186,7 +184,6 @@ var ChannelModule = function (socket) {
       })
       .catch(function (error) {
       });
-    },1000);
 
   });
 };

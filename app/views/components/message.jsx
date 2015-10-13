@@ -44,8 +44,8 @@ var ChatComponent = function (socket) {
     render: function () {
       return (
         <div className="msg">
+          <div className="msg__loading"><i className="fa fa-circle-o-notch fa-spin"></i></div>
           <div className="msg__wrap">
-            <div className="msg__loading"><i className="fa fa-circle-o-notch fa-spin"></i></div>
             <div className="msg__body">
               <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll} />
             </div>

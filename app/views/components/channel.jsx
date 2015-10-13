@@ -24,6 +24,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     changeChannel: function (event) {
       socket.activeChannel = event.target.dataset.slug;
+      $('.msg__loading').fadeIn();
       socket.emit('channel get', {
         channel: event.target.dataset.slug,
         date: new Date()

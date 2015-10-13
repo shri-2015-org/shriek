@@ -133,7 +133,6 @@ var ChannelModule = function (socket) {
    */
   socket.on('channel get', function (data) {
     var indata = data;
-
     var getMessages = new Promise(function (resolve, reject) {
       // строим запрос в БД
       var limit = 20;
@@ -185,6 +184,7 @@ var ChannelModule = function (socket) {
       })
       .catch(function (error) {
       });
+
   });
 };
 

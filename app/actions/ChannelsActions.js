@@ -36,6 +36,7 @@ var ChannelsActions = alt_obj.createActions({
 
     socket.on('channel get', function (data) {
       _this.actions.setActiveChannel(data.slug);
+      $('.msg__loading').fadeOut();
     });
 
     socket.on('message send', function (data) {

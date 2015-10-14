@@ -201,10 +201,10 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
             </div>
             <div className="form__row">
               <label className="form__label" htmlFor="channelDesc"><i className="fa fa-edit"></i></label>
-              <textarea className="form__textarea" type="text" id="channelDesc" ref="channelDesc" placeholder="Кратко опишите"></textarea>
+              <textarea className="form__textarea" type="text" id="channelDesc" ref="channelDesc" placeholder="Описание канала"></textarea>
             </div>
             <div className="form__row userlist">
-              {this.props.userlist.length > 0 &&(<div>
+              {this.props.userlist.length > 0 && (<div>
                 <input type="checkbox" className="userlist__checkbox" id="privateChannel" onClick={this.handleSetPrivate}/>
                 <label htmlFor="privateChannel">Приватный канал</label>
                 <UserList userlist={this.props.userlist}/>

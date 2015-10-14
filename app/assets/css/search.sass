@@ -1,0 +1,35 @@
+.modal__search
+  width: 600px
+
+.search-results
+  text-align: left
+  height: calc(100% - 130px)
+  overflow: auto
+  padding: 0 15px
+  margin: 0 0 20px 0
+
+  .search-result
+    padding: 5px;
+    border-bottom: 1px solid #999
+    cursor: pointer
+
+  .search-result:hover
+    background: #E0E0E0
+
+  .search-result:active
+    background: #fff
+
+  .search-result__author
+    float: left
+    margin-right: 5px
+    font-weight: bold
+
+  .search-result__date
+    float: right
+    margin-left: 5px
+
+  .search-result__text
+    & > *
+      margin: 20px 0 5px
+    img
+      display: none

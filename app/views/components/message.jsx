@@ -12,7 +12,19 @@ var ChatComponent = function (socket) {
     componentDidMount: function () {
       MessagesStore.listen(this.onChange); // подписываемся на изменения store
       MessagesActions.initMessages(socket);
-      MessagesActions.getMessages(socket);
+
+      socket.emit('channel get', {
+        channel: socket.activeChannel,
+        limit: 20,
+        force: true,
+        scrollAfter: true
+      });
+      socket.emit('channel info', {
+        slug: socket.activeChannel
+      });
+
+      window.shriek = {};
+      window.shriek.stopscroll = false;
     },
 
     componentWillUnmount: function () {
@@ -25,9 +37,7 @@ var ChatComponent = function (socket) {
     },
 
     submitMessage: function (text, callback) {
-      if (!text) {
-        callback('Enter message, please!');
-      } else {
+      if (text) {
         var message = {
           username: socket.username,
           channel: socket.activeChannel,
@@ -37,6 +47,8 @@ var ChatComponent = function (socket) {
 
         socket.emit('message send', message);
         callback();
+      } else {
+        callback('Enter message, please!');
       }
 
     },
@@ -47,7 +59,7 @@ var ChatComponent = function (socket) {
           <div className="msg__loading"><i className="fa fa-circle-o-notch fa-spin"></i></div>
           <div className="msg__wrap">
             <div className="msg__body">
-              <MessagesList messages={this.state.messages} stopScroll={this.state.stopScroll} />
+              <MessagesList messages={this.state.messages} hideMore={this.state.hideMore} />
             </div>
             <ChannelUsers />
           </div>
@@ -59,7 +71,7 @@ var ChatComponent = function (socket) {
 
   var MessagesList = React.createClass({
     getInitialState: function () {
-      return ({scrollValue: 0, scrollHeight: 0});
+      return ( { } );
     },
 
     componentDidMount: function () {
@@ -84,11 +96,11 @@ var ChatComponent = function (socket) {
     },
 
     componentDidUpdate: function () {
-      if (this.state.scrollHeight) {
-        $(this.getDOMNode()).animate({
-          scrollTop: this.state.scrollHeight
-        }, 300);
-      }
+
+    },
+    clickMoreHandler: function() {
+      var skip = MessagesStore.getState().skip; // подписываемся на изменения store
+      MessagesActions.getMessages(socket, skip);
     },
 
     render: function () {
@@ -96,12 +108,14 @@ var ChatComponent = function (socket) {
 
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
-          return (<Message message={message} key={message._id}/>);
+          return (<Message message={message} key={message._id} />);
         });
       }
 
+      var classes = 'msg__load_more ' + (this.props.hideMore ? 'hidden' : '');
       return (
-        <div className="msg__list" ref="msglist" onScroll={this.handleScroll}>
+        <div className="msg__list" ref="msglist">
+          <div className={classes} onClick={this.clickMoreHandler}>Загрузить еще</div>
           {Messages}
         </div>
       );

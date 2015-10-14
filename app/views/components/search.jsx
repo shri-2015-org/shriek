@@ -8,16 +8,19 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
       return {};
     },
 
-    handleSearch: function () {
-      var _this = this;
-      var allowedChannels = ChannelsStore.state.channels.map(function (channel) {
-        return channel.slug;
-      });
+    handleSearch: function (e) {
+      if ($('#search').val().trim()) {
+        var chList = [];
+        ChannelsStore.getState().channels.map(function(ch) {
+          chList.push(ch.slug);
+        });
 
-      socket.emit('search text', {
-        channels: allowedChannels,
-        text: $('#search').val()
-      });
+        socket.emit('search text', {
+          channels: chList,
+          text: $('#search').val().trim()
+        });
+        $('#search').val('');
+      }
     },
 
     render: function () {
@@ -27,7 +30,7 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
             <label className='form__label' htmlFor='search' onClick={this.handleSearch}>
               <i className='fa fa-search'></i>
             </label>
-            <input className='form__text' type='text' id='search' ref='search' onChange={this.handleSearch}/>
+            <input className='form__text' type='text' id='search' ref='search'/>
           </div>
         </div>
       );

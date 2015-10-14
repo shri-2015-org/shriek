@@ -1,4 +1,5 @@
 var alt_obj = require('./../controllers/alt_obj');
+var MessagesActions = require('./MessagesActions');
 
 var ChannelsActions = alt_obj.createActions({
   displayName: 'ChannelsActions', // обязательное поле в ES5
@@ -55,11 +56,13 @@ var ChannelsActions = alt_obj.createActions({
       if (data.status === 'ok') {
         _this.actions.createdNewChannel(data);
 
-        if (data.creator === socket.username) {
+        var currUser = localStorage.userName || '';
+        if (data.creator === currUser) {
           _this.actions.setActiveChannel(data.channel.slug);
           socket.emit('channel get', {
             channel: data.channel.slug,
-            date: new Date()
+            date: new Date(),
+            force: true
           });
         }
       }

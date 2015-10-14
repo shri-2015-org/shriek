@@ -1,33 +1,5 @@
 var ChannelStoreObj = null;
 var ChannelsStoreFunction = function (socket) {
-var alt_obj = require('./../controllers/alt_obj');
-var ChannelsActions = require('./../actions/ChannelsActions');
-function ChannelsStore() {
-  this.channels = []; // это бывший initState у компонента
-  this.show_modal = false;
-  this.userList = [];
-
-  // для создания нового канала
-  this.newChannel = {};
-  this.newChannel.privateUsers = false;
-  this.newChannel.userList = [];
-  // для создания нового канала
-
-  this.displayName = 'ChannelsStore'; // обязательное поле для ES5
-  this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
-    updateChannels: ChannelsActions.UPDATE_CHANNELS,  // ключ хеша — функция стора, значение — функция экшена
-    setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
-    setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
-    updateUserList: ChannelsActions.UPDATE_USER_LIST,
-    addUserToNewChannel:ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
-    deleteUserFromNewChannel:ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
-    createdNewChannel: ChannelsActions.CREATED_NEW_CHANNEL,
-    addNewChannel:ChannelsActions.ADD_NEW_CHANNEL,
-    updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL,
-    setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL
-  });
-}
-
   var alt_obj = require('./../controllers/alt_obj');
   var ChannelsActions = require('./../actions/ChannelsActions');
 

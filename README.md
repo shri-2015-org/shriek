@@ -1,12 +1,11 @@
-# Shriek Chat
+# Shriek Chat [![Build Status](https://travis-ci.org/shri-2015-org/shriek.svg?branch=master)](https://travis-ci.org/shri-2015-org/shriek)
+
 Yet another chat
 
 # Build workflow (short)
 ```
-npm install -g jshint
-npm install -g jscs
 npm install
-gulp
+npm run init
 ```
 
 # Development workflow
@@ -20,10 +19,8 @@ gulp
 `node .`
 
 ## Тестирование сервера
-
-1. Установите глобально Mocha: `npm install -g mocha`
-2. Стартоните приложение: `node .`
-3. В другом окне консоли запустите тесты: `mocha`
+1. Стартоните приложение: `node .`
+2. В другом окне консоли запустите тесты: `mocha`
 
 # Files structure
 * app — основное приложение
@@ -43,8 +40,38 @@ gulp
     * css
     * js
 
-## API
-### Description
+# Deployment to remote server
+
+## SSH Key for server (on local machine)
+1. `ssh-keygen -t rsa`
+  * Можно изменить имя файла, но лучше этого не делать. Default: `id_rsa`
+  * passphrase не пишите, оставьте пустым
+2. `cat ~/.ssh/id_rsa.pub | ssh shriek@128.199.39.245 'cat >> ~/.ssh/authorized_keys'`
+
+Если все сделано правильно, то выполните:
+
+```bash
+ssh shriek@128.199.39.245 "ssh -T git@github.com"
+```
+
+Вы должны увидеть такое сообщение:
+
+> Hi `sigorilla`! You've successfully authenticated, but GitHub does not provide shell access.
+
+## PM2
+
+Для удаленного обновления используем NPM пакет `pm2`
+
+1. `npm install -g pm2@latest`
+3. `pm2 deploy <environment_key>`, где `environment_key` - либо `dev` (тестирование, разработка), либо `production` (`master` ветка)
+
+## Результат
+
+* Production будет доступна по адресу: shriek-chat.tk
+* Development - по адресу: shriek-chat.tk:81
+
+# API
+## Description
 Все события отправляются с помощью `socket.io`. Если мы хотим получить данные то пишем:
 
 ```javascript
@@ -58,7 +85,7 @@ socket.on('<name-of-event>', function (data) {
 socket.emit('<name-of-event>', data);
 ```
 
-### Response
+## Response
 
 ##### Success
 
@@ -78,7 +105,7 @@ socket.emit('<name-of-event>', data);
 }
 ```
 
-### Events
+## Events
 
 ##### `user enter`
 
@@ -256,6 +283,9 @@ socket.emit('<name-of-event>', data);
 | Field | Type | Description |
 |-------|------ | -------|
 | name | String | Название чата |
+| description | String | Описание чата |
+| privateUsers | Boolean | Приватный ли |
+| userslist | String | Пользователи канала |
 
 *Output* (`on`)
 
@@ -289,7 +319,7 @@ socket.emit('<name-of-event>', data);
 
 ##### `channel list`
 
-Получение списка каналов
+Получение списка каналов с учетом привытных каналов для данного пользователя
 
 *Input* (`emit`)
 
@@ -373,9 +403,9 @@ socket.emit('<name-of-event>', data);
 `error_message`:
   * `Ошибка поиска`
 
-### Schema
+## Schema
 
-##### User
+#### User
 
 | Field | Type | Other |
 |-------|------ | -------|
@@ -402,26 +432,31 @@ socket.emit('<name-of-event>', data);
 
 `password` from 6 letters.
 
-##### Channel
+#### Channel
 
 | Field | Type | Other |
 |-------|------ | -------|
 | name | String | `required` |
+| description | String |  |
 | slug | String | `required`, `unique` |
+| is_private | Boolean | `required`, `default: false` |
 | created_at | ISODate | `default: now` |
 | updated_at | ISODate | `default: now` |
+| users | Array | Array of usernames in current channel |
 
-##### Message
+#### Message
 
 | Field | Type | Other |
 |-------|------ | -------|
 | username | String | `required` |
 | channel | String | `required` |
 | text | String | `required` |
+| raw | String | HTML after modules |
 | type | String | `required` |
 | created_at | ISODate | `default: now` |
+| attachments | Object | - |
 
-### Config
+## Config
 
 Configuration file `config.json` example
 
@@ -435,6 +470,26 @@ Configuration file `config.json` example
 
 ```
 
-### Удалить все данные из БД
+## Удалить все данные из БД
 
 `mongo shriek --eval "db.dropDatabase();"`
+
+# Plugins
+
+## For backend
+
+You can create NPM package (ex. [shriek-markdown](https://github.com/sigorilla/shriek-markdown)).
+
+1. You should name package with prefix `shriek-`.
+2. Add you package via `require` in file `app/modules/plugins.js`.
+3. Add in code `module.exports.forEvent`.
+ - Different events have different data for your package.
+
+## For frontend
+
+As plugins for backend you can create React component as Bower package (ex. [shriek-emoji](https://github.com/sigorilla/shriek-emoji/)).
+
+1. You should name package with prefix `shriek-`.
+2. You should exec registration function with your root component. For example, registration for message component names `registerMessagePlugin`.
+3. ...
+4. Profit! Now your plugin is in our chat.

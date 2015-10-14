@@ -30,7 +30,13 @@ var ChannelModule = function (socket) {
 
       newChannel.save({runValidators: true}, function (err, data) {
         if (err) {
-          var error = new Error('Ошибка создания чата');
+          var error;
+
+          if (err.code === 11000) {
+            error = new Error('Такой канал уже существует');
+          } else {
+            error = new Error('Ошибка создания чата');
+          }
 
           reject(error);
         } else {
@@ -51,7 +57,7 @@ var ChannelModule = function (socket) {
         socket.emit('channel create', data);
       })
       .catch(function (error) {
-        console.log(error);
+        socket.emit('channel create error', error.toString());
       });
   });
 
@@ -76,6 +82,7 @@ var ChannelModule = function (socket) {
           resolve(out);
         }
       });
+
     });
 
     getChannelInfo
@@ -83,7 +90,6 @@ var ChannelModule = function (socket) {
         socket.emit('channel info', data);
       })
       .catch(function (error) {
-        console.log(error);
       });
   });
 
@@ -115,7 +121,6 @@ var ChannelModule = function (socket) {
         socket.emit('channel list', data);
       })
       .catch(function (error) {
-        console.log(error);
       });
   });
 
@@ -129,46 +134,58 @@ var ChannelModule = function (socket) {
    */
   socket.on('channel get', function (data) {
     var indata = data;
-
     var getMessages = new Promise(function (resolve, reject) {
+
       // строим запрос в БД
       var limit = 20;
       var query = {channel: data.channel}; // канал нужно учитывать всегда
 
       if (data.hasOwnProperty('date')) {
-        query.created_at = {$lt: data.date}; // дата — если пришла
+        if (data.hasOwnProperty('rtl') && data.rtl == 'gte') {
+          query.created_at = {$gte: data.date}; // дата — если пришла
+        } else {
+          query.created_at = {$lt: data.date}; // дата — если пришла
+        }
       }
 
       var q = MessageModel.find(query);
 
       q.sort({created_at: -1});
-      q.limit(limit);
 
-      if (data.hasOwnProperty('skip')) {
-        q.skip(data.skip * limit); // offset
+      if (data.hasOwnProperty('limit')) {
+        limit = data.limit;
+      }
+      if (limit !== -1) {
+        q.limit(limit);
       }
 
-      q.exec(function (err, data) { // выполняем запрос
+      var newSkip = 0;
+
+      if (data.hasOwnProperty('skip')) {
+        newSkip = data.skip + 1;
+        q.skip(newSkip * limit); // offset
+      }
+
+
+
+      q.exec(function (err, dbdata) { // выполняем запрос
         if (err) {
           var error = new Error('Ошибка получения сообщений');
 
           reject(error);
         } else {
+
           var out = {
             status: 'ok',
             // возвращаем сообщения или пустой массив, чтобы не возвращать null
-            messages: (data.length > 0 ? data.reverse() : []),
+            messages: (dbdata.length > 0 ? dbdata.reverse() : []),
             slug: indata.channel,
-            type: 'channel get'
+            type: 'channel get',
+            newSkip: newSkip,
+            force: indata.force || false,
+            limit: limit,
+            indata: indata
           };
-
-          if (indata.skip) {
-            out.type = 'scroll';
-          }
-
-          if (data.length < limit) {
-            out.stopScroll = true;
-          }
 
           resolve(out);
         }
@@ -177,11 +194,30 @@ var ChannelModule = function (socket) {
 
     getMessages
       .then(function (data) {
+        return new Promise(function(resolve, reject) {
+          if (data.force == true) {
+            MessageModel.find({channel: data.slug}, function(testerr, testdata){
+              if (testerr) {
+                reject(testerr);
+              }
+              if (testdata.length <= data.messages.length) {
+                data.hideMore = true;
+              }
+              resolve(data);
+            });
+          } else {
+            data.hideMore = false;
+            resolve(data);
+          }
+        });
+      })
+      .then(function (data) {
         socket.emit(data.type, data);
       })
       .catch(function (error) {
-        console.log('channel get error', error);
+        console.log(error);
       });
+
   });
 };
 

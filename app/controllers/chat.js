@@ -9,20 +9,14 @@ var session = require('express-session');
 var port = config.get('port') || 3000;
 
 // passportjs
-var configPs = require('./passport_configs.json');
 var passport = require('passport');
-var TwitterStrategy = require('passport-twitter').Strategy;
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var GitHubStrategy = require('passport-github2').Strategy;
-
-var UserModel = require('../models/user');
 
 var domain = '';
 switch (process.env.NODE_ENV) {
   case 'dev':
-    domain = 'localhost:3000';
+    domain = 'shriek-chat.tk:81';
     break;
-  case 'prod':
+  case 'production':
     domain = 'shriek-chat.tk';
     break;
   default:
@@ -31,8 +25,6 @@ switch (process.env.NODE_ENV) {
 }
 
 server.listen(port, function () {
-  console.log('Server listening at port %d', port);
-
   mongoose.connect(config.get('mongoose:uri'));
   var db = mongoose.connection;
 
@@ -43,10 +35,6 @@ server.listen(port, function () {
     console.info('Connected to DB!');
   });
 });
-
-// this is a cookie variable
-var psUser;
-var firstTime = false;
 
 // Routing
 app.use(express.static('public'));
@@ -70,157 +58,18 @@ passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
+var UserModel = require('../models/user');
+
 passport.deserializeUser(function (id, done) {
-  UserModel.findById (id, function (err, user) {
+  UserModel.findById(id, function (err, user) {
     done(err, user);
   });
 });
 
-// TODO: Вынести паспорты в модули
-
-// passport: twitter
-passport.use(new TwitterStrategy({
-  consumerKey: configPs.twitter.key,
-  consumerSecret: configPs.twitter.secret,
-  callbackURL: 'http://' + domain + '/auth/twitter/callback'
-}, function (token, tokenSecret, profile, done) {
-  UserModel.findOne({
-    username: profile.username
-  }, function (err, user) {
-    psUser = profile.username;
-    if (err) {
-      return done(err);
-    }
-    if (!user) {
-      console.log('user not found');
-      firstTime = true;
-      user = new UserModel({
-        username: profile.username,
-        twitterId: profile.id,
-        setting: {
-          image: profile.photos[0].value
-        }
-      });
-      user.save(function (err) {
-        if (err) {
-          console.log(err);
-        }
-        return done(err, user);
-      });
-    } else {
-      console.log('user found');
-      return done(err, user);
-    }
-  });
-}));
-
-// passport: google
-passport.use(new GoogleStrategy({
-  clientID: configPs.google.key,
-  clientSecret: configPs.google.secret,
-  callbackURL: 'http://' + domain + '/auth/google/callback'
-}, function (accessToken, refreshToken, profile, done) {
-  UserModel.findOne({
-    username: profile.name.givenName
-  }, function (err, user) {
-    psUser = profile.name.givenName;
-    if (err) {
-      return done(err);
-    }
-    if (!user) {
-      user = new UserModel({
-        username: profile.name.givenName,
-        googleId: profile.id,
-        setting: {
-          image: profile.photos[0].value
-        }
-      });
-      firstTime = true;
-      user.save(function (err) {
-        if (err) {
-          console.log(err);
-        }
-        return done(err, user);
-      });
-    } else {
-      return done(err, user);
-    }
-  });
-}));
-
-// passport: github
-passport.use(new GitHubStrategy({
-  clientID: configPs.github.key,
-  clientSecret: configPs.github.secret,
-  callbackURL: 'http://' + domain + '/auth/github/callback'
-}, function (accessToken, refreshToken, profile, done) {
-  UserModel.findOne({
-    username: profile.username
-  }, function (err, user) {
-    psUser = profile.username;
-    if (err) {
-      return done(err);
-    }
-    if (!user) {
-      user = new UserModel({
-        username: profile.username,
-        githubId: profile.id,
-        setting: {
-          image: profile._json.avatar_url
-        }
-      });
-      firstTime = true;
-      user.save(function (err) {
-        if (err) {
-          console.log(err);
-        }
-        return done(err, user);
-      });
-    } else {
-      return done(err, user);
-    }
-  });
-}));
-
-app.get('/auth/twitter', passport.authenticate('twitter'));
-app.get('/auth/google', passport.authenticate(
-  'google',
-  {scope: 'https://www.googleapis.com/auth/plus.login'}
-));
-app.get('/auth/github', passport.authenticate('github', {scope: ['user:email']}));
-
-app.get('/auth/twitter/callback', passport.authenticate('twitter', {
-  failureRedirect: '/failure'
-}), function (req, res) {
-  res.cookie('psUser', psUser, {maxAge: 10000, httpOnly: false});
-  if (firstTime) {
-    res.cookie('psInit', 'yes', {maxAge: 10000, httpOnly: false});
-    firstTime = false;
-  }
-  res.redirect('/');
-});
-
-app.get('/auth/google/callback', passport.authenticate('google', {
-  failureRedirect: '/failure'
-}), function (req, res) {
-  res.cookie('psUser', psUser, {maxAge: 10000, httpOnly: false});
-  if (firstTime) {
-    res.cookie('psInit', 'yes', {maxAge: 10000, httpOnly: false});
-    firstTime = false;
-  }
-  res.redirect('/');
-});
-
-app.get('/auth/github/callback', passport.authenticate('github', {
-  failureRedirect: '/failure'
-}), function (req, res) {
-  res.cookie('psUser', psUser, {maxAge: 10000, httpOnly: false});
-  if (firstTime) {
-    res.cookie('psInit', 'yes', {maxAge: 10000, httpOnly: false});
-    firstTime = false;
-  }
-  res.redirect('/');
-});
+// passports
+require('../modules/passports/twitter')(app, domain);
+require('../modules/passports/google')(app, domain);
+require('../modules/passports/github')(app, domain);
 
 // Chatroom
 

@@ -1,12 +1,42 @@
 .msg
   flex-grow: 1
   display: flex
+  position: relative
   flex-direction: column
   justify-content: flex-end
 
 .msg__wrap
   position: relative
   flex-grow: 1
+
+.msg__loading
+  position: absolute
+  display: none
+  background: rgba(0,0,0,.4)
+  top: 0
+  right: 0
+  bottom: 0
+  z-index: 1
+  font-size: 3em
+  left: 0
+  color: #fff
+  i
+    position: absolute
+    bottom: 1.5em
+    left: .5em
+
+.msg__load_more
+  width: 100%
+  height: 60px
+  background: #fefefe
+  text-align: center
+  line-height: 60px
+  cursor: pointer
+  margin: 0 0 20px 0
+  &:hover
+    background: #fcfcfc
+  &.hidden
+    display: none
 
 .msg__list
   height: 100%
@@ -81,6 +111,7 @@
   height: 100%
   overflow-y: auto
 
-.message-date
+.msg__date
   color: grey
   float: right
+  margin-left: 10px

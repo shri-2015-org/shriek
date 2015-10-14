@@ -1,6 +1,7 @@
 var ChannelComponent = function (socket) {
 var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
 var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
+var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
   var ChannelsList = React.createClass({
     getInitialState: function () {
@@ -24,9 +25,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
     changeChannel: function (event) {
       socket.activeChannel = event.target.dataset.slug;
+      $('.msg__loading').fadeIn();
       socket.emit('channel get', {
         channel: event.target.dataset.slug,
-        date: new Date()
+        limit: 20,
+        force: true,
+        scrollAfter: true
       });
       socket.emit('channel join', {
         channel: event.target.dataset.slug
@@ -34,6 +38,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       socket.emit('channel info', {
         slug: socket.activeChannel
       });
+      this.refs.show_all_checkbox.getDOMNode().checked = false;
     },
 
     render: function () {
@@ -59,12 +64,12 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
             <h3 className="heading__header">Каналы</h3>
             <ButtonAddChannel ref="showModalButton"/>
           </div>
-          <input type="checkbox" id="showAllChannels" className="show_all_checkbox" />
+          <input type="checkbox" id="showAllChannels" ref='show_all_checkbox' className="show_all_checkbox" />
           <ul className="list list_channels">
             {Channels}
           </ul>
           <MoreChannels len = {len_channels}/>
-          {this.state.show_modal == true && (
+          {this.state.show_modal === true && (
             <AddChannelModal userlist = {this.state.userList}/>
           )}
         </div>
@@ -97,7 +102,7 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
 
   var MoreChannels = React.createClass({
     render: function () {
-      var channelsDisplaying = 3;
+      var channelsDisplaying = 5;
       var hiddenChannelsCount = this.props.len - channelsDisplaying;
 
       // Отображаем «Показать» только в случае избыточного количества каналов
@@ -185,6 +190,11 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
         <div className="modal">
           <form className="form modal__body" onSubmit={this.handleSubmit}>
             <h2 className="modal__heading heading">Добавьте канал</h2>
+            <div className="form__row">
+                  {ChannelsStore.getState().hasError &&(
+                    <div>{ChannelsStore.getState().hasError}</div>
+                  )}
+                </div>
             <div className="form__row">
               <label className="form__label" htmlFor="channelName"><i className="fa fa-users"></i></label>
               <input className="form__text" type="text" id="channelName" ref="сhannelName" placeholder="Назовите" />

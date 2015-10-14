@@ -1,4 +1,5 @@
 var alt_obj = require('./../controllers/alt_obj');
+var MessagesActions = require('./MessagesActions');
 
 var ChannelsActions = alt_obj.createActions({
   displayName: 'ChannelsActions', // обязательное поле в ES5
@@ -6,17 +7,25 @@ var ChannelsActions = alt_obj.createActions({
   updateChannels: function (channels) {  // на эту функцию мы будем подписываться в сторе
     this.dispatch(channels); // это блин ТРИГГЕР, на который реагирует стор
   },
+
   setActiveChannel: function (channelSlug) {
     this.dispatch(channelSlug);
   },
+
   createdNewChannel: function (channel) {
     this.dispatch(channel);
   },
+
   setUnreadChannel: function (channelSlug) {
     this.dispatch(channelSlug);
   },
+
   updateUserList: function (users) {
     this.dispatch(users);
+  },
+
+  showError: function (error) {
+    this.dispatch(error);
   },
 
   initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
@@ -28,10 +37,11 @@ var ChannelsActions = alt_obj.createActions({
 
     socket.on('channel get', function (data) {
       _this.actions.setActiveChannel(data.slug);
+      $('.msg__loading').fadeOut();
     });
 
     socket.on('message send', function (data) {
-      if (data.message.channel != socket.activeChannel) { // только если сообщение пришло в не активный канал
+      if (data.message.channel !== socket.activeChannel) { // только если сообщение пришло в не активный канал
         _this.actions.setUnreadChannel(data.message.channel);
       }
     });
@@ -46,14 +56,20 @@ var ChannelsActions = alt_obj.createActions({
       if (data.status === 'ok') {
         _this.actions.createdNewChannel(data);
 
-        if (data.creator === socket.username) {
+        var currUser = localStorage.userName || '';
+        if (data.creator === currUser) {
           _this.actions.setActiveChannel(data.channel.slug);
           socket.emit('channel get', {
             channel: data.channel.slug,
-            date: new Date()
+            date: new Date(),
+            force: true
           });
         }
       }
+    });
+
+    socket.on('channel create error', function (data) {
+      _this.actions.showError(data);
     });
   },
 

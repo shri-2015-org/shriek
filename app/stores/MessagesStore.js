@@ -19,6 +19,7 @@ var MessagesStoreFunction = function () {
   }
 
 
+
   // тут описываем все функции стора (в основном это присваение стейта нового значения)
   MessagesStore.prototype.pushMessage = function (fetched_data) {
     var messagesAll = this.messages;

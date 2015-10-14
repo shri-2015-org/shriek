@@ -9,11 +9,18 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
     },
 
     handleSearch: function (e) {
+
       if ($('#search').val().trim()) {
+        var chList = [];
+        ChannelsStore.getState().channels.map(function(ch) {
+          chList.push(ch.slug);
+        });
+
         socket.emit('search text', {
-          channels: [socket.activeChannel],
+          channels: chList,
           text: $('#search').val().trim()
         });
+        $('#search').val('');
       }
     },
 

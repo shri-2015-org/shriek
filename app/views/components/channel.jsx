@@ -1,6 +1,7 @@
 var ChannelComponent = function (socket) {
 var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
 var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
+var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
   var ChannelsList = React.createClass({
     getInitialState: function () {
@@ -27,7 +28,9 @@ var ChannelsActions = require('./../../actions/ChannelsActions'); // подкл�
       $('.msg__loading').fadeIn();
       socket.emit('channel get', {
         channel: event.target.dataset.slug,
-        date: new Date()
+        limit: 20,
+        force: true,
+        scrollAfter: true
       });
       socket.emit('channel join', {
         channel: event.target.dataset.slug

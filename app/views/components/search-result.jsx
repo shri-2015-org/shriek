@@ -46,7 +46,6 @@ var SearchResultComponent = function (socket) {
       );
       var id = dataset.id;
       setTimeout(function () {
-        MessagesActions.highlightMessage(id);
         socket.emit('channel get',
           {
             channel: dataset.channel,
@@ -56,6 +55,7 @@ var SearchResultComponent = function (socket) {
           }
         );
         setTimeout(function () {
+          MessagesActions.highlightMessage(id);
           $('.msg__list').scrollTop($('.msg__searched').offset().top - 500);
         }, 1000)
       }, 500);

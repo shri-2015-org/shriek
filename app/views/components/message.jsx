@@ -193,7 +193,7 @@ var ChatComponent = function (socket) {
       return (
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
-            <textarea className="send__text" onKeyDown={this.handleKeyDown} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
+            <textarea className="send__text" onKeyDown={this.handleKeyDown} onKeyUp={this.resize} onInput={this.resize} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
             {messagePlugins.map(function (PluginComponent) {
               return <PluginComponent/>;
             })}

@@ -1,24 +1,25 @@
 language: node_js
+
 node_js:
-- 4.0.0
+  - 4.0.0
+
 branches:
   only:
   - master
   - develop
+
 services:
-- mongodb
-addons:
-  ssh_known_hosts: 128.199.39.245
-before_install:
-- openssl aes-256-cbc -K $encrypted_48afa7b4060f_key -iv $encrypted_48afa7b4060f_iv
-  -in deploy_key.enc -out deploy_key -d
+  - mongodb
+
 install:
-- npm install --production
-- npm run init
+  - npm i --production
+  - npm i -g gulp
+  - npm i -g mocha
+  - bower install
+
 script:
-after_success:
-- chmod 600 deploy_key
-- mv deploy_key ~/.ssh/id_rsa
+  # no test
+
 deploy:
   provider: heroku
   api_key:

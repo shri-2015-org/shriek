@@ -1,41 +1,30 @@
 language: node_js
-
 node_js:
-  - "4.0.0"
-
+- 4.0.0
 branches:
   only:
-    - master
-    - develop
-
+  - master
+  - develop
 services:
-  - mongodb
-
+- mongodb
 addons:
   ssh_known_hosts: 128.199.39.245
-
 before_install:
-  - openssl aes-256-cbc -K $encrypted_48afa7b4060f_key -iv $encrypted_48afa7b4060f_iv
-    -in deploy_key.enc -out deploy_key -d
-
+- openssl aes-256-cbc -K $encrypted_48afa7b4060f_key -iv $encrypted_48afa7b4060f_iv
+  -in deploy_key.enc -out deploy_key -d
 install:
-  - npm install --production
-  - npm run init
-
+- npm install --production
+- npm run init
 script:
-  # test running
-
 after_success:
-  - chmod 600 deploy_key
-  - mv deploy_key ~/.ssh/id_rsa
-
+- chmod 600 deploy_key
+- mv deploy_key ~/.ssh/id_rsa
 deploy:
-  - provider: script
-    script: "sh scripts/deploy-production.sh"
-    on:
-      branch: master
-
-  - provider: script
-    script: "sh scripts/deploy-dev.sh"
-    on:
-      branch: develop
+  provider: heroku
+  api_key:
+    secure: Z2JvWM96yyS1kPZ6S+7HHh/itCa3EnGAMwntIXMX9Otg2qXwmsnCLKkkNZHh1327rk/UBwP3rhJfqkoonzYY23OV42wlGhZTBtxIr6gSEKZj9OX6zyRkBqgY1/K1jBx+7JKTUbZK9YKhiPMEAy3EIfEzDH4mnBVbSI+mcxeTi9jh2swmnGe6s+gbTIHpbd7d59OjQ6uLsjrXf3T0aQeIDlEYKochHWWs4y0buyGsPgTWGR8fkrCm2gZczSpKbI8ht6+xOwkEn+ltPv8SRAdYSTLNfwO3Avt8uK9LguP28z22mnQ6wfiYIA8EjdTC8Jvp365JHWN/kswglUxa9KlOOX8o3P365DWeoXQAN16a2+mq535Kq/6/I45J0vUlKAs3UDPVGPWvtIHVbSzud5+gfC5mRmB4Qb6k07enjHfpmMietQXRCvfut5qyJtL8QpR0HRnYai6WM0TI88z7LTERVdDUBadHkzCPOC0EZPukE/ZvYM0ZDA9i6uUiQj+sloTEkxGdesmhP3EFyZKGI+w07vcci1chn+ua24XuonruedfkZ2s0InhOXVhnPdCfwCYCvMvUlnNcwyH7a5hI3PKKceufWCcLwzhyMNiVPyrOv2OzR/hMAZ69Ck7SrN+wnQ76VqvcVwJXPJao/+85pLaP6hRvJFOvaQJQMOX8mDqvOHU=
+  app:
+    master: shriek-zarathustra-master
+    develop: shriek-zarathustra
+  on:
+    repo: TehZarathustra/shriek

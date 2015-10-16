@@ -25,7 +25,7 @@ switch (process.env.NODE_ENV) {
 }
 
 server.listen(port, function () {
-  mongoose.connect(config.get('mongoose:uri'));
+  mongoose.connect(process.env.MONGO_LINK || 'mongodb://localhost/shriek');
   var db = mongoose.connection;
 
   db.on('error', function (err) {

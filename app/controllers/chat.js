@@ -6,7 +6,8 @@ var io = require('socket.io')(server);
 var mongoose = require('mongoose');
 var config = require('../configs/config');
 var session = require('express-session');
-var port = config.get('port') || 3000;
+var port = process.env.PORT || 5000;
+app.set('port', port);
 
 // passportjs
 var passport = require('passport');

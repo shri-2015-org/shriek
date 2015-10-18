@@ -1,7 +1,0 @@
-{
-  apps: [{
-    name: "Shriek-prod",
-    script: "index.js",
-    cwd: "/home/shriek/projects/production/source"
-  }]
-}

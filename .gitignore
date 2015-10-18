@@ -1,16 +1,15 @@
 *.sublime-*
 .sass-cache
+.travis.yml
+.DS_Store
+.idea
 
+deploy_key
+config.json
 node_modules
 
 app/components
 app/assets/css/modules.sass
 app/js/.module-cache
-public/assets/js/.module-cache
 public/assets
 public/index.html
-.idea/
-.DS_Store
-
-config.json
-deploy_key

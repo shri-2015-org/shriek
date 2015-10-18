@@ -1,41 +1,32 @@
 language: node_js
 
 node_js:
-  - "4.0.0"
+  - 4.0.0
 
 branches:
   only:
     - master
     - develop
 
-services:
-  - mongodb
-
-addons:
-  ssh_known_hosts: 128.199.39.245
-
-before_install:
-  - openssl aes-256-cbc -K $encrypted_48afa7b4060f_key -iv $encrypted_48afa7b4060f_iv
-    -in deploy_key.enc -out deploy_key -d
-
 install:
   - npm install --production
-  - npm run init
+  - npm install -g gulp
+  - npm install -g mocha
+  - bower install
 
 script:
-  # test running
+  - mocha
 
 after_success:
   - chmod 600 deploy_key
   - mv deploy_key ~/.ssh/id_rsa
 
 deploy:
-  - provider: script
-    script: "sh scripts/deploy-production.sh"
-    on:
-      branch: master
-
-  - provider: script
-    script: "sh scripts/deploy-dev.sh"
-    on:
-      branch: develop
+  provider: heroku
+  api_key:
+    secure: iMiviEP6X3eris4kcrrJm/1FvtLPBmYCFa4RfMq5/kpfoXNHeVj98c+PfDqQ6ckQVpe09LKmt+9kzPTr5smNRRX5uSt/tnq1eSD7u9rMDB77hSIvvuUcP26hV2DVlo9O0w9TVcDcEV6Vz33PmlcSizYOjHKgoG/mDVzY6FUAVZjw/X09dOaBLsIgagZQiTTU/LoEprrwnEcddZNl/Ar6WV6dZe+wOxIdVVEwPGrioQ/dcx/63sWKvK+kv9mM7Sal7wzcTvmSs5QPsG1sEQ3miJc0Ck61KrzaUySRWoOLoWq/4OHmWoUO8lvuropdcRBH+vQnBWSCeqyjaTvv5owq3vxwOdq4k0YALIJm77Db/tAVDLeq+Byd/gvQhDA1/ndCElSYMyjknmYUs8hgkbRyiMlhQ68xLpK1WPmlZxoSedNI8ouRH4SW2frduItITISORE+2ixFD2Zvpi8RZDzSRx+2+NyP42xBR9OYgYrLEX6+Yb2O5xispyvl8kXFpmjqJWf79g0GFUJFfzKRFYaofczq9A9hTg33JHilVEqor8cl9WjnbZQLpS021ygz0dy3TemdWgXgsZUwz9f4Kzj43Fs+9gLmcxcA9wM2tUp32MhqsVOqfgWlmB0G8BWVjXFMQguOZvPc9l26Fi4ucdnRL3FscypA/ycbzqk8DTe/CJpE=
+  app:
+    master: shriek-chat
+    develop: shriek-chat-dev
+  on:
+    repo: shri-2015-org/shriek

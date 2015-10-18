@@ -7,7 +7,10 @@
     "url": "https://github.com/shri-2015-org/shriek/issues"
   },
   "scripts": {
-    "init": "sh ./scripts/init-dev.sh"
+    "init": "sh ./scripts/init-dev.sh",
+    "postinstall": "bower install && gulp bower sass build",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\""
   },
   "license": "MIT",
   "main": "index.js",

@@ -15,7 +15,8 @@ install:
   - bower install
 
 script:
-  - mocha
+  # Tests if needed
+  #- mocha
 
 after_success:
   - chmod 600 deploy_key

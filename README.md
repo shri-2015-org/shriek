@@ -42,7 +42,7 @@ npm run init
 
 ## Результат
 
-Production доступен по адресу shriek-chat.tk, development — test.shriek-chat.tk
+Production доступен по адресу http://shriek-chat.tk, development — http://test.shriek-chat.tk.
 
 # API
 ## Description

@@ -2,13 +2,18 @@ var app = app || {};
 // Если убираем test.js, то надо раскомментить
 var socket = io();
 
-socket.on('disconnect', function() {
-  if (confirm('Внимание, соединение потеряно, попробуйте перезагрузить страницу.')) {
-    setInterval(function() { location.replace('/') }, 1000);
-  }
+socket.on('reconnect', function() {
+  console.log('reconnect');
+});
+
+socket.on('connect_error', function() {
+  console.log('connect_error');
 });
 
 socket.activeChannel = 'general';
+
+// RECONNECT COMPONENT
+var ReconnectComponent = require('../../views/components/reconnect.jsx')(socket);
 
 // CHAT MODULE
 var ChatComponent = require('../../views/components/message.jsx')(socket);
@@ -49,17 +54,17 @@ var SearchResultComponent = require('../../views/components/search-result.jsx')(
       var menu, main;
 
       menu = (
-        <div className='nav'>
-          <Title/>
-          <ChannelComponent/>
-          <UserComponent/>
+        <div className="nav">
+          <Title />
+          <ChannelComponent />
+          <UserComponent />
         </div>
       );
 
       main = (
         <div className="content">
-          <ProfileComponent/>
-          <ChatComponent/>
+          <ProfileComponent />
+          <ChatComponent />
         </div>
       );
 
@@ -76,18 +81,19 @@ var SearchResultComponent = require('../../views/components/search-result.jsx')(
     render: function () {
       return (
         <div className="layout">
+          <ReconnectComponent />
           <SettingComponent />
           <LoginComponent />
           <SearchResultComponent />
           <ChatApp />
-        </ div >
+        </div>
       );
     }
   });
 
   function render() {
     React.render(
-      <Content/>,
+      <Content />,
       document.body
     );
   }

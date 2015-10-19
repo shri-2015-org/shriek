@@ -1,0 +1,19 @@
+.reconnecting
+  color: #fefefe
+  position: fixed
+  text-align: center
+  left: 50%
+  transform: translate(-50%, 0)
+  background: #9b3430
+  z-index: 1000
+  line-height: 32px
+  padding: 0 10px
+  transition: ease-in 1s all
+  top: -100%
+
+  &.active
+    top: 0
+    transition: ease-out 0.8s all
+
+  span + span
+    margin-left: 10px

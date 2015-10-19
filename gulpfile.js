@@ -47,10 +47,10 @@ gulp.task('watch', function () {
 gulp.task('bower', ['bowerInstall'], function () {
   gulp.src(path.HTML)
     .pipe(wiredep({
-      exclude: [ /components\/shriek-*/ ]
+      exclude: [/components\/shriek-*/]
     }))
     .pipe(wiredep({
-      exclude: [ /components\/(?!shriek\-).*/ ],
+      exclude: [/components\/(?!shriek\-).*/],
       fileTypes: {
         html: {
           block: /(([ \t]*)<!--\s*shriek:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endshriek\s*-->)/gi,
@@ -98,6 +98,6 @@ gulp.task('sass', ['images'], function () {
     .pipe(sass().on('error', sass.logError))
     .pipe(concat('bundle.min.css'))
     .pipe(prefix({browsers: ['last 2 version']}))
-    .pipe(nano())
+    .pipe(nano({zindex: false}))
     .pipe(gulp.dest('./public/assets/css'));
 });

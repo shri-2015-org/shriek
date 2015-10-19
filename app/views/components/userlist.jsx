@@ -19,7 +19,7 @@ var UserComponent = function (socket) {
     },
 
     render: function () {
-      Users = (<div>Loading users...</div>);
+      Users = (<div>Загрзка пользователей…</div>);
 
       if (this.state.users) {
         Users = this.state.users.map(function(user) {

@@ -14,7 +14,7 @@ var SearchResultComponent = function (socket) {
 
     render: function () {
       var _this = this;
-      var Messages = (<div>Loading messages...</div>);
+      var Messages = (<div>Загрузка сообщений…</div>);
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
           return (<SearchResult message={message} key={'search' + message._id} handleClose={_this.handleClose} />);
@@ -31,6 +31,7 @@ var SearchResultComponent = function (socket) {
   var SearchResult = React.createClass({
     handleJump: function (e) {
       e.preventDefault();
+
       var dataset = e.currentTarget.dataset;
 
       socket.activeChannel = dataset.channel;
@@ -38,13 +39,15 @@ var SearchResultComponent = function (socket) {
         {
           channel: dataset.channel,
           date: dataset.date,
-          limit: -1, rtl:
-          'gte',
+          limit: -1,
+          rtl: 'gte',
           force: true,
           scrollAfter: false
         }
       );
+
       var id = dataset.id;
+
       setTimeout(function () {
         socket.emit('channel get',
           {
@@ -54,6 +57,7 @@ var SearchResultComponent = function (socket) {
             scrollAfter: false
           }
         );
+
         setTimeout(function () {
           MessagesActions.highlightMessage(id);
           $('.msg__list').scrollTop($('.msg__searched').offset().top - 500);
@@ -72,6 +76,7 @@ var SearchResultComponent = function (socket) {
       var month = localDate.getMonth();
       var fullDate = date + ' ' + ('0' + day).slice(-2) + '/' +
         ('0' + month).slice(-2) + '/' + localDate.getFullYear();
+
       return (
         <div className='search-result'>
           <span className='search-result__author'>{this.props.message.username} ({this.props.message.channel})</span>
@@ -110,8 +115,7 @@ var SearchResultComponent = function (socket) {
       });
     },
 
-    handleSearch: function (e) {
-    },
+    handleSearch: function (e) {},
 
     handleClose: function (e) {
       this.setState({showSearchResult: false});

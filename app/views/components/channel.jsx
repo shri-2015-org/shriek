@@ -42,7 +42,7 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
     },
 
     render: function () {
-      var Channels = (<div>Loading channels...</div>);
+      var Channels = (<div>Загрузка каналов…</div>);
       var _this = this;
       var len_channels = 0;
       if (this.state.channels) {

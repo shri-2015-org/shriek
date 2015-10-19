@@ -1,23 +1,22 @@
 var LoginComponent = function(socket) {
+  // LOGIN ERROR MODULE
+  var LoginError = require('../../views/components/login-error.jsx')(socket);
 
-// LOGIN ERROR MODULE
-var LoginError = require('../../views/components/login-error.jsx')(socket);
+  // LOGIN DEFAULT MODULE
+  var LoginDefault = require('../../views/components/login-default.jsx')(socket);
 
-// LOGIN DEFAULT MODULE
-var LoginDefault = require('../../views/components/login-default.jsx')(socket);
+  // LOGIN PASSPORT MODULE
+  var LoginPassport = require('../../views/components/login-passport.jsx')(socket);
 
-// LOGIN PASSPORT MODULE
-var LoginPassport = require('../../views/components/login-passport.jsx')(socket);
-
-// ALT-JS STORE INIT
-var AuthStore = require('./../../stores/AuthStore')(socket);
-var AuthActions = require('./../../actions/AuthActions');
+  // ALT-JS STORE INIT
+  var AuthStore = require('./../../stores/AuthStore')(socket);
+  var AuthActions = require('./../../actions/AuthActions');
 
 
-// askLogin component
+  // askLogin component
   var AskLogin = React.createClass({
 
-    getInitialState: function() {
+    getInitialState: function () {
       var state = Boolean(localStorage.userName);
 
       return {
@@ -32,7 +31,7 @@ var AuthActions = require('./../../actions/AuthActions');
       };
     },
 
-    componentDidMount: function() {
+    componentDidMount: function () {
 
       AuthStore.listen(this.onChange); // подписываемся на изменения store
 

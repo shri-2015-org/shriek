@@ -104,7 +104,7 @@ var ChatComponent = function (socket) {
     },
 
     render: function () {
-      var Messages = (<div>Loading messages...</div>);
+      var Messages = (<div>Загрузка сообщений…</div>);
 
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {

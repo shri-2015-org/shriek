@@ -1,33 +1,31 @@
 language: node_js
 
 node_js:
-  - 4.0.0
+- 4.0.0
 
 branches:
   only:
-    - master
-    - develop
-
+  - master
+  - develop
+  
+services:
+  - mongodb
+  
 install:
-  - npm install --production
-  - npm install -g gulp
-  - npm install -g mocha
-  - bower install
+- npm install --production
+- npm install -g gulp
+- npm install -g mocha
+- bower install
 
-script:
-  # Tests if needed
-  #- mocha
-
-after_success:
-  - chmod 600 deploy_key
-  - mv deploy_key ~/.ssh/id_rsa
-
+script: 
+ # No test
+ 
 deploy:
   provider: heroku
   api_key:
-    secure: iMiviEP6X3eris4kcrrJm/1FvtLPBmYCFa4RfMq5/kpfoXNHeVj98c+PfDqQ6ckQVpe09LKmt+9kzPTr5smNRRX5uSt/tnq1eSD7u9rMDB77hSIvvuUcP26hV2DVlo9O0w9TVcDcEV6Vz33PmlcSizYOjHKgoG/mDVzY6FUAVZjw/X09dOaBLsIgagZQiTTU/LoEprrwnEcddZNl/Ar6WV6dZe+wOxIdVVEwPGrioQ/dcx/63sWKvK+kv9mM7Sal7wzcTvmSs5QPsG1sEQ3miJc0Ck61KrzaUySRWoOLoWq/4OHmWoUO8lvuropdcRBH+vQnBWSCeqyjaTvv5owq3vxwOdq4k0YALIJm77Db/tAVDLeq+Byd/gvQhDA1/ndCElSYMyjknmYUs8hgkbRyiMlhQ68xLpK1WPmlZxoSedNI8ouRH4SW2frduItITISORE+2ixFD2Zvpi8RZDzSRx+2+NyP42xBR9OYgYrLEX6+Yb2O5xispyvl8kXFpmjqJWf79g0GFUJFfzKRFYaofczq9A9hTg33JHilVEqor8cl9WjnbZQLpS021ygz0dy3TemdWgXgsZUwz9f4Kzj43Fs+9gLmcxcA9wM2tUp32MhqsVOqfgWlmB0G8BWVjXFMQguOZvPc9l26Fi4ucdnRL3FscypA/ycbzqk8DTe/CJpE=
-  app:
-    master: shriek-chat
-    develop: shriek-chat-dev
+    secure: 2BzFF7RSn3Dkyu+pwrZvtp3g6amWN2NkjlrzFjQIlVjj2oDDEmVNgxrA9t8q5sanvA7O8cDyH1LMhJVQP85+5hOdHbIqIr6yKHS3bLsSJ2o9Q7J/LOPnaP1EYA0YzX8+Mg2Zylx4zYS0zdy5iDHxzwh8Z7+sk4lsKci/uua1rqrOEskYBlhnPhhp4JhgSH1e9fkBur28OtMO9daIj73BOFjHr4zPUkEeTOBeuRC6S0N12BWahgZspWxLPX/ZJdd1HNogApBoCVJwiJk5XbNcvHDHj9rTQdHThN8WLoWfq0jth4h7Hj/bsWSeuDs0K+XznC/MuxmS3YtfXoSKdWFJmBHmvbw5Lq3+kAdgSKgKpCiPEQZp2P5QApcMXLk6yakVz1ypbNWu1ei5USC6Vii0JUFE3zQYBWkUjfU4+5LsTZABWw7eFM9R2QyHvhDi0i2s7y7Fm9kHV//eQ4bt1L4xfrrbbKaAVyQYQtzH98sOCS9lPc2f3F10eDioI0vOgdgJ+gnmG1O7yLoKEJNcDpiK7MYGU6ajt1P35iY0vd3+nDqSSFMNYfsL412c8d1qpt9p0spX0nw4upK+kw7mDnJf7xYbBaFGSQpJektIwDRAxF3lFPwWlaYGggrOeMNrVYifoI7ss7l4axloawuTe4QwIiX40iwZ2s85WokNzbmRa6o=
+  app: 
+	master: pw_master
+	dev: pw_dev
   on:
-    repo: shri-2015-org/shriek
+    repo: vitaliy-pavlenko/shriek
